@@ -12,3 +12,6 @@ yarn-error.log*
 *.sln
 logs/
 run/
+app/view/
+public/
+config/*.json
