@@ -1,7 +1,6 @@
 <template>
-  <layout-home description="vue server side render">
-    <img :src="url" class="img">
-  </layout-home>
+  <Layout description="vue server side render">
+  </Layout>
 </template>
 <style>
   @import "index.css";
@@ -21,8 +20,8 @@
       }
     },
     computed: {
-      url(){
-        return `/api/proxyurl?url=${this.serverUrl}video_feed`;
+      lists(){
+        return this.list;
       }
     },
     methods: {
@@ -49,7 +48,6 @@
       }
     },
     mounted() {
-      console.log(this.serverUrl)
       formatDate(new Date());
       window.addEventListener('scroll', ()=>{
         this.loadPage();

@@ -3,6 +3,8 @@ const fs = require('fs');
 module.exports = app => {
   const exports = {};
 
+  exports.serverUrl = "http://0.0.0.0:5000/"
+
   exports.siteFile = {
     '/favicon.ico': fs.readFileSync(path.join(app.baseDir, 'app/web/asset/images/favicon.ico'))
   };

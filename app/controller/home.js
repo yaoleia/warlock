@@ -4,12 +4,18 @@ module.exports = app => {
 
     async index() {
       const { ctx } = this;
-      await ctx.render('home/index.js');
+      const serverUrl = app.config.serverUrl;
+      await ctx.render('home/index.js', { serverUrl });
     }
 
     async client() {
       const { ctx } = this;
       await ctx.renderClient('home/index.js');
+    }
+
+    async history() {
+      const { ctx } = this;
+      await ctx.renderClient('history/index.js');
     }
 
     async pager() {

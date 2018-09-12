@@ -1,9 +1,16 @@
 {
+  "history/index.js": "/public/js/history/index.js",
   "home/index.js": "/public/js/home/index.js",
-  "img/loading.gif": "/public/img/loading.gif",
   "js/vendor.js": "/public/js/vendor.js",
   "vendor.js": "/public/js/vendor.js",
   "deps": {
+    "history/index.js": {
+      "js": [
+        "/public/js/vendor.js",
+        "/public/js/history/index.js"
+      ],
+      "css": []
+    },
     "home/index.js": {
       "js": [
         "/public/js/vendor.js",

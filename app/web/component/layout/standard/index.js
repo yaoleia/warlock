@@ -19,7 +19,7 @@ const template = `<!DOCTYPE html>
 </html>`;
 
 export default {
-  name: 'Layout',
+  name: 'LayoutHome',
   props: [ 'title', 'description', 'keywords' ],
   components: {
     MainLayout
