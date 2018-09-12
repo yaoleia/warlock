@@ -1,0 +1,20 @@
+{
+  "home/index.js": "/public/js/home/index.js",
+  "img/loading.gif": "/public/img/loading.gif",
+  "js/vendor.js": "/public/js/vendor.js",
+  "vendor.js": "/public/js/vendor.js",
+  "deps": {
+    "home/index.js": {
+      "js": [
+        "/public/js/vendor.js",
+        "/public/js/home/index.js"
+      ],
+      "css": []
+    }
+  },
+  "info": {
+    "publicPath": "/public/",
+    "buildPath": "public",
+    "mapped": true
+  }
+}

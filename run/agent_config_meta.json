@@ -1,0 +1,344 @@
+{
+  "siteFile": {
+    "/favicon.ico": "/Users/admin/Documents/response/warclock/config/config.default.js"
+  },
+  "view": {
+    "cache": "/Users/admin/Documents/response/warclock/node_modules/egg-view/config/config.local.js",
+    "root": "/Users/admin/Documents/response/warclock/node_modules/egg-view/config/config.default.js",
+    "defaultExtension": "/Users/admin/Documents/response/warclock/node_modules/egg-view/config/config.default.js",
+    "defaultViewEngine": "/Users/admin/Documents/response/warclock/node_modules/egg-view/config/config.default.js",
+    "mapping": {
+      ".js": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js"
+    }
+  },
+  "vuessr": {
+    "layout": "/Users/admin/Documents/response/warclock/config/config.default.js",
+    "renderOptions": {
+      "basedir": "/Users/admin/Documents/response/warclock/config/config.default.js",
+      "runInNewContext": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js"
+    },
+    "doctype": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js",
+    "manifest": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js",
+    "injectHeadRegex": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js",
+    "injectBodyRegex": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js",
+    "injectCss": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.local.js",
+    "injectJs": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js",
+    "injectRes": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js",
+    "crossorigin": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js",
+    "mergeLocals": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js",
+    "fallbackToClient": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js",
+    "cache": {
+      "max": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js",
+      "maxAge": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js"
+    },
+    "afterRender": "/Users/admin/Documents/response/warclock/node_modules/egg-view-vue-ssr/config/config.default.js"
+  },
+  "logger": {
+    "consoleLevel": "/Users/admin/Documents/response/warclock/config/config.default.js",
+    "dir": "/Users/admin/Documents/response/warclock/config/config.default.js",
+    "encoding": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "env": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "level": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "disableConsoleAfterReady": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "outputJSON": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "buffer": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "appLogName": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "coreLogName": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "agentLogName": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "errorLogName": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "coreLogger": {
+      "consoleLevel": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.local.js"
+    },
+    "allowDebugAtProd": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+  },
+  "static": {
+    "prefix": "/Users/admin/Documents/response/warclock/config/config.default.js",
+    "dir": "/Users/admin/Documents/response/warclock/config/config.default.js",
+    "maxAge": "/Users/admin/Documents/response/warclock/config/config.local.js",
+    "dynamic": "/Users/admin/Documents/response/warclock/node_modules/egg-static/config/config.default.js",
+    "preload": "/Users/admin/Documents/response/warclock/node_modules/egg-static/config/config.default.js",
+    "buffer": "/Users/admin/Documents/response/warclock/node_modules/egg-static/config/config.default.js",
+    "maxFiles": "/Users/admin/Documents/response/warclock/node_modules/egg-static/config/config.default.js"
+  },
+  "keys": "/Users/admin/Documents/response/warclock/config/config.default.js",
+  "middleware": "/Users/admin/Documents/response/warclock/config/config.default.js",
+  "development": {
+    "watchDirs": "/Users/admin/Documents/response/warclock/config/config.local.js",
+    "ignoreDirs": "/Users/admin/Documents/response/warclock/config/config.local.js",
+    "fastReady": "/Users/admin/Documents/response/warclock/node_modules/egg-development/config/config.default.js",
+    "reloadOnDebug": "/Users/admin/Documents/response/warclock/node_modules/egg-development/config/config.default.js",
+    "overrideDefault": "/Users/admin/Documents/response/warclock/node_modules/egg-development/config/config.default.js"
+  },
+  "logview": {
+    "dir": "/Users/admin/Documents/response/warclock/config/config.local.js",
+    "prefix": "/Users/admin/Documents/response/warclock/node_modules/egg-logview/config/config.default.js",
+    "staticHost": "/Users/admin/Documents/response/warclock/node_modules/egg-logview/config/config.default.js"
+  },
+  "security": {
+    "domainWhiteList": "/Users/admin/Documents/response/warclock/config/config.local.js",
+    "protocolWhiteList": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+    "defaultMiddleware": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+    "csrf": {
+      "enable": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "useSession": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "ignoreJSON": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "cookieName": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "sessionName": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "headerName": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "bodyName": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "queryName": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+    },
+    "xframe": {
+      "enable": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "value": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+    },
+    "hsts": {
+      "enable": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.local.js",
+      "maxAge": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "includeSubdomains": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+    },
+    "dta": {
+      "enable": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+    },
+    "methodnoallow": {
+      "enable": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+    },
+    "noopen": {
+      "enable": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+    },
+    "nosniff": {
+      "enable": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+    },
+    "referrerPolicy": {
+      "enable": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "value": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+    },
+    "xssProtection": {
+      "enable": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "value": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+    },
+    "csp": {
+      "enable": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "policy": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+    },
+    "ssrf": {
+      "ipBlackList": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js",
+      "checkAddress": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+    }
+  },
+  "session": {
+    "maxAge": "/Users/admin/Documents/response/warclock/node_modules/egg-session/config/config.default.js",
+    "key": "/Users/admin/Documents/response/warclock/node_modules/egg-session/config/config.default.js",
+    "httpOnly": "/Users/admin/Documents/response/warclock/node_modules/egg-session/config/config.default.js",
+    "encrypt": "/Users/admin/Documents/response/warclock/node_modules/egg-session/config/config.default.js"
+  },
+  "helper": {
+    "shtml": "/Users/admin/Documents/response/warclock/node_modules/egg-security/config/config.default.js"
+  },
+  "jsonp": {
+    "limit": "/Users/admin/Documents/response/warclock/node_modules/egg-jsonp/config/config.default.js",
+    "callback": "/Users/admin/Documents/response/warclock/node_modules/egg-jsonp/config/config.default.js",
+    "csrf": "/Users/admin/Documents/response/warclock/node_modules/egg-jsonp/config/config.default.js"
+  },
+  "onerror": {
+    "errorPageUrl": "/Users/admin/Documents/response/warclock/node_modules/egg-onerror/config/config.default.js",
+    "appErrorFilter": "/Users/admin/Documents/response/warclock/node_modules/egg-onerror/config/config.default.js",
+    "templatePath": "/Users/admin/Documents/response/warclock/node_modules/egg-onerror/config/config.default.js"
+  },
+  "i18n": {
+    "defaultLocale": "/Users/admin/Documents/response/warclock/node_modules/egg-i18n/config/config.default.js",
+    "dirs": "/Users/admin/Documents/response/warclock/node_modules/egg-i18n/config/config.default.js",
+    "queryField": "/Users/admin/Documents/response/warclock/node_modules/egg-i18n/config/config.default.js",
+    "cookieField": "/Users/admin/Documents/response/warclock/node_modules/egg-i18n/config/config.default.js",
+    "cookieMaxAge": "/Users/admin/Documents/response/warclock/node_modules/egg-i18n/config/config.default.js"
+  },
+  "watcher": {
+    "type": "/Users/admin/Documents/response/warclock/node_modules/egg-watcher/config/config.local.js",
+    "eventSources": {
+      "default": "/Users/admin/Documents/response/warclock/node_modules/egg-watcher/config/config.default.js",
+      "development": "/Users/admin/Documents/response/warclock/node_modules/egg-watcher/config/config.default.js"
+    }
+  },
+  "multipart": {
+    "autoFields": "/Users/admin/Documents/response/warclock/node_modules/egg-multipart/config/config.default.js",
+    "defaultCharset": "/Users/admin/Documents/response/warclock/node_modules/egg-multipart/config/config.default.js",
+    "fieldNameSize": "/Users/admin/Documents/response/warclock/node_modules/egg-multipart/config/config.default.js",
+    "fieldSize": "/Users/admin/Documents/response/warclock/node_modules/egg-multipart/config/config.default.js",
+    "fields": "/Users/admin/Documents/response/warclock/node_modules/egg-multipart/config/config.default.js",
+    "fileSize": "/Users/admin/Documents/response/warclock/node_modules/egg-multipart/config/config.default.js",
+    "files": "/Users/admin/Documents/response/warclock/node_modules/egg-multipart/config/config.default.js",
+    "fileExtensions": "/Users/admin/Documents/response/warclock/node_modules/egg-multipart/config/config.default.js",
+    "whitelist": "/Users/admin/Documents/response/warclock/node_modules/egg-multipart/config/config.default.js"
+  },
+  "customLogger": {
+    "scheduleLogger": {
+      "consoleLevel": "/Users/admin/Documents/response/warclock/node_modules/egg-schedule/config/config.default.js",
+      "file": "/Users/admin/Documents/response/warclock/node_modules/egg-schedule/config/config.default.js"
+    }
+  },
+  "logrotator": {
+    "filesRotateByHour": "/Users/admin/Documents/response/warclock/node_modules/egg-logrotator/config/config.default.js",
+    "hourDelimiter": "/Users/admin/Documents/response/warclock/node_modules/egg-logrotator/config/config.default.js",
+    "filesRotateBySize": "/Users/admin/Documents/response/warclock/node_modules/egg-logrotator/config/config.default.js",
+    "maxFileSize": "/Users/admin/Documents/response/warclock/node_modules/egg-logrotator/config/config.default.js",
+    "maxFiles": "/Users/admin/Documents/response/warclock/node_modules/egg-logrotator/config/config.default.js",
+    "rotateDuration": "/Users/admin/Documents/response/warclock/node_modules/egg-logrotator/config/config.default.js",
+    "maxDays": "/Users/admin/Documents/response/warclock/node_modules/egg-logrotator/config/config.default.js"
+  },
+  "cors": "/Users/admin/Documents/response/warclock/node_modules/egg-cors/config/config.default.js",
+  "webpack": {
+    "port": "/Users/admin/Documents/response/warclock/node_modules/egg-webpack/config/config.default.js",
+    "proxy": {
+      "host": "/Users/admin/Documents/response/warclock/node_modules/egg-webpack/config/config.default.js",
+      "match": "/Users/admin/Documents/response/warclock/node_modules/egg-webpack/config/config.default.js"
+    },
+    "webpackConfigList": "/Users/admin/Documents/response/warclock/node_modules/egg-webpack/config/config.default.js"
+  },
+  "env": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+  "name": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+  "proxy": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+  "protocolHeaders": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+  "ipHeaders": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+  "hostHeaders": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+  "pkg": {
+    "name": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "version": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "description": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "scripts": {
+      "debug": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "clean": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "build": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "start": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "dev": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "lint": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "fix": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "ii": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+    },
+    "dependencies": {
+      "axios": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "cross-env": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "egg": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "egg-bin": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "egg-cors": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "egg-logger": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "egg-scripts": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "egg-validate": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "egg-view-vue-ssr": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "element-ui": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "extend": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "lodash": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "mint-ui": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "mockjs": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "moment": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "vue": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "vue-hot-reload-api": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "vue-router": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "vuex": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "vuex-router-sync": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+    },
+    "devDependencies": {
+      "autod-egg": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "autoprefixer": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "babel-plugin-add-module-exports": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "babel-plugin-syntax-dynamic-import": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "babel-plugin-transform-object-assign": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "babel-plugin-transform-object-rest-spread": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "babel-plugin-transform-runtime": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "babel-preset-env": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "easywebpack-cli": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "easywebpack-vue": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "egg-logview": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "egg-webpack": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "egg-webpack-vue": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "eslint": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "eslint-config-egg": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "eslint-plugin-vue": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "imagemin-webpack-plugin": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "ip": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "less": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "less-loader": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "node-sass": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "sass-loader": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "vconsole": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+    },
+    "engines": {
+      "node": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+    },
+    "ci": {
+      "version": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+    },
+    "repository": {
+      "type": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "url": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+    },
+    "author": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "license": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "homepage": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+  },
+  "baseDir": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+  "HOME": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+  "rundir": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+  "dump": {
+    "ignore": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+  },
+  "confusedConfigurations": {
+    "bodyparser": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "notFound": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "sitefile": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "middlewares": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "httpClient": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+  },
+  "notfound": {
+    "pageUrl": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+  },
+  "bodyParser": {
+    "enable": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "encoding": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "formLimit": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "jsonLimit": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "strict": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "queryString": {
+      "arrayLimit": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "depth": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "parameterLimit": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+    }
+  },
+  "httpclient": {
+    "enableDNSCache": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "dnsCacheLookupInterval": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "dnsCacheMaxLength": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "request": {
+      "timeout": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+    },
+    "httpAgent": {
+      "keepAlive": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "freeSocketKeepAliveTimeout": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "maxSockets": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "maxFreeSockets": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+    },
+    "httpsAgent": {
+      "keepAlive": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "freeSocketKeepAliveTimeout": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "maxSockets": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "maxFreeSockets": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+    }
+  },
+  "meta": {
+    "enable": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "logging": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+  },
+  "coreMiddleware": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+  "workerStartTimeout": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+  "cluster": {
+    "listen": {
+      "path": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "port": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+      "hostname": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+    }
+  },
+  "clusterClient": {
+    "maxWaitTime": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js",
+    "responseTimeout": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+  },
+  "onClientError": "/Users/admin/Documents/response/warclock/node_modules/egg/config/config.default.js"
+}
