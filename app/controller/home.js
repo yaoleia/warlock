@@ -5,7 +5,7 @@ module.exports = app => {
       const serverUrl = app.config.serverUrl;
 
       const { ctx } = this;
-      await ctx.renderClient('home/index.js', { serverUrl });
+      await ctx.render('home/index.js', { serverUrl });
     }
 
     async client() {
