@@ -1,11 +1,18 @@
 <template>
-    <div class="main">
-        <div class="page-container page-component">
-            <img :src="url?url:'/api/proxyurl?url=http://0.0.0.0:5000/video_feed'" class="img" @load="loaded">
-        </div>
+    <div class="img-stream">
+        <img :src="url" class="img" @load="loaded">
     </div>
 </template>
-<style>
+<style lang="scss">
+    .img-stream {
+      width: 100%;
+      height: 100%;
+      .img {
+        width: 100%;
+        height: 100%;
+        vertical-align: top;
+      }
+    }
 </style>
 <script type="text/babel">
     export default {
