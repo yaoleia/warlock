@@ -4,7 +4,7 @@ module.exports = {
 	framework: 'vue',
 	entry: {
 		include: ['app/web/page'],
-		exclude: [/app\/web\/page\/admin\/home\/(component|view|router|store)/],
+		exclude: [/app\/web\/page\/admin\/home\/index\/(component|view|router|store)/],
 		loader: {
 			client: 'app/web/framework/vue/entry/client-loader.js',
 			server: 'app/web/framework/vue/entry/server-loader.js',

@@ -7,7 +7,7 @@ export default {
     articleadd: '添加文章'
   },
   lang: {
-    href: '/admin?locale=en',
+    href: '/index?locale=en',
     text: '中文'
   }
 };

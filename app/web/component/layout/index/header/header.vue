@@ -1,61 +1,109 @@
 <template>
-<div>
-    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header page-scroll">
-                <button type="button" @click="menuBtn" class="navbar-toggle" :class="{ 'collapsed': collapsed }" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">IBlog</a>
-            </div>
-            <div class="collapse navbar-collapse" :class="{ 'collapse in': collapsed }" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="/">{{$t('menu.home')}}</a>
-                    </li>
-                    <li>
-                        <a href="/category">{{$t('menu.category')}}</a>
-                    </li>
-                </ul>
-            </div>
+  <div style="height:100%">
+     <header class="header">
+      <div class="logo">
+          <span class="big">{{ site.name }}</span>
+          <span class="min">{{ site.description }}</span>
         </div>
-    </nav>
-    <header class="intro-header" style="background-color:#3c763d;">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
-                    <div class="site-heading">
-                        <div>
-                            <img src="../../../../asset/images/loading.gif" width="80px" height="80px" style="display: inline">
-                        </div>
-                        <h1>博客</h1>
-                        <hr class="large">
-                        <span class="subheading">IBlog</span>
-                    </div>
-                </div>
-            </div>
+        <span class="header-btn" @click="sidebarToggle"><i class="el-icon-menu"></i></span>
+       
+        <div class="right">
+          <span class="header-btn">
+            <a v-bind:href="$t('lang.href')"><i class="el-icon-message"></i></a>
+          </span>
+          <el-dropdown>
+              <span class="header-btn">
+                  {{$t('lang.text')}}<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="switchLang('en')">英文</el-dropdown-item>
+              <el-dropdown-item @click.native="switchLang('cn')">中文</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <span class="header-btn">
+              <el-badge :value="2" class="badge">
+                  <i class="el-icon-message"></i>
+              </el-badge>
+          </span>
+          <span class="header-btn">
+            <i class="el-icon-bell"></i>
+          </span>
+          <el-dropdown>
+                      <span class="header-btn">
+                          Index<i class="el-icon-arrow-down el-icon--right"></i>
+                      </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item @click.native="logout">退出系统</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
     </header>
-</div>
+    <LeftMenu :collapse="collapse"></LeftMenu>
+  </div>
 </template>
+<style lang="scss">
+.sidebar-hidden {
+    .header {
+      .logo {
+        .big {
+          display: none;
+        }
+        .min {
+          display: block;
+        }
+        width: 64px;
+      }
+    }
+
+    .app-body {
+      margin-left: 80px,
+    }
+  }
+</style>
 <script type="babel">
-import "./header.scss";
+import './header.scss';
+import LeftMenu from '../menu/index.vue';
 export default {
-  components: {},
+  components: {
+    LeftMenu
+  },
   data() {
     return {
-      collapsed: false
+      collapse: false,
+      site: {
+        name: 'We-Blog',
+        description: 'IBlog'
+      }
     };
   },
   computed: {},
   methods: {
-    menuBtn() {
-      this.collapsed = !this.collapsed;
+    sidebarToggle(e) {
+      e.preventDefault();
+      if (this.collapse) {
+        document.body.classList.remove("sidebar-hidden");
+        this.siteName = 'IBlog';
+        this.collapse = false;
+      } else {
+        document.body.classList.add("sidebar-hidden");
+        this.collapse = true;
+      }
+    },
+    logout() {
+      window.location.replace('/login');
+    },
+    switchLang(lang) {
+      window.location.href= `/index?locale=${lang}`;
     }
   },
-  mounted() {}
+  mounted: function() {
+    if (!this.collapse) {
+      document.body.classList.remove('sidebar-hidden');
+      this.siteName = 'IBlog';
+    } else {
+      document.body.classList.add('sidebar-hidden');
+    }
+  }
 };
 </script>

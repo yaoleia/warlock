@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <slot name='content'></slot>
+  <div class='app-body'>
+      <div class='main-container'>
+        <router-view></router-view>
+      </div>
   </div>
 </template>
 <style>

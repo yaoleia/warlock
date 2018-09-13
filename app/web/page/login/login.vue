@@ -2,7 +2,7 @@
 <div class="login">
     <div class="login-form">
       <div class="login-header">
-        <img src="../../../asset/images/logo.png" height="100" alt="">
+        <img src="../../asset/images/logo.png" height="100" alt="">
         <p>IBlog</p>
       </div>
       <div class="login-info">
@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     login() {
-      window.location.replace("/admin");
+      window.location.replace("/index");
     }
   }
 };

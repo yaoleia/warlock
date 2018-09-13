@@ -1,13 +1,13 @@
 'use strict';
 module.exports = app => {
-	return class AdminController extends app.Controller {
+	return class IndexController extends app.Controller {
 		async login(ctx) {
-			await ctx.renderClient('admin/login/login.js', {});
+			await ctx.renderClient('login/login.js', {});
 		}
 		async home(ctx) {
 			const serverUrl = app.config.serverUrl;
-			const url = ctx.url.replace(/\/admin/, '');
-			await ctx.render('admin/home/home.js', {
+			const url = ctx.url.replace(/\/index/, '');
+			await ctx.render('home/home.js', {
 				ctx,
 				url,
 				serverUrl

@@ -1,9 +1,9 @@
 <template>
-  <AdminLayout>
+  <IndexLayout>
     <transition name="fade" mode="out-in">
       <router-view></router-view>
     </transition>
-  </AdminLayout>
+  </IndexLayout>
 </template>
 <script type="text/babel">
 import Vue from 'vue';
@@ -11,10 +11,10 @@ import ElementUI from 'element-ui';
 import VueI18n from 'vue-i18n';
 import { sync } from 'vuex-router-sync';
 import 'element-ui/lib/theme-chalk/index.css';
-import createI18n from 'framework/i18n/admin';
+import createI18n from 'framework/i18n/index';
 import createStore from './store/app';
 import createRouter from './router';
-import AdminLayout from 'component/layout/admin';
+import IndexLayout from 'component/layout/index';
 
 Vue.use(VueI18n);
 Vue.use(ElementUI);
@@ -27,7 +27,7 @@ export default {
   router,
   store,
   components: {
-    AdminLayout,
+    IndexLayout,
   },
   computed: {},
   mounted() {},

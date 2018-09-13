@@ -6,7 +6,7 @@ export default {
     articleadd: 'Article Add'
   },
   lang: {
-    href: '/admin?locale=cn',
+    href: '/index?locale=cn',
     text: 'English'
   }
 };
