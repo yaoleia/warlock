@@ -4,15 +4,11 @@ module.exports = {
 	framework: 'vue',
 	entry: {
 		include: ['app/web/page'],
-		exclude: ['app/web/page/[a-z]+/component', 'app/web/page/test'],
+		exclude: [/app\/web\/page\/admin\/home\/(component|view|router|store)/],
 		loader: {
 			client: 'app/web/framework/vue/entry/client-loader.js',
 			server: 'app/web/framework/vue/entry/server-loader.js',
 		}
-	},
-	compile: {
-		thread: true, // 多进程编译
-		cache: true // 启动编译缓存
 	},
 	alias: {
 		server: 'app/web/framework/vue/entry/server.js',
@@ -22,8 +18,17 @@ module.exports = {
 		framework: 'app/web/framework',
 		vue: 'vue/dist/vue.esm.js'
 	},
-	dll: ['vue', 'axios'],
-	loaders: {},
+	compile: {
+		thread: true, // 多进程编译
+		cache: true // 启动编译缓存
+	},
+	dll: ['vue', 'axios', 'vue-router', 'vuex', 'vuex-router-sync'],
+	loaders: {
+		scss: true
+	},
+	node: {
+		console: true
+	},
 	plugins: {},
 	done() {
 

@@ -1,8 +1,9 @@
 
 module.exports = app => {
-  app.get('/', app.controller.home.index);
-  app.get('/client', app.controller.home.client);
-  app.get('/pager', app.controller.home.pager);
-  app.get('/history', app.controller.home.history);
-  app.get('/api/proxyurl', app.controller.proxy.proxyUrl);
+    const { router, controller } = app;
+    router.get('/', controller.home.index);
+    router.get('/client', controller.home.client);
+    router.get('/pager', controller.home.pager);
+    router.get('/history(/.+)?', controller.home.history);
+    router.get('/api/proxyurl', controller.proxy.proxyUrl);
 };
