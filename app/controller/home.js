@@ -19,7 +19,7 @@ module.exports = app => {
       const serverUrl = app.config.serverUrl;
 
       const { ctx } = this;
-      await ctx.renderClient('history/index.js', { serverUrl });
+      await ctx.render('history/index.js', { serverUrl });
     }
 
     async pager() {
