@@ -1,27 +1,100 @@
 # egg-vue-webpack-boilerplate
 
-基于 Egg + Vue + Webpack4 多页面服务端渲染项目开发项目
+基于 Egg + Vue + Webpack4 Server Side Render 工程项目，包括前台系统和后台管理系统
 
-
-## 版本
+## 1. 版本
 
 - Egg 版本： ^2.x.x
-- Node 版本: Node ^8.9.0+
-(https://github.com/hubcarl/egg-vue-webpack-boilerplate/tree/node6)
-- Webpack 版本: ^4.x.x, 对应 `easywebpack-vue` 版本为 ^4.x.x
+- Node 版本: Node ^8.x.x+,  Node 6.x.x 版本请见 [Egg 1.0 + Node6分支](https://github.com/hubcarl/egg-vue-webpack-boilerplate/tree/node6)
+- Webpack 版本: ^4.x.x, 对应 `easywebpack-vue` 版本为 ^4.x.x; Webpack3 版本项目骨架请见 `webpack3` 分支, 对应 `easywebpack-react` 版本为 3.x.x
 - Vue 版本: ^2.5.0
 
-## 说明 
-
-![hubcarl](https://avatars3.githubusercontent.com/u/4983042?v=4&u=0befb64a57a7911c630b7f97df5632385b08da2a&s=250)
-
-## 文档
+## 2. 文档
 
 - http://hubcarl.github.io/easywebpack/vue/rule
 - https://zhuanlan.zhihu.com/easywebpack
 
 
-## 项目结构和基本规范
+## 3. 使用
+
+#### 3.1 安装cli(非必需)
+
+```bash
+npm install easywebpack-cli -g
+```
+
+^3.5.0 开始， `easywebpack-cli` 已内置 `devDependencies` 中, 无需安装。如果你需要在命令行使用 `easy` 命令, 可以单独全局安装。
+
+#### 3.2 安装依赖
+
+```bash
+npm install
+```
+
+
+#### 3.3 本地开发启动应用
+
+```bash
+npm run dev
+```
+
+应用访问: http://127.0.0.1:7001
+
+![npm start启动](https://github.com/hubcarl/egg-vue-webpack-boilerplate/blob/master/docs/images/webpack-build.png)
+
+
+#### 3.4 发布模式启动应用
+
+- 首先在本地或者ci构建好jsbundle文件
+
+```bash
+npm run build 
+```
+
+- 然后,启动应用
+
+```bash
+npm start 
+```
+
+
+详细打包部署请见： http://hubcarl.github.io/easywebpack/vue/dev/
+
+## 4. 配置说明(支持三种方式)
+
+#### 4.1 方式一: `easywebpack-cli` 根据  `webpack.config.js` 自动创建Webpack Config 
+
+```js
+`config/config.local.js` 
+const EasyWebpack = require('easywebpack-vue');
+exports.webpack = {
+    webpackConfigList:EasyWebpack.getWebpackConfig() 
+  };
+```
+
+#### 4.2 方式二: 自己编写Webpack配置
+
+编写配置请见 tag `1.0.0`  build目录代码实现
+
+```js
+`config/config.local.js` 
+exports.webpack = {
+    webpackConfigList: [
+      require(path.join(app.baseDir, 'build/client')), // http://127.0.0.1:9000
+      require(path.join(app.baseDir, 'build/server')), // http://127.0.0.1:9001
+    ]
+  };
+```
+
+#### 4.3 方式三: 开启多进程编译
+
+[egg npm start 启动开启多进程编译](http://hubcarl.github.io/easywebpack/vue/version/)
+
+
+构建会同时启动两个 webpack 构建服务, 客户端js构建(build/client), 服务端构建(build/server), 默认端口9000,  webpackConfigList 端口依次递增. 
+
+
+## 5. 项目结构和基本规范
 
     ├── app
     │   ├── controller

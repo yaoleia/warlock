@@ -1,28 +1,43 @@
 {
-  "history/index.css": "/public/css/history/index.a5a51680.css",
-  "history/index.js": "/public/js/history/index.f2f2eeff.js",
-  "home/index.css": "/public/css/home/index.768130e7.css",
-  "home/index.js": "/public/js/home/index.3b8007f8.js",
-  "js/vendor.db052698.js": "/public/js/vendor.db052698.js",
-  "vendor.js": "/public/js/vendor.db052698.js",
+  "admin/home/home.js": "/public/js/admin/home/home.js",
+  "admin/login/login.js": "/public/js/admin/login/login.js",
+  "js/chunk/0.js": "/public/js/chunk/0.js",
+  "js/chunk/1.js": "/public/js/chunk/1.js",
+  "js/chunk/2.js": "/public/js/chunk/2.js",
+  "js/chunk/3.js": "/public/js/chunk/3.js",
+  "js/chunk/4.js": "/public/js/chunk/4.js",
+  "js/chunk/5.js": "/public/js/chunk/5.js",
+  "font/fontawesome-webfont.ttf?v=4.7.0": "/public/font/fontawesome-webfont.ttf",
+  "font/glyphicons-halflings-regular.eot": "/public/font/glyphicons-halflings-regular.eot",
+  "font/glyphicons-halflings-regular.ttf": "/public/font/glyphicons-halflings-regular.ttf",
+  "font/glyphicons-halflings-regular.woff": "/public/font/glyphicons-halflings-regular.woff",
+  "font/glyphicons-halflings-regular.woff2": "/public/font/glyphicons-halflings-regular.woff2",
+  "img/egg-vue-webpack-dev.png": "/public/img/egg-vue-webpack-dev.png",
+  "img/loading.gif": "/public/img/loading.gif",
+  "img/logo.png": "/public/img/logo.png",
+  "font/element-icons.ttf": "/public/font/element-icons.ttf",
+  "font/element-icons.woff": "/public/font/element-icons.woff",
+  "font/fontawesome-webfont.eot?v=4.7.0": "/public/font/fontawesome-webfont.eot",
+  "img/fontawesome-webfont.svg?v=4.7.0": "/public/img/fontawesome-webfont.svg",
+  "img/glyphicons-halflings-regular.svg": "/public/img/glyphicons-halflings-regular.svg",
+  "font/fontawesome-webfont.woff2?v=4.7.0": "/public/font/fontawesome-webfont.woff2",
+  "font/fontawesome-webfont.woff?v=4.7.0": "/public/font/fontawesome-webfont.woff",
+  "js/vendor.js": "/public/js/vendor.js",
+  "vendor.js": "/public/js/vendor.js",
   "deps": {
-    "history/index.js": {
+    "admin/home/home.js": {
       "js": [
-        "/public/js/vendor.db052698.js",
-        "/public/js/history/index.f2f2eeff.js"
+        "/public/js/vendor.js",
+        "/public/js/admin/home/home.js"
       ],
-      "css": [
-        "/public/css/history/index.a5a51680.css"
-      ]
+      "css": []
     },
-    "home/index.js": {
+    "admin/login/login.js": {
       "js": [
-        "/public/js/vendor.db052698.js",
-        "/public/js/home/index.3b8007f8.js"
+        "/public/js/vendor.js",
+        "/public/js/admin/login/login.js"
       ],
-      "css": [
-        "/public/css/home/index.768130e7.css"
-      ]
+      "css": []
     }
   },
   "info": {

@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <div class="page-container page-component">
-            <img :src="url" class="img" @load="loaded">
+            <img :src="url?url:'/api/proxyurl?url=http://0.0.0.0:5000/video_feed'" class="img" @load="loaded">
         </div>
     </div>
 </template>
