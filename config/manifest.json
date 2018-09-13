@@ -1,22 +1,28 @@
 {
-  "history/index.js": "/public/js/history/index.js",
-  "home/index.js": "/public/js/home/index.js",
-  "js/vendor.js": "/public/js/vendor.js",
-  "vendor.js": "/public/js/vendor.js",
+  "history/index.css": "/public/css/history/index.a5a51680.css",
+  "history/index.js": "/public/js/history/index.f2f2eeff.js",
+  "home/index.css": "/public/css/home/index.768130e7.css",
+  "home/index.js": "/public/js/home/index.3b8007f8.js",
+  "js/vendor.db052698.js": "/public/js/vendor.db052698.js",
+  "vendor.js": "/public/js/vendor.db052698.js",
   "deps": {
     "history/index.js": {
       "js": [
-        "/public/js/vendor.js",
-        "/public/js/history/index.js"
+        "/public/js/vendor.db052698.js",
+        "/public/js/history/index.f2f2eeff.js"
       ],
-      "css": []
+      "css": [
+        "/public/css/history/index.a5a51680.css"
+      ]
     },
     "home/index.js": {
       "js": [
-        "/public/js/vendor.js",
-        "/public/js/home/index.js"
+        "/public/js/vendor.db052698.js",
+        "/public/js/home/index.3b8007f8.js"
       ],
-      "css": []
+      "css": [
+        "/public/css/home/index.768130e7.css"
+      ]
     }
   },
   "info": {

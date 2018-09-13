@@ -1,12 +1,9 @@
 <template>
-    <div>
-        <LayoutHeader></LayoutHeader>
-        <LayoutContent>
-            <div slot="content">
-                <slot name="main"></slot>
-            </div>
-        </LayoutContent>
-    </div>
+    <LayoutContent>
+        <div slot="content">
+            <slot name="main"></slot>
+        </div>
+    </LayoutContent>
 </template>
 <style lang="css">
     body {
