@@ -1,11 +1,28 @@
 <template>
     <header class="header">
-        <div class="right">
-            <span class="header-btn">
-                <a v-bind:href="$t('lang.href')">
-                    <i class="el-icon-message"></i>
-                </a>
+        <el-dropdown>
+            <span class="el-dropdown-link">
+                硬件
+                <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>主摄像机</el-dropdown-item>
+                <el-dropdown-item>辅助摄像机</el-dropdown-item>
+                <el-dropdown-item>光源</el-dropdown-item>
+                <el-dropdown-item>激光触发</el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+        <el-dropdown>
+            <span class="el-dropdown-link">
+                算法
+                <i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>差分</el-dropdown-item>
+                <el-dropdown-item>检测</el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+        <div class="right">
             <el-dropdown>
                 <span class="header-btn">
                     Index
@@ -36,6 +53,14 @@
       .app-body {
         margin-left: 80px;
       }
+    }
+    .header {
+        .el-dropdown {
+            line-height: 50px;
+            margin: 0 30px;
+            cursor: pointer;
+            color: #fff;
+        }
     }
 </style>
 <script type="babel">

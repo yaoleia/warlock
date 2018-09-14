@@ -1,29 +1,43 @@
 <template>
-    <div class="img-stream">
+    <el-card class="img-stream" :class="{visibility:!show}">
         <img :src="url" class="img" @load="loaded">
-    </div>
+    </el-card>
 </template>
 <style lang="scss">
     .img-stream {
+      box-sizing: border-box;
       width: 100%;
       height: 100%;
+      padding: 5px;
+      margin: 10px 0;
+      .el-card__body {
+        padding: 0;
+        height: 100%;
+      }
       .img {
         width: 100%;
         height: 100%;
         vertical-align: top;
       }
     }
+    .visibility {
+    //   visibility: hidden;
+    }
 </style>
 <script type="text/babel">
     export default {
       data() {
-        return {}
+        return {
+          show: false
+        }
       },
       props: ["url"],
       components: {},
       mounted() {},
       methods: {
-        loaded() {}
+        loaded() {
+            this.show = true
+        }
       }
     }
 </script>

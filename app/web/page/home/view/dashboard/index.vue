@@ -23,24 +23,35 @@
         </div>
         <div class="right-img-col col">
             <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
-            <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            <el-card class="msg img-stream">msg</el-card>
         </div>
     </div>
 </template>
 <style lang="less">
     .dashboard {
       display: flex;
-      justify-content: space-between;
-      height: 100%;
+      justify-content: space-around;
+      height: calc(~"100% - 20px");
+      box-sizing: border-box;
+      padding: 0 30px;
       .col {
+        // width: calc(~"(100% - 120px)/3");
+        max-width: calc(~"(150vh - 75px)/3");
+        flex: 1;
         &.left-img-col {
-          height: calc(~"(100%)/3");
+          .img-stream {
+            height: calc(~"(100% - 30px)/3");
+          }
         }
         &.middle-img-col {
-          height: 100%;
+          .img-stream {
+            height: calc(~"(100% - 10px)");
+          }
         }
         &.right-img-col {
-          height: 50%;
+          .img-stream {
+            height: calc(~"(100% - 20px)/2");
+          }
         }
       }
     }
