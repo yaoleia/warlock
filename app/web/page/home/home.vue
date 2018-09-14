@@ -1,8 +1,6 @@
 <template>
     <IndexLayout>
-        <transition name="fade" mode="out-in">
-            <router-view></router-view>
-        </transition>
+        <headerBtns/>
     </IndexLayout>
 </template>
 <script type="text/babel">
@@ -13,6 +11,7 @@
     import createStore from "./store/app"
     import createRouter from "./router"
     import IndexLayout from "component/layout/index"
+    import headerBtns from "./view/headerBtns.vue"
 
     Vue.use(ElementUI)
 
@@ -24,7 +23,8 @@
       router,
       store,
       components: {
-        IndexLayout
+        IndexLayout,
+        headerBtns
       }
     }
 </script>
