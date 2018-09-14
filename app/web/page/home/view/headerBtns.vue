@@ -1,6 +1,6 @@
 <template>
     <div class="header-btns">
-        <el-dropdown>
+        <el-dropdown trigger="click">
             <span class="el-dropdown-link">
                 硬件
                 <i class="el-icon-arrow-down el-icon--right"></i>
@@ -12,7 +12,7 @@
                 <el-dropdown-item>激光触发</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
-        <el-dropdown>
+        <el-dropdown trigger="click">
             <span class="el-dropdown-link">
                 算法
                 <i class="el-icon-arrow-down el-icon--right"></i>
