@@ -1,15 +1,15 @@
 <template>
     <div class="header-btns">
-        <el-dropdown trigger="click">
+        <el-dropdown trigger="click" @command="handleCommand1">
             <span class="el-dropdown-link">
                 硬件
                 <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>主摄像机</el-dropdown-item>
-                <el-dropdown-item>辅助摄像机</el-dropdown-item>
-                <el-dropdown-item>光源</el-dropdown-item>
-                <el-dropdown-item>激光触发</el-dropdown-item>
+                <el-dropdown-item command="main">主摄像机</el-dropdown-item>
+                <el-dropdown-item command="assist">辅助摄像机</el-dropdown-item>
+                <el-dropdown-item command="light">光源</el-dropdown-item>
+                <el-dropdown-item command="laser">激光触发</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
         <el-dropdown trigger="click">
@@ -22,13 +22,115 @@
                 <el-dropdown-item>检测</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
+
+        <el-dialog title="主摄像机" :visible.sync="mainDialog" append-to-body width='400px'>
+            <el-form :model="main">
+                <el-form-item label="曝光">
+                    <el-input type="number" v-model.trim.number="main.b" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="增益">
+                    <el-input step="0.1" type="number" v-model.trim.number="main.z" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="伽马">
+                    <el-input step="0.1" type="number" v-model.trim.number="main.g" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="mainDialog = false">取 消</el-button>
+                <el-button type="primary" @click="mainClick">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="辅助摄像机" :visible.sync="assistDialog" append-to-body width='400px'>
+            <el-form :model="assist">
+                <el-form-item label="曝光">
+                    <el-input step="0.1" type="number" v-model.trim.number="assist.b" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="assistDialog = false">取 消</el-button>
+                <el-button type="primary" @click="assistClick">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="光源" :visible.sync="lightDialog" append-to-body width='400px'>
+            <el-form :model="light">
+                <el-radio v-model="light.on" label="1">开灯</el-radio>
+                <el-radio v-model="light.on" label="2">关灯</el-radio>
+                <el-form-item label="亮度">
+                    <el-input type="number" v-model.trim.number="light.l" auto-complete="off" min="50" max="255"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="lightDialog = false">取 消</el-button>
+                <el-button type="primary" @click="lightClick">确 定</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog title="激光触发" :visible.sync="laserDialog" append-to-body width='400px'>
+            <el-form :model="laser">
+                <el-radio v-model="laser.t" label="1">硬件触发</el-radio>
+                <el-radio v-model="laser.t" label="2">随机触发</el-radio>
+                <el-radio v-model="laser.t" label="3">手动触发</el-radio>
+                <el-button @click="tOnceClick">触发一次</el-button>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="laserDialog = false">取 消</el-button>
+                <el-button type="primary" @click="laserClick">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script type="text/babel">
     export default {
       components: {},
       data() {
-        return {}
+        return {
+          mainDialog: false,
+          assistDialog: false,
+          lightDialog: false,
+          laserDialog: false,
+          radio: 1,
+          light: {
+            l: 250,
+            on: "1"
+          },
+          laser: {
+            t: "1"
+          },
+          assist: {
+            b: 1.0
+          },
+          main: {
+            b: 80000,
+            z: 1.0,
+            g: 1.0
+          }
+        }
+      },
+      mounted() {},
+      methods: {
+        handleCommand1(command) {
+          this[`${command}Dialog`] = true
+        },
+        async assistClick() {
+          let resp = await this.$request.post(`/api/assist`, this.assist)
+          this.assistDialog = false
+        },
+        async mainClick() {
+          let resp = await this.$request.post(`/api/main`, this.main)
+          this.mainDialog = false
+        },
+        async lightClick() {
+          let resp = await this.$request.post(`/api/light`, this.light)
+          this.lightDialog = false
+        },
+        async laserClick() {
+          let resp = await this.$request.post(`/api/laser`, this.laser)
+          this.laserDialog = false
+        },
+        async tOnceClick() {
+          let resp = await this.$request.post(`/api/tonce`)
+        }
       }
     }
 </script>

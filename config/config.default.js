@@ -8,6 +8,15 @@ module.exports = app => {
 		'/favicon.ico': fs.readFileSync(path.join(app.baseDir, 'app/web/asset/images/favicon.ico'))
 	};
 
+	exports.http = {
+		headers: {
+			common: {
+				'Content-Type': 'application/json; charset=UTF-8'
+			}
+		},
+		timeout: 10000
+	};
+
 	exports.vuessr = {
 		layout: path.join(app.baseDir, 'app/web/view/layout.html'),
 		renderOptions: {

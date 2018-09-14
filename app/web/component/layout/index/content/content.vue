@@ -1,8 +1,10 @@
 <template>
     <div class='app-body'>
         <div class='main-container'>
-            <transition name="fade" mode="out-in">
-                <router-view></router-view>
+            <transition name="el-fade-in">
+                <!-- <keep-alive> -->
+                    <router-view></router-view>
+                <!-- </keep-alive> -->
             </transition>
         </div>
     </div>
