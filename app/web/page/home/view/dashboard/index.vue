@@ -16,14 +16,14 @@
         <div class="left-img-col col">
             <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
             <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
-            <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            <el-card class="msg img-stream">msg</el-card>
         </div>
         <div class="middle-img-col col">
             <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
         </div>
         <div class="right-img-col col">
             <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
-            <el-card class="msg img-stream">msg</el-card>
+            <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
         </div>
     </div>
 </template>

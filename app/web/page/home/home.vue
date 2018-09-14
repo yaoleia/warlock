@@ -1,6 +1,6 @@
 <template>
     <IndexLayout>
-        <headerBtns/>
+        <navs />
     </IndexLayout>
 </template>
 <script type="text/babel">
@@ -11,7 +11,7 @@
     import createStore from "./store/app"
     import createRouter from "./router"
     import IndexLayout from "component/layout/index"
-    import headerBtns from "./view/headerBtns.vue"
+    import navs from "./view/nav.vue"
 
     Vue.use(ElementUI)
 
@@ -24,7 +24,7 @@
       store,
       components: {
         IndexLayout,
-        headerBtns
+        navs
       }
     }
 </script>

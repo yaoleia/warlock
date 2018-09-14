@@ -10,7 +10,7 @@
     .main {
       display: flex;
       .el-menu:not(.el-menu--collapse) {
-        width: 230px;
+        // width: 230px;
       }
       .app {
         width: 100%;

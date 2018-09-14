@@ -1,6 +1,6 @@
 <template>
     <div class="header-btns">
-        <el-dropdown trigger="click" @command="handleCommand1">
+        <!-- <el-dropdown trigger="click" @command="handleCommand1">
             <span class="el-dropdown-link">
                 硬件
                 <i class="el-icon-arrow-down el-icon--right"></i>
@@ -21,7 +21,29 @@
                 <el-dropdown-item>差分</el-dropdown-item>
                 <el-dropdown-item>检测</el-dropdown-item>
             </el-dropdown-menu>
-        </el-dropdown>
+        </el-dropdown> -->
+
+        <el-menu class="el-menu-vertical-demo" @select='handleCommand1'>
+            <el-submenu index="1">
+                <template slot="title">
+                    硬件
+                </template>
+                <el-menu-item index="main">主摄像机</el-menu-item>
+                <el-menu-item index="assist">辅助摄像机</el-menu-item>
+                <el-menu-item index="light">光源</el-menu-item>
+                <el-menu-item index="laser">激光触发</el-menu-item>
+            </el-submenu>
+        </el-menu>
+
+        <el-menu class="el-menu-vertical-demo">
+            <el-submenu index="2">
+                <template slot="title">
+                    算法
+                </template>
+                <el-menu-item index="differ">差分</el-menu-item>
+                <el-menu-item index="test">检测</el-menu-item>
+            </el-submenu>
+        </el-menu>
 
         <el-dialog title="主摄像机" :visible.sync="mainDialog" append-to-body width='400px'>
             <el-form :model="main">
@@ -110,6 +132,7 @@
       mounted() {},
       methods: {
         handleCommand1(command) {
+          console.log(command)
           this[`${command}Dialog`] = true
         },
         async assistClick() {
@@ -140,7 +163,7 @@
         line-height: 50px;
         margin: 0 30px;
         cursor: pointer;
-        color: #fff;
+        color: #000;
       }
     }
 </style>
