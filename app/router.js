@@ -14,4 +14,5 @@ module.exports = app => {
   router.post('/api/light', controller.home.light)
   router.post('/api/laser', controller.home.laser)
   router.post('/api/tonce', controller.home.tonce)
+  app.io.route('chat', app.io.controller.chat);
 };

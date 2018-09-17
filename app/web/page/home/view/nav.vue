@@ -29,8 +29,8 @@
       },
       mounted() {},
       watch: {
-        $route: function(r) {
-          this.tabactive = r.path
+        "$route.path": function(p) {
+          this.tabactive = p;
         }
       },
       methods: {
