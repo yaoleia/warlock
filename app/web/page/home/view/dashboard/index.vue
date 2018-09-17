@@ -14,16 +14,16 @@
 <template>
     <div class="dashboard">
         <div class="left-img-col col">
-            <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
-            <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
-            <el-card class="msg img-stream">msg</el-card>
+            <imgStream class="h280" :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            <imgStream class="h280" :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            <el-card class="msg">检测结果：</el-card>
         </div>
         <div class="middle-img-col col">
             <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
         </div>
         <div class="right-img-col col">
             <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
-            <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            <imgStream class="h280" :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
         </div>
     </div>
 </template>
@@ -43,8 +43,9 @@
         align-items: center;
         justify-content: space-between;
         &.left-img-col {
-          .img-stream {
-            height: 280px;
+          .msg {
+            height: 200px;
+            width: 100%;
           }
         }
         &.middle-img-col {
@@ -57,6 +58,9 @@
             height: 420px;
           }
         }
+        .img-stream.h280 {
+          height: 280px;
+        }
       }
       background: lightblue;
     }
@@ -65,6 +69,22 @@
         .col {
           width: 320px;
           height: 640px;
+          &.left-img-col {
+            .img-stream {
+              height: calc(~"320px / 1.5");
+            }
+            .msg {
+              height: 25%;
+            }
+          }
+          &.right-img-col {
+            .img-stream {
+              height: 320px;
+            }
+            .img-stream.h280 {
+              height: calc(~"320px / 1.5");
+            }
+          }
         }
       }
     }
