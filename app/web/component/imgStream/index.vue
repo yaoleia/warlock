@@ -9,7 +9,6 @@
       width: 100%;
       height: 100%;
       padding: 5px;
-      margin: 10px 0;
       .el-card__body {
         padding: 0;
         height: 100%;

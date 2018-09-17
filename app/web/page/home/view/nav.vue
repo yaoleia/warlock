@@ -1,9 +1,15 @@
 <template>
     <div class="navs-wrap">
+        <div class="block">
+            <el-button type="text" @click="slider">暂停</el-button>
+            <el-button type="text" @click="slider">前进</el-button>
+            <el-slider v-model="value" :step="1" show-stops></el-slider>
+            <el-button type="text" @click="slider">后退</el-button>
+        </div>
         <el-menu router :default-active="tabactive" class="el-menu-demo" mode="horizontal">
             <el-menu-item index="/">返回主页</el-menu-item>
             <el-menu-item index="/article/list">查看历史</el-menu-item>
-            <el-menu-item index="/article/detail">帮助</el-menu-item>
+            <el-menu-item index="/article/add">帮助</el-menu-item>
         </el-menu>
         <el-popover popper-class="navs-popover" placement="bottom" width="220" trigger="manual" v-model="visible">
             <headerBtns />
@@ -16,9 +22,19 @@
     export default {
       data() {
         return {
-          tabactive: "/",
-          visible: false
+          tabactive: this.$route.path,
+          visible: false,
+          value: 0
         }
+      },
+      mounted() {},
+      watch: {
+        $route: function(r) {
+          this.tabactive = r.path
+        }
+      },
+      methods: {
+        slider() {}
       },
       components: {
         headerBtns
@@ -26,14 +42,33 @@
     }
 </script>
 <style lang="scss">
+    .block {
+      padding-right: 30px;
+      width: 530px;
+      height: 50px;
+      display: flex;
+      justify-content: space-around;
+      .el-button {
+        color: #fff;
+      }
+      .el-slider {
+        width: 350px;
+      }
+      .el-slider__runway {
+        margin: 22px 0;
+      }
+    }
     .navs-wrap {
       position: absolute;
-      left: 100px;
+      left: 0;
+      right: 0;
       top: 0;
-      width: 600px;
+      margin: auto;
+      width: 1000px;
       display: flex;
     }
     .navs-popover.el-popover {
+      border: none;
       color: #fff;
       padding: 0;
       min-width: 100px;
@@ -44,26 +79,27 @@
           border-bottom-color: #3c8dbc;
         }
       }
-      .el-menu-item:focus, .el-menu-item:hover {
-          background: none;
+      .el-menu-item:focus,
+      .el-menu-item:hover {
+        background: lightblue;
       }
       .el-submenu__title:hover {
-          background: none;
+        background: none;
       }
       .el-submenu__title {
-          color: #fff;
+        color: #fff;
       }
       .el-menu-item {
-          color: #fff;
+        color: #fff;
       }
       .el-submenu__title i {
-          color: #fff;
+        color: #fff;
       }
     }
     .console {
       color: #fff;
-      line-height: 50px;
-      padding: 0 30px;
+      line-height: 32px;
+      padding: 9px 30px 0;
     }
     .el-button--text:hover {
       color: #fff;
@@ -77,6 +113,7 @@
     .el-menu--horizontal > .el-menu-item:not(.is-disabled):focus,
     .el-menu--horizontal > .el-menu-item:not(.is-disabled):hover,
     .el-menu--horizontal > .el-submenu .el-submenu__title:hover {
+      border-right: none;
       background: none;
       color: #fff;
     }

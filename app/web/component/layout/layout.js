@@ -6,7 +6,7 @@ export default function createLayout(name, components, tpl) {
     components,
     computed: {
       vTitle() {
-        return this.$root.title || this.title || 'IBlog';
+        return this.$root.title || this.title || 'warlock';
       },
       vKeywords() {
         return this.$root.keywords || this.keywords || 'egg, typescript, vue, webpack, server side render';

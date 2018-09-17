@@ -31,28 +31,44 @@
     .dashboard {
       display: flex;
       justify-content: space-around;
-      height: calc(~"100% - 20px");
       box-sizing: border-box;
-      padding: 0 30px;
+      padding: 0 20px;
+      height: 100%;
+      align-items: center;
       .col {
-        // width: calc(~"(100% - 120px)/3");
-        max-width: calc(~"(150vh - 75px)/3");
-        flex: 1;
+        width: 420px;
+        height: 840px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
         &.left-img-col {
           .img-stream {
-            height: calc(~"(100% - 30px)/3");
+            height: 280px;
           }
         }
         &.middle-img-col {
           .img-stream {
-            height: calc(~"(100% - 10px)");
+            height: 100%;
           }
         }
         &.right-img-col {
           .img-stream {
-            height: calc(~"(100% - 20px)/2");
+            height: 420px;
           }
         }
+      }
+      background: lightblue;
+    }
+    @media screen and (max-width: 1440px) {
+      .dashboard {
+        .col {
+          width: 320px;
+          height: 640px;
+        }
+      }
+      .main .main-container {
+        min-width: 1200px;
       }
     }
 </style>

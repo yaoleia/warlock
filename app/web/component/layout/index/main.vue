@@ -26,8 +26,9 @@
         overflow: auto;
       }
       .main-container {
-        height: calc(~"(200vw - 120px) / 3");
-        max-height: 100%;
+          min-width: 1440px;
+          margin: 0 auto;
+          height: 100%;
       }
     }
 </style>
