@@ -4,8 +4,28 @@ const fs = require('fs');
 module.exports = app => {
 	const exports = {};
 	exports.serverUrl = "http://0.0.0.0:5000/"
+
+	exports.io = {
+		namespace: {
+			'/': {
+				connectionMiddleware: ['auth'],
+				packetMiddleware: ['filter'],
+			},
+		}
+	};
+
+
 	exports.siteFile = {
 		'/favicon.ico': fs.readFileSync(path.join(app.baseDir, 'app/web/asset/images/favicon.ico'))
+	};
+
+	exports.http = {
+		headers: {
+			common: {
+				'Content-Type': 'application/json; charset=UTF-8'
+			}
+		},
+		timeout: 10000
 	};
 
 	exports.vuessr = {

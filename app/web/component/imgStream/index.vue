@@ -1,22 +1,42 @@
 <template>
-    <div class="main">
-        <div class="page-container page-component">
-            <img :src="url?url:'/api/proxyurl?url=http://0.0.0.0:5000/video_feed'" class="img" @load="loaded">
-        </div>
-    </div>
+    <el-card class="img-stream" :class="{visibility:!show}">
+        <img :src="url" class="img" @load="loaded">
+    </el-card>
 </template>
-<style>
+<style lang="scss">
+    .img-stream {
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      padding: 5px;
+      .el-card__body {
+        padding: 0;
+        height: 100%;
+      }
+      .img {
+        width: 100%;
+        height: 100%;
+        vertical-align: top;
+      }
+    }
+    .visibility {
+    //   visibility: hidden;
+    }
 </style>
 <script type="text/babel">
     export default {
       data() {
-        return {}
+        return {
+          show: false
+        }
       },
       props: ["url"],
       components: {},
       mounted() {},
       methods: {
-        loaded() {}
+        loaded() {
+            this.show = true
+        }
       }
     }
 </script>
