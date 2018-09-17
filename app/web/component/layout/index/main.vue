@@ -7,8 +7,18 @@
     </div>
 </template>
 <style lang='less'>
+    #app {
+      height: 100%;
+    }
+    html,
+    body {
+      min-width: 1200px;
+      overflow: auto;
+    }
     .main {
-      display: flex;
+      height: 100%;
+      position: relative;
+      //   display: flex;
       .el-menu:not(.el-menu--collapse) {
         // width: 230px;
       }
@@ -26,9 +36,8 @@
         overflow: auto;
       }
       .main-container {
-          min-width: 1440px;
-          margin: 0 auto;
-          height: 100%;
+        margin: 0 auto;
+        height: 100%;
       }
     }
 </style>

@@ -67,8 +67,5 @@
           height: 640px;
         }
       }
-      .main .main-container {
-        min-width: 1200px;
-      }
     }
 </style>
