@@ -39,6 +39,9 @@
     </div>
 </template>
 <style lang="less">
+    ::selection {
+      background: transparent;
+    }
     .dashboard {
       display: flex;
       justify-content: space-around;

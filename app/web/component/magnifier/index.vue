@@ -1,7 +1,8 @@
 <template>
     <div class="magnifier" @mousedown="mousedown" @mousemove="mousemove" @mouseup="canMove=false" @mouseleave="canMove=false">
         <slot></slot>
-        <div class="area" ref="area">
+        <div class="area visibilityh" ref="area">
+            <div class="close el-icon-close" @mousedown.stop @click.stop="close"></div>
             <i @mousedown.stop="imousedown"></i>
         </div>
     </div>
@@ -21,18 +22,31 @@
         top: 0;
         width: 100px;
         height: 100px;
-        background: blue;
-        opacity: 0.2;
-        visibility: hidden;
-        i {
+        border-radius: 2px;
+        background: rgba(0, 0, 235, 0.2);
+        transition: left 0.1s, top 0.1s;
+        & > i {
           position: absolute;
           right: 0;
           bottom: 0;
           width: 10px;
           height: 10px;
           background: #000;
+          opacity: 0.2;
           cursor: nwse-resize;
         }
+      }
+      .close {
+        opacity: 0.3;
+        position: absolute;
+        background: none;
+        right: 0;
+        top: 0;
+        border: none;
+        padding: 0;
+      }
+      .visibilityh {
+        visibility: hidden;
       }
     }
 </style>
@@ -60,6 +74,10 @@
         }
       },
       methods: {
+        close() {
+          $(this.$refs.area).addClass("visibilityh")
+          this.imgMagnifier.src = ""
+        },
         mousedown(e) {
           let $el = this.$el
           let $area = this.$refs.area
@@ -71,19 +89,14 @@
           let $elh = $el.clientHeight
           this.mouse = { e, $areaw, $areah, $eltop, $elleft, $elw, $elh, $area }
           this.canMove = true
-          $area.style.visibility = `visible`
+          $(this.$refs.area).removeClass("visibilityh")
           this.move()
         },
         mousemove(e) {
           if (!this.canMove) return
-          if (this.timer) {
-            clearTimeout(this.timer)
-          }
-          this.timer = setTimeout(() => {
-            this.mouse.e = e
-            this.move()
-            this.timer = null
-          }, 10)
+          this.mouse.e = e
+          this.move()
+          this.timer = null
         },
         move() {
           let { e, $areaw, $areah, $eltop, $elleft, $elw, $elh, $area } = this.mouse
@@ -103,8 +116,7 @@
           if (top > $elh - $areah) {
             top = $elh - $areah
           }
-          $area.style.left = `${left}px`
-          $area.style.top = `${top}px`
+          $($area).css({ left, top })
         },
         getArea() {
           let $area = this.$refs.area
@@ -202,8 +214,7 @@
             wh = down.$elw - this.cut.left
           }
 
-          this.$refs.area.style.width = `${wh}px`
-          this.$refs.area.style.height = `${wh}px`
+          $(this.$refs.area).css({ width: wh, height: wh })
           this.cut.width = wh
           this.cut.height = wh
           this.imouse.e = e
@@ -212,7 +223,13 @@
       mounted() {},
       watch: {
         "mouse.e": async function(e) {
-          this.getArea()
+          if (this.timer) {
+            clearTimeout(this.timer)
+          }
+          this.timer = setTimeout(() => {
+            this.getArea()
+            this.timer = null
+          }, 600)
         }
       }
     }
