@@ -186,6 +186,7 @@
           document.onmouseup = () => {
             document.onmousemove = null
             this.getArea()
+            document.onmouseup = null
           }
         },
         imousemove(e) {
