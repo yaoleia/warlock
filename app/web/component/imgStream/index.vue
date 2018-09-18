@@ -1,7 +1,7 @@
 <template>
     <el-card class="img-stream" :class="{visibility:!show}">
         <img :src="url" class="img" @load="loaded" v-if="url">
-        <p class="msg" v-else>放大查看区域</p>
+        <p class="msg" v-else>放大区域</p>
     </el-card>
 </template>
 <style lang="scss">

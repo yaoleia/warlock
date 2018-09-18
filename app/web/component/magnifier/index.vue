@@ -76,7 +76,9 @@
       methods: {
         close() {
           $(this.$refs.area).addClass("visibilityh")
-          this.imgMagnifier.src = ""
+          this.$nextTick(() => {
+            this.imgMagnifier.src = ""
+          })
         },
         mousedown(e) {
           let $el = this.$el
@@ -183,6 +185,7 @@
           }
           document.onmouseup = () => {
             document.onmousemove = null
+            this.getArea()
           }
         },
         imousemove(e) {
