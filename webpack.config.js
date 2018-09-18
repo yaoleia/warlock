@@ -16,7 +16,20 @@ module.exports = {
 		asset: 'app/web/asset',
 		component: 'app/web/component',
 		framework: 'app/web/framework',
-		vue: 'vue/dist/vue.esm.js'
+		vue: 'vue/dist/vue.esm.js',
+		jquery: 'jquery/src/jquery.js'
+	},
+	module: {
+		rules: [{
+			test: require.resolve('jquery'),
+			use: [{
+				loader: 'expose-loader',
+				options: 'jQuery'
+			}, {
+				loader: 'expose-loader',
+				options: '$'
+			}]
+		}]
 	},
 	compile: {
 		thread: true, // 多进程编译
@@ -28,8 +41,8 @@ module.exports = {
 	},
 	node: {
 		console: true
-    },
-    plugins: {},
+	},
+	plugins: {},
 	done() {
 		console.log('如果启动成功后, Chrome控制台浏览器脚本报错, 可以尝试执行 npm run clean 清除缓存解决');
 	}

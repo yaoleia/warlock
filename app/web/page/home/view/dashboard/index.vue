@@ -1,13 +1,22 @@
 <script type="text/babel">
     import imgStream from "component/imgStream"
+    import magnifier from "component/magnifier"
     export default {
+      data() {
+        return {
+          imgMagnifier: {
+            src: ""
+          }
+        }
+      },
       computed: {
         serverUrl() {
           return this.$store.state.serverUrl
         }
       },
       components: {
-        imgStream
+        imgStream,
+        magnifier
       }
     }
 </script>
@@ -19,10 +28,12 @@
             <el-card class="msg">检测结果：</el-card>
         </div>
         <div class="middle-img-col col">
-            <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            <magnifier :imgMagnifier="imgMagnifier">
+                <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            </magnifier>
         </div>
         <div class="right-img-col col">
-            <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            <imgStream :url="imgMagnifier.src"></imgStream>
             <imgStream class="h280" :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
         </div>
     </div>
