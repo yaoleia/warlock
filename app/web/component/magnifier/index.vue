@@ -16,6 +16,9 @@
       .img {
         pointer-events: none;
       }
+      .filter {
+        filter: grayscale(30%) brightness(70%);
+      }
       .area {
         position: absolute;
         left: 0;
@@ -23,8 +26,10 @@
         width: 100px;
         height: 100px;
         border-radius: 2px;
-        background: rgba(0, 0, 235, 0.2);
-        transition: left 0.1s, top 0.1s;
+        background-color: rgba(0, 0, 235, 0.2);
+        background-repeat: no-repeat;
+        filter: brightness(110%);
+        // transition: left 0.02s, top 0.02s;
         & > i {
           position: absolute;
           right: 0;
@@ -71,11 +76,15 @@
       props: {
         imgMagnifier: {
           required: false
+        },
+        pic: {
+          required: false
         }
       },
       methods: {
         close() {
           $(this.$refs.area).addClass("visibilityh")
+          $(".img", this.$el).removeClass("filter")
           this.$nextTick(() => {
             this.imgMagnifier.src = ""
           })
@@ -92,6 +101,10 @@
           this.mouse = { e, $areaw, $areah, $eltop, $elleft, $elw, $elh, $area }
           this.canMove = true
           $(this.$refs.area).removeClass("visibilityh")
+          $(".img", this.$el).addClass("filter")
+          $(this.$refs.area).css({
+            backgroundSize: `${$elw}px ${$elh}px`
+          })
           this.move()
         },
         mousemove(e) {
@@ -118,6 +131,9 @@
           if (top > $elh - $areah) {
             top = $elh - $areah
           }
+          $(this.$refs.area).css({
+            backgroundPosition: `-${left}px -${top}px`
+          })
           $($area).css({ left, top })
         },
         getArea() {
@@ -224,7 +240,9 @@
           this.imouse.e = e
         }
       },
-      mounted() {},
+      mounted() {
+        this.$refs.area.style.backgroundImage = `url(${this.pic})`
+      },
       watch: {
         "mouse.e": async function(e) {
           if (this.timer) {
@@ -233,7 +251,12 @@
           this.timer = setTimeout(() => {
             this.getArea()
             this.timer = null
-          }, 600)
+          }, 200)
+        },
+        pic: {
+          handler: function(p) {
+            this.$refs.area.style.backgroundImage = `url(${p})`
+          }
         }
       }
     }

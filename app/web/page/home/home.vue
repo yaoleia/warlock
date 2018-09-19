@@ -52,7 +52,7 @@
           let ws = io(`/`)
 
           ws.on("connect", () => {
-            console.log(`websocket successfully connected ${self.shopId}`)
+            console.log(`websocket successfully connected !`)
           })
           ws.on("new", msg => {
             if (msg.data.shop_id == self.shopId) {

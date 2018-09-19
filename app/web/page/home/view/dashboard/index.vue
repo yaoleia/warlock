@@ -6,12 +6,45 @@
         return {
           imgMagnifier: {
             src: ""
-          }
+          },
+          opts: {}
         }
       },
       computed: {
         serverUrl() {
           return this.$store.state.serverUrl
+        }
+      },
+      beforeMount() {
+        // 只会在浏览器执行
+        // this.$options.components.webcam = () => import("component/webcam")
+      },
+      methods: {
+        resize() {
+          if (window.innerWidth < 1440) {
+            this.opts = {
+              width: 320,
+              height: 240,
+              dest_width: 320,
+              dest_height: 240,
+              crop_width: 320,
+              crop_height: 213
+            }
+          } else {
+            this.opts = {}
+          }
+        }
+      },
+      activated() {
+        let video = document.querySelectorAll("video")[0]
+        if (video) {
+          video.play()
+        }
+      },
+      mounted() {
+        this.resize()
+        window.onresize = () => {
+          this.resize()
         }
       },
       components: {
@@ -28,12 +61,15 @@
             <el-card class="msg">检测结果：</el-card>
         </div>
         <div class="middle-img-col col">
-            <magnifier :imgMagnifier="imgMagnifier">
+            <magnifier :imgMagnifier="imgMagnifier" :pic="`/api/proxyurl?url=${serverUrl}video_feed`">
                 <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
             </magnifier>
         </div>
         <div class="right-img-col col">
             <imgStream :url="imgMagnifier.src"></imgStream>
+            <!-- <el-card class="img-stream h280">
+                <webcam :opts="opts"></webcam>
+            </el-card> -->
             <imgStream class="h280" :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
         </div>
     </div>
@@ -68,6 +104,7 @@
           }
         }
         &.right-img-col {
+          position: relative;
           .img-stream {
             height: 420px;
           }

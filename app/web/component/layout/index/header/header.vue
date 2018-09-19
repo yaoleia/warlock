@@ -1,5 +1,6 @@
 <template>
     <header class="header">
+        <img src="~asset/images/logo_nav.png" class="logo">
         <slot></slot>
         <div class="right">
             <el-dropdown>
@@ -53,8 +54,6 @@
           window.location.replace("/login")
         }
       },
-      mounted: function() {
-        
-      }
+      mounted: function() {}
     }
 </script>
