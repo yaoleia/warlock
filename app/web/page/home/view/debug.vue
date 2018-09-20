@@ -6,8 +6,8 @@
                 <el-tab-pane label="主摄像机" name="main"></el-tab-pane>
                 <el-tab-pane label="辅助摄像机" name="assist"></el-tab-pane>
             </el-tabs>
-            <imgStream v-if="activeName=='main'" class="" :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
-            <imgStream v-if="activeName=='assist'" class="h280" :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            <imgStream v-if="activeName=='main'" class="" :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
+            <imgStream v-if="activeName=='assist'" class="h280" :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
         </div>
     </div>
 </template>

@@ -1,10 +1,11 @@
 'use strict';
 const path = require('path');
 const fs = require('fs');
+const env = process.env;
 module.exports = app => {
-    const exports = {};
-    
-	exports.serverUrl = "http://0.0.0.0:5000/"
+	const exports = {};
+
+	exports.serverUrl = env.SERVER_URL || "http://127.0.0.1:5000";
 
 	exports.io = {
 		namespace: {
@@ -63,7 +64,7 @@ module.exports = app => {
 		},
 		xframe: {
 			enable: false,
-		},
+		}
 	};
 
 	return exports;

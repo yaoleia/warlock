@@ -56,13 +56,13 @@
 <template>
     <div class="dashboard">
         <div class="left-img-col col">
-            <imgStream class="h280" :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
-            <imgStream class="h280" :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            <imgStream class="h280" :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
+            <imgStream class="h280" :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
             <el-card class="msg">检测结果：</el-card>
         </div>
         <div class="middle-img-col col">
-            <magnifier :imgMagnifier="imgMagnifier" :pic="`/api/proxyurl?url=${serverUrl}video_feed`">
-                <imgStream :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            <magnifier :imgMagnifier="imgMagnifier" :pic="`/api/proxyurl?url=${serverUrl}/video_feed`">
+                <imgStream :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
             </magnifier>
         </div>
         <div class="right-img-col col">
@@ -70,7 +70,7 @@
             <!-- <el-card class="img-stream h280">
                 <webcam :opts="opts"></webcam>
             </el-card> -->
-            <imgStream class="h280" :url="`/api/proxyurl?url=${serverUrl}video_feed`"></imgStream>
+            <imgStream class="h280" :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
         </div>
     </div>
 </template>

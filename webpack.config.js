@@ -31,10 +31,6 @@ module.exports = {
 			}]
 		}]
 	},
-	compile: {
-		thread: true, // 多进程编译
-		cache: true // 启动编译缓存
-	},
 	dll: ['vue', 'axios', 'vue-router', 'vuex', 'vuex-router-sync'],
 	loaders: {
 		scss: true
