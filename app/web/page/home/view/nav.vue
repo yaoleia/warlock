@@ -10,7 +10,7 @@
             <el-menu-item index="/">主页</el-menu-item>
             <el-menu-item index="/list">历史记录</el-menu-item>
             <el-menu-item index="/debug">参数调试</el-menu-item>
-            <el-menu-item index="/help">帮助</el-menu-item>
+            <!-- <el-menu-item index="/help">帮助</el-menu-item> -->
         </el-menu>
     </div>
 </template>

@@ -1,8 +1,9 @@
 module.exports = app => {
-	return function* (next) {
-        console.log(this.io)
+	return async function (ctx, next) {
+        // ctx.socket.join(room);
+        // let nsp = app.io.of('/')
 		// this.socket.emit('res', 'connected!');
-		yield* next;
+		await next();
 		// execute when disconnect.
 		console.log('disconnection!');
 	};
