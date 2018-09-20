@@ -136,9 +136,9 @@
 </script>
 <style lang="scss">
     .header-btns {
-      background: #3c8dbc;
-      width: 200px;
-      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.06);
+      width: 240px;
+      border-radius: 8px;
       .el-submenu__title {
         color: #fff;
       }
@@ -147,10 +147,10 @@
       }
       .el-menu-item:focus,
       .el-menu-item:hover {
-        background: #70a1d4;
+        background: #222;
       }
       .el-submenu__title:hover {
-        background-color: #3c8dbc;
+        background: rgba(255, 255, 255, 0.06);
       }
       .el-submenu__title i {
         color: #fff;

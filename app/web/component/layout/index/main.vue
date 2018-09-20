@@ -9,10 +9,10 @@
 <style lang='less'>
     #app {
       height: 100%;
+      background-image: linear-gradient(to bottom, #2d2d2d, #252121);
     }
     html,
     body {
-      min-width: 1200px;
       overflow: auto;
     }
     .main {
@@ -28,15 +28,14 @@
       }
 
       .app-body {
+        box-sizing: border-box;
         width: 100%;
-        height: calc(~"100% - 50px");
-        position: absolute;
-        left: 0;
-        top: 50px;
+        height: calc(~"100% - 120px");
+        padding-top: 20px;
         overflow: auto;
+        background-image: linear-gradient(to bottom, #2d2d2d, #252121);
       }
       .main-container {
-        margin: 0 auto;
         height: 100%;
       }
     }

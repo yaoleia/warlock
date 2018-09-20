@@ -18,8 +18,8 @@
                 <el-button class="add-button" type="success" @click="write()">写文章</el-button>
             </el-row>
         </div>
-        <el-table :data="articleList" v-loading="loading" element-loading-text="拼命加载中" border style="width: 100%;">
-            <el-table-column type="index" width="55" :index="indexMethod" label="序号">
+        <el-table stripe :data="articleList" v-loading="loading" element-loading-text="拼命加载中" border style="width: 100%;">
+            <el-table-column type="index" width="55" :index="indexMethod">
             </el-table-column>
             <el-table-column prop="title" label="二维码ID">
                 <template slot-scope="props">
@@ -35,14 +35,14 @@
             </el-table-column>
             <el-table-column prop="hits" label="时间">
             </el-table-column>
-            <el-table-column label="操作" width="180">
+            <!-- <el-table-column label="操作" width="180">
                 <template slot-scope="props">
                     <router-link :to="{params: {id: props.row.id}}" tag="span">
                         <el-button type="info" size="small" icon="edit" @click="handleEdit(props.$index, props.row)">修改</el-button>
                     </router-link>
                     <el-button type="danger" size="small" icon="delete" @click="handleDelete(props.$index, props.row)">删除</el-button>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
         </el-table>
         <el-pagination class="pager" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="q.pageIndex" :page-sizes="[10, 15, 20, 50]" :page-size="q.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
@@ -59,6 +59,25 @@
       .pager {
         display: table;
         margin: 30px auto;
+      }
+      .el-table,
+      .el-table__expanded-cell {
+        background: none;
+      }
+      .el-table th,
+      .el-table tr {
+        background-color: rgba(255, 255, 255, 0.06);
+      }
+      .el-table--enable-row-hover .el-table__body tr:hover>td {
+          background: none;
+      }
+      .el-table tr {
+          box-sizing: border-box;
+        border: 1px solid #ff8800;
+        cursor: pointer;
+      }
+      .el-table--striped .el-table__body tr.el-table__row--striped td {
+        background: rgba(255, 255, 255, 0.09);
       }
     }
 </style>

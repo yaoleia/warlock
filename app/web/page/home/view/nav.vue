@@ -7,7 +7,7 @@
             <el-button type="text" @click="slider">后退</el-button>
         </div> -->
         <el-menu router :default-active="tabactive" class="el-menu-demo" mode="horizontal">
-            <el-menu-item index="/">主页</el-menu-item>
+            <el-menu-item index="/">首页</el-menu-item>
             <el-menu-item index="/list">历史记录</el-menu-item>
             <el-menu-item index="/debug">参数调试</el-menu-item>
             <!-- <el-menu-item index="/help">帮助</el-menu-item> -->
@@ -38,7 +38,7 @@
     .block {
       padding-right: 30px;
       width: 530px;
-      height: 50px;
+      height: 120px;
       display: flex;
       justify-content: space-around;
       .el-button {
@@ -52,12 +52,11 @@
       }
     }
     .navs-wrap {
+      padding-top: 37px;
       position: absolute;
-      left: 0;
       right: 0;
       top: 0;
       margin: auto;
-      width: 330px;
       display: flex;
     }
     .el-dropdown-menu__item--divided:before,
@@ -67,17 +66,30 @@
     .el-menu--horizontal > .el-submenu .el-submenu__title:hover {
       border-right: none;
       background: none;
-      color: #fff;
+      color: #ff8800;
+      opacity: 1;
     }
     .el-menu--horizontal > .el-menu-item.is-active {
-      color: #fff;
+      color: #ff8800;
       background: none;
-      border-bottom: 2px solid #fff;
+      border-bottom: 2px solid #ff8800;
+      opacity: 1;
     }
     .el-menu--horizontal > .el-menu-item {
-      line-height: 50px;
-      height: 50px;
+      line-height: 30px;
+      height: 33px;
       color: #fff;
+      font-size: 18px;
+      padding: 0;
+      margin-right: 60px;
+      font-weight: lighter;
+      opacity: 0.7;
+      &:last-child {
+        margin-right: 0; 
+      }
+    }
+    .el-menu--horizontal {
+      border: none;
     }
 </style>
 

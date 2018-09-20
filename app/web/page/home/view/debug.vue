@@ -15,23 +15,37 @@
     .debug {
       margin: 0 auto;
       padding-top: 30px;
-      width: 1440px;
+      width: 1420px;
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
       .header-btns {
         height: auto;
         margin-right: 100px;
       }
       .right-content {
-        width: 900px;
-        height: 600px;
+        width: 1100px;
+        height: 730px;
         .el-tabs__nav-wrap {
-            height: 40px;
+          height: 40px;
         }
         .img-stream {
-          width: 780px;
-          height: 520px;
+          width: 1002px;
+          height: 668px;
         }
+      }
+      .el-tabs__item {
+        color: #fff;
+        opacity: 0.7;
+      }
+      .el-tabs__item.is-active {
+        color: #ff8800;
+        opacity: 1;
+      }
+      .el-tabs__active-bar {
+        background-color: #ff8800;
+      }
+      .el-tabs__nav-wrap::after {
+          background: none;
       }
     }
 </style>

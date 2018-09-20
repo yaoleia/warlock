@@ -1,19 +1,15 @@
 .header {
-	width: 100%;
+    max-width: 1900px;
+    margin: 0 auto;
 	position: relative;
-	height: 50px;
-	background-color: #3c8dbc;
+	height: 120px;
 	z-index: 10;
 
 	.logo {
 		.min {
 			display: none;
         }
-        filter: invert(100%) Brightness(200%);
-        margin: 10px 0 0 55px;
-		height: 35px;
 		text-align: center;
-		line-height: 50px;
 		color: #fff;
 		-webkit-transition: width 0.35s;
 		transition: width 0.35s;

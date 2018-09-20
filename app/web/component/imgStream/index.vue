@@ -1,7 +1,7 @@
 <template>
     <el-card class="img-stream" :class="{visibility:!show}">
+        <p class="title" v-if="title">{{title}}</p>
         <img :src="url" class="img" @load="loaded" v-if="url">
-        <p class="msg" v-else>放大区域</p>
     </el-card>
 </template>
 <style lang="scss">
@@ -23,16 +23,16 @@
         vertical-align: top;
       }
       .msg {
-          position: absolute;
-          left: 0;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          margin: auto;
-          height: 30px;
-          line-height: 30px;
-          text-align: center;
-          color: #ccc;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        color: #ccc;
       }
     }
     .visibility {
@@ -46,7 +46,7 @@
           show: false
         }
       },
-      props: ["url"],
+      props: ["url", "title"],
       components: {},
       mounted() {},
       methods: {
