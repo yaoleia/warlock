@@ -44,6 +44,12 @@
       beforeDestroy() {
         this.uninit()
       },
+      watch: {
+        options() {
+          this.uninit()
+          this.init()
+        }
+      },
       methods: {
         init() {
           Webcam.reset()

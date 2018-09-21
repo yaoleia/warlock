@@ -1,28 +1,5 @@
 <template>
     <div class="header-btns">
-        <!-- <el-dropdown trigger="click" @command="handleCommand1">
-            <span class="el-dropdown-link">
-                硬件
-                <i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="main">主摄像机</el-dropdown-item>
-                <el-dropdown-item command="assist">辅助摄像机</el-dropdown-item>
-                <el-dropdown-item command="light">光源</el-dropdown-item>
-                <el-dropdown-item command="laser">激光触发</el-dropdown-item>
-            </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown trigger="click">
-            <span class="el-dropdown-link">
-                算法
-                <i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>差分</el-dropdown-item>
-                <el-dropdown-item>检测</el-dropdown-item>
-            </el-dropdown-menu>
-        </el-dropdown> -->
-
         <el-menu class="el-menu-vertical-demo" @select='handleCommand1'>
             <el-submenu index="1">
                 <template slot="title">
@@ -159,11 +136,24 @@
 </script>
 <style lang="scss">
     .header-btns {
-      .el-dropdown {
-        line-height: 50px;
-        margin: 0 30px;
-        cursor: pointer;
-        color: #000;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      .el-submenu__title {
+        color: #fff;
+      }
+      .el-menu-item {
+        color: #fff;
+      }
+      .el-menu-item:focus,
+      .el-menu-item:hover {
+        background: #222;
+      }
+      .el-submenu__title:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .el-submenu__title i {
+        color: #fff;
+        font-weight: bold;
       }
     }
 </style>

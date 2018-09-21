@@ -9,18 +9,19 @@
     .min {
       display: none;
     }
-    width: 230px;
-    height: 50px;
+    filter: invert(100%) Brightness(200%);
+    margin: 10px 0 0 55px;
+    height: 35px;
     text-align: center;
     line-height: 50px;
     color: #fff;
-    background-color: #367fa9;
     -webkit-transition: width 0.35s;
     transition: width 0.35s;
   }
   .right {
     position: absolute;
     right: 0;
+    top: 0;
   }
   .header-btn {
     .el-badge__content {

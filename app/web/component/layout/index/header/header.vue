@@ -1,7 +1,8 @@
 <template>
     <header class="header">
+        <img src="~asset/images/logo_@2x.png" class="logo">
         <slot></slot>
-        <div class="right">
+        <!-- <div class="right">
             <el-dropdown>
                 <span class="header-btn">
                     Index
@@ -12,27 +13,22 @@
                     <el-dropdown-item @click.native="logout">退出系统</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-        </div>
+        </div> -->
     </header>
 </template>
 <style lang="scss">
-    .sidebar-hidden {
-      .header {
-        .logo {
-          .big {
-            display: none;
-          }
-          .min {
-            display: block;
-          }
-          width: 64px;
+    .header {
+      .logo {
+        width: 180px;
+        .big {
+          display: none;
+        }
+        .min {
+          display: block;
         }
       }
-
-      .app-body {
-        margin-left: 80px;
-      }
     }
+   
 </style>
 <script type="babel">
     import "./header.scss"
@@ -53,8 +49,6 @@
           window.location.replace("/login")
         }
       },
-      mounted: function() {
-        
-      }
+      mounted: function() {}
     }
 </script>

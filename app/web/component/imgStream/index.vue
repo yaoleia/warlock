@@ -1,14 +1,18 @@
 <template>
     <el-card class="img-stream" :class="{visibility:!show}">
-        <img :src="url" class="img" @load="loaded">
+        <p class="title" v-if="title">{{title}}</p>
+        <img :src="url" class="img" @load="loaded" v-if="url">
     </el-card>
 </template>
 <style lang="scss">
     .img-stream {
       box-sizing: border-box;
+      position: relative;
       width: 100%;
       height: 100%;
-      padding: 5px;
+      &.el-card {
+        border: none;
+      }
       .el-card__body {
         padding: 0;
         height: 100%;
@@ -18,9 +22,21 @@
         height: 100%;
         vertical-align: top;
       }
+      .msg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        color: #ccc;
+      }
     }
     .visibility {
-    //   visibility: hidden;
+      //   visibility: hidden;
     }
 </style>
 <script type="text/babel">
@@ -30,12 +46,12 @@
           show: false
         }
       },
-      props: ["url"],
+      props: ["url", "title"],
       components: {},
       mounted() {},
       methods: {
         loaded() {
-            this.show = true
+          this.show = true
         }
       }
     }

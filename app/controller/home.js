@@ -38,7 +38,7 @@ module.exports = app => {
 				num: data.b
 			}))
 			let resp = await new Promise((resolve, reject) => {
-				form.submit(`${serverUrl}USBCam_exposure`, function (err, res) {
+				form.submit(`${serverUrl}/USBCam_exposure`, function (err, res) {
 					resolve(res)
 				});
 			})
@@ -54,7 +54,7 @@ module.exports = app => {
 					num: data.b
 				}))
 				respb = new Promise((resolve, reject) => {
-					formb.submit(`${serverUrl}mainCam_exposure`, function (err, res) {
+					formb.submit(`${serverUrl}/mainCam_exposure`, function (err, res) {
 						resolve(res)
 					});
 				})
@@ -66,7 +66,7 @@ module.exports = app => {
 					num: data.z
 				}))
 				respz = new Promise((resolve, reject) => {
-					formz.submit(`${serverUrl}mainCam_gain`, function (err, res) {
+					formz.submit(`${serverUrl}/mainCam_gain`, function (err, res) {
 						resolve(res)
 					});
 				})
@@ -78,7 +78,7 @@ module.exports = app => {
 					num: data.g
 				}))
 				respg = new Promise((resolve, reject) => {
-					formg.submit(`${serverUrl}mainCam_gamma`, function (err, res) {
+					formg.submit(`${serverUrl}/mainCam_gamma`, function (err, res) {
 						resolve(res)
 					});
 				})
@@ -98,7 +98,7 @@ module.exports = app => {
 					num: data.l
 				}))
 				respl = new Promise((resolve, reject) => {
-					forml.submit(`${serverUrl}lightBright`, function (err, res) {
+					forml.submit(`${serverUrl}/lightBright`, function (err, res) {
 						resolve(res)
 					});
 				})
@@ -107,7 +107,7 @@ module.exports = app => {
 				let formon = new FormData()
 				formon.append("data", data.on)
 				respon = new Promise((resolve, reject) => {
-					formon.submit(data.on == "1" ? `${serverUrl}lightOn` : `${serverUrl}lightOff`, function (err, res) {
+					formon.submit(data.on == "1" ? `${serverUrl}/lightOn` : `${serverUrl}/lightOff`, function (err, res) {
 						resolve(res)
 					});
 				})
@@ -122,11 +122,11 @@ module.exports = app => {
 			let form = new FormData()
 			let url = '';
 			if (data.t == "1") {
-				url = `${serverUrl}ModeLaserTrigger`
+				url = `${serverUrl}/ModeLaserTrigger`
 			} else if (data.t == "2") {
-				url = `${serverUrl}ModeRandomTrigger`
+				url = `${serverUrl}/ModeRandomTrigger`
 			} else if (data.t == "3") {
-				url = `${serverUrl}ModeManualTrigger`
+				url = `${serverUrl}/ModeManualTrigger`
 			}
 			form.append("data", 0)
 			let resp = await new Promise((resolve, reject) => {
@@ -142,7 +142,7 @@ module.exports = app => {
 			let form = new FormData()
 			form.append("data", 0)
 			let resp = await new Promise((resolve, reject) => {
-				form.submit(`${serverUrl}LaserTriggerTriggerOnce`, function (err, res) {
+				form.submit(`${serverUrl}/LaserTriggerTriggerOnce`, function (err, res) {
 					resolve(res)
 				});
 			})
