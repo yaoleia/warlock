@@ -1,6 +1,7 @@
 <script type="text/babel">
     import imgStream from "component/imgStream"
     import magnifier from "component/magnifier"
+    import $ from "jquery"
     export default {
       data() {
         return {
@@ -8,7 +9,8 @@
             src: ""
           },
           opts: {},
-          msg: {}
+          msg: {},
+          tagRadio: "1"
         }
       },
       computed: {
@@ -75,6 +77,10 @@
           window.ws.emit("chat", "get")
           window.ws.on("msg", m => {
             self.msg = m
+            $(".middle-img-col .img-stream", this.$el)
+              .stop()
+              .fadeOut(500)
+              .fadeIn(500)
           })
         })
       },
@@ -92,8 +98,12 @@
         </div>
         <div class="middle-img-col col">
             <p class="title">检测结果</p>
+            <!-- <el-radio-group v-model="tagRadio" size="small">
+                <el-radio-button label="1">原图</el-radio-button>
+                <el-radio-button label="2">标记</el-radio-button>
+            </el-radio-group> -->
             <magnifier :imgMagnifier="imgMagnifier" :pic="msg.sem_diff_path?`/img/${msg.sem_diff_path}`:''">
-                <img class="img-big" :src="`/img/2.jpg`">
+                <img class="img-big" v-if="msg.sem_diff_path" :src="msg.sem_diff_path?`/img/2.jpg`:''">
                 <imgStream :url="msg.sem_diff_path?`/img/${msg.sem_diff_path}`:''"></imgStream>
             </magnifier>
         </div>
@@ -171,7 +181,8 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            z-index: -2;
+            left: 0;
+            top: 0;
           }
         }
         &.right-img-col {

@@ -84,7 +84,7 @@
       methods: {
         close() {
           $(this.$refs.area).addClass("visibilityh")
-          $(".img", this.$el).removeClass("filter")
+          $(".img,.img-big", this.$el).removeClass("filter")
           this.$nextTick(() => {
             this.imgMagnifier.src = ""
           })
@@ -101,7 +101,7 @@
           this.mouse = { e, $areaw, $areah, $eltop, $elleft, $elw, $elh, $area }
           this.canMove = true
           $(this.$refs.area).removeClass("visibilityh")
-          $(".img", this.$el).addClass("filter")
+          $(".img,.img-big", this.$el).addClass("filter")
           $(this.$refs.area).css({
             backgroundSize: `${$elw}px ${$elh}px`
           })
