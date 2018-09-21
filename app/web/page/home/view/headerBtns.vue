@@ -137,7 +137,6 @@
 <style lang="scss">
     .header-btns {
       background: rgba(255, 255, 255, 0.06);
-      width: 240px;
       border-radius: 8px;
       .el-submenu__title {
         color: #fff;

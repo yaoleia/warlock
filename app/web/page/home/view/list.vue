@@ -50,8 +50,10 @@
 </template>
 <style lang="scss">
     .history-list {
+      width: 1900px;
       min-height: 600px;
-      padding: 30px 30px 0;
+      padding: 30px 0 0;
+      margin: 0 auto;
       .el-table {
         margin-top: 30px;
         min-height: 500px;
@@ -68,17 +70,22 @@
       .el-table tr {
         background-color: rgba(255, 255, 255, 0.06);
       }
-      .el-table--enable-row-hover .el-table__body tr:hover>td {
-          background: none;
+      .el-table--enable-row-hover .el-table__body tr:hover > td {
+        background: none;
       }
       .el-table tr {
-          box-sizing: border-box;
+        box-sizing: border-box;
         border: 1px solid #ff8800;
         cursor: pointer;
       }
       .el-table--striped .el-table__body tr.el-table__row--striped td {
         background: rgba(255, 255, 255, 0.09);
       }
+    }
+    @media screen and (max-width: 1920px) {
+        .history-list {
+            width: 1420px;
+        }
     }
 </style>
 <script type="babel">
