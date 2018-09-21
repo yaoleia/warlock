@@ -7,12 +7,36 @@
           imgMagnifier: {
             src: ""
           },
-          opts: {}
+          opts: {},
+          msg: {}
         }
       },
       computed: {
         serverUrl() {
           return this.$store.state.serverUrl
+        },
+        ifOk() {
+          let type = this.msg.defect_type
+          if (type) {
+            return "NG"
+          }
+          if (type === 0) {
+            return "OK"
+          }
+          return ""
+        },
+        defectType() {
+          let type = this.msg.defect_type
+          if (type === 0) {
+            return "无缺陷"
+          }
+          if (type === 1) {
+            return "多螺丝"
+          }
+          if (type === 2) {
+            return "少螺丝"
+          }
+          return ""
         }
       },
       beforeMount() {
@@ -43,12 +67,14 @@
       },
       mounted() {
         this.resize()
+        let self = this
         window.onresize = () => {
           this.resize()
         }
         this.$nextTick(() => {
+          window.ws.emit("chat", "get")
           window.ws.on("msg", m => {
-            console.log(m)
+            self.msg = m
           })
         })
       },
@@ -62,12 +88,13 @@
     <div class="dashboard">
         <div class="left-img-col col">
             <imgStream class="mb30" title="拍摄原图" :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
-            <imgStream class="" title="目标定位" :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
+            <imgStream class="" title="目标定位" :url="msg.seg_img_path?`/img/${msg.seg_img_path}`:''"></imgStream>
         </div>
         <div class="middle-img-col col">
             <p class="title">检测结果</p>
-            <magnifier :imgMagnifier="imgMagnifier" :pic="`/api/proxyurl?url=${serverUrl}/video_feed`">
-                <imgStream :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
+            <magnifier :imgMagnifier="imgMagnifier" :pic="msg.sem_diff_path?`/img/${msg.sem_diff_path}`:''">
+                <img class="img-big" :src="`/img/2.jpg`">
+                <imgStream :url="msg.sem_diff_path?`/img/${msg.sem_diff_path}`:''"></imgStream>
             </magnifier>
         </div>
         <div class="right-img-col col">
@@ -77,6 +104,9 @@
             </el-card> -->
             <el-card class="msg mb30">
                 <p class="title">检测结果详情</p>
+                <span>{{msg.dm_code}}</span><br>
+                <span>{{ifOk}}</span>
+                <span>{{defectType}}</span>
             </el-card>
             <imgStream title="监控" class="" :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
         </div>
@@ -137,6 +167,12 @@
             padding: 0;
             border-radius: 12px;
           }
+          .img-big {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+          }
         }
         &.right-img-col {
           width: 520px;
@@ -150,11 +186,21 @@
           .msg {
             position: relative;
             border: 0;
-            padding: 66px 60px 60px;
+            padding: 66px 60px 0;
             background: rgba(255, 255, 255, 0.06);
             border-radius: 18px;
             height: 144px;
             width: 100%;
+            .el-card__body {
+              padding: 0;
+              color: #dbdbdb;
+              font-size: 15px;
+              line-height: 24px;
+              padding-left: 5px;
+              span {
+                margin: 0 30px 0 0;
+              }
+            }
           }
         }
       }

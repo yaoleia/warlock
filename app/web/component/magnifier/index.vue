@@ -146,7 +146,7 @@
           this.cutPic(this.cut)
         },
         async cutPic(opt) {
-          let img = $(".img", this.$el)[0]
+          let img = $(".img-big", this.$el)[0]
           let scaleX = img.naturalWidth / img.clientWidth
           let scaleY = img.naturalHeight / img.clientHeight
           let src = await this.cutImg(

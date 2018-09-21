@@ -13,7 +13,7 @@
                     <el-option v-for="item in status" :key="item.id" :label="item.name" :value="item.status">
                     </el-option>
                 </el-select> -->
-            <el-date-picker v-model="q.dateRange" type="datetimerange" :picker-options="pickerOptions" start-placeholder="开始时间" end-placeholder="结束时间" align="left">
+            <el-date-picker v-model="q.dateRange" type="datetimerange" :picker-options="pickerOptions" start-placeholder="开始时间" end-placeholder="结束时间" align="left" value-format="timestamp">
             </el-date-picker>
             <el-button class="search-button" type="text" @click="query()">查询</el-button>
             <!-- <el-button class="add-button" type="success" @click="write()">写文章</el-button> -->
@@ -226,6 +226,7 @@
       }
       .el-table th {
         background: rgba($color: #ff8800, $alpha: 0.3);
+        text-align: center;
       }
       .el-table tr {
         background-color: rgba(255, 255, 255, 0.06);
@@ -249,6 +250,7 @@
       }
       .el-table td {
         padding: 4px 0;
+        text-align: center;
       }
       .el-button--text:focus,
       .el-button--text:hover {
