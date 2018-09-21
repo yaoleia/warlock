@@ -4,7 +4,7 @@ module.exports = class Query {
     this.orderByField = 'createTime';
     this.orderBy = 'desc';
     this._pageIndex = 1;
-    this._pageSize = 10;
+    this._pageSize = 20;
     this.where = new Proxy({}, {
       set(target, key, value, proxy) {
         if (value === undefined) {

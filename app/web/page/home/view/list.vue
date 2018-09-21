@@ -15,16 +15,13 @@
                     </el-option>
                 </el-select>
                 <el-button class="search-button" type="primary" @click="query()">查询</el-button>
-                <el-button class="add-button" type="success" @click="write()">写文章</el-button>
+                <!-- <el-button class="add-button" type="success" @click="write()">写文章</el-button> -->
             </el-row>
         </div>
-        <el-table stripe :data="articleList" v-loading="loading" element-loading-text="拼命加载中" border style="width: 100%;">
+        <el-table stripe :data="articleList" v-loading="loading" element-loading-text="拼命加载中" height="650">
             <el-table-column type="index" width="55" :index="indexMethod">
             </el-table-column>
-            <el-table-column prop="title" label="二维码ID">
-                <template slot-scope="props">
-                    <router-link :to="'/article/detail/'+ props.row.id">{{props.row.title}}</router-link>
-                </template>
+            <el-table-column prop="title" label="二维码ID" width="355">
             </el-table-column>
             <el-table-column prop="hits" label="OK/NG">
             </el-table-column>
@@ -35,16 +32,17 @@
             </el-table-column>
             <el-table-column prop="hits" label="时间">
             </el-table-column>
-            <!-- <el-table-column label="操作" width="180">
+            <el-table-column label="操作">
                 <template slot-scope="props">
-                    <router-link :to="{params: {id: props.row.id}}" tag="span">
+                    <!-- <router-link :to="{params: {id: props.row.id}}" tag="span">
                         <el-button type="info" size="small" icon="edit" @click="handleEdit(props.$index, props.row)">修改</el-button>
                     </router-link>
-                    <el-button type="danger" size="small" icon="delete" @click="handleDelete(props.$index, props.row)">删除</el-button>
+                    <el-button type="danger" size="small" icon="delete" @click="handleDelete(props.$index, props.row)">删除</el-button> -->
+                    <el-button type="text" icon="delete" @click="handleDelete(props.$index, props.row)">查看</el-button>
                 </template>
-            </el-table-column> -->
+            </el-table-column>
         </el-table>
-        <el-pagination class="pager" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="q.pageIndex" :page-sizes="[10, 15, 20, 50]" :page-size="q.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        <el-pagination background class="pager" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="q.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="q.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
     </div>
 </template>
@@ -56,36 +54,98 @@
       margin: 0 auto;
       .el-table {
         margin-top: 30px;
-        min-height: 500px;
+        min-height: 650px;
       }
       .pager {
-        display: table;
-        margin: 30px auto;
+        margin: 30px 0;
+        text-align: right;
+        .el-input__inner {
+          background: rgba($color: #fff, $alpha: 0.1);
+          border: none;
+          color: #dbdbdb;
+        }
+      }
+      .el-pagination.is-background .el-pager li:not(.disabled).active {
+        background: rgba($color: #fff, $alpha: 0.1);
+        color: #ff8800;
+        box-shadow: 0 0 0 1px #ff8800;
+      }
+      .el-pagination.is-background .el-pager li:not(.disabled):hover {
+        color: #ff8800;
+      }
+      .el-pagination.is-background .btn-next,
+      .el-pagination.is-background .btn-prev,
+      .el-pagination.is-background .el-pager li {
+        color: #dbdbdb;
+        background: rgba($color: #fff, $alpha: 0.1);
+      }
+      .el-pagination.is-background .btn-next.disabled,
+      .el-pagination.is-background .btn-next:disabled,
+      .el-pagination.is-background .btn-prev.disabled,
+      .el-pagination.is-background .btn-prev:disabled,
+      .el-pagination.is-background .el-pager li.disabled {
+        color: #777;
+      }
+
+      .el-table thead,
+      .el-table tbody {
+        color: #dbdbdb;
       }
       .el-table,
       .el-table__expanded-cell {
         background: none;
+        border-radius: 18px;
       }
-      .el-table th,
+      .el-table th {
+        background: rgba($color: #ff8800, $alpha: 0.3);
+      }
       .el-table tr {
         background-color: rgba(255, 255, 255, 0.06);
       }
       .el-table--enable-row-hover .el-table__body tr:hover > td {
         background: none;
+        &:nth-child(1) {
+          border-left: 1px solid #ff8800;
+        }
+        &:last-child {
+          border-right: 1px solid #ff8800;
+        }
+      }
+      .el-table--enable-row-hover .el-table__body tr:hover {
+        box-shadow: 0 0 0 1px #ff8800;
+      }
+      .el-table--border::after,
+      .el-table--group::after,
+      .el-table::before {
+        background: none;
+      }
+      .el-table td {
+        padding: 4px 0;
+      }
+      .el-button--text:focus,
+      .el-button--text:hover {
+        color: #ff8800;
+      }
+      .el-button--text {
+        color: #dbdbdb;
+      }
+      .el-table--border,
+      .el-table--group,
+      .el-table td,
+      .el-table th.is-leaf {
+        border: none;
       }
       .el-table tr {
         box-sizing: border-box;
-        border: 1px solid #ff8800;
-        cursor: pointer;
       }
       .el-table--striped .el-table__body tr.el-table__row--striped td {
         background: rgba(255, 255, 255, 0.09);
       }
     }
     @media screen and (max-width: 1920px) {
-        .history-list {
-            width: 1420px;
-        }
+      .history-list {
+        width: 1420px;
+      }
     }
 </style>
 <script type="babel">
@@ -99,7 +159,7 @@
             categoryId: undefined,
             statusId: undefined,
             pageIndex: 1,
-            pageSize: 10
+            pageSize: 20
           },
           //请求时的loading效果
           loading: false
