@@ -1,5 +1,10 @@
 'use strict';
+const staticServer = require('koa-static')
+const mount = require('koa-mount')
+const path = require('path')
 module.exports = app => {
+  const serve = staticServer(path.join(__dirname, '../images'));
+  app.use(mount('/img', serve));
   const { router, controller } = app;
   router.get('/', controller.home.home);
   router.get('/index(/.+)?', controller.home.home);

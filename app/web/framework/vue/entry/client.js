@@ -4,6 +4,7 @@ import '../filter';
 import '../directive';
 import '../component';
 Vue.use(plugin);
+Vue.config.devtools = true;
 export default function(options) {
   const state = window.__INITIAL_STATE__ || {};
   if (options.store) {
