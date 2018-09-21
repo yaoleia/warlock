@@ -1,8 +1,7 @@
 <template>
     <div class="history-list">
         <div class="search">
-            <el-row class="clear">
-                <label> 标题:</label>
+            <!-- <label> 标题:</label>
                 <el-input class="search-input" clearable v-model="q.title" placeholder="关键字"></el-input>
                 <label> 分类:</label>
                 <el-select v-model="q.categoryId" placeholder="分类">
@@ -13,10 +12,11 @@
                 <el-select v-model="q.status" placeholder="状态">
                     <el-option v-for="item in status" :key="item.id" :label="item.name" :value="item.status">
                     </el-option>
-                </el-select>
-                <el-button class="search-button" type="primary" @click="query()">查询</el-button>
-                <!-- <el-button class="add-button" type="success" @click="write()">写文章</el-button> -->
-            </el-row>
+                </el-select> -->
+            <el-date-picker v-model="q.dateRange" type="datetimerange" :picker-options="pickerOptions" start-placeholder="开始时间" end-placeholder="结束时间" align="left">
+            </el-date-picker>
+            <el-button class="search-button" type="text" @click="query()">查询</el-button>
+            <!-- <el-button class="add-button" type="success" @click="write()">写文章</el-button> -->
         </div>
         <el-table stripe :data="articleList" v-loading="loading" element-loading-text="拼命加载中" height="650">
             <el-table-column type="index" width="55" :index="indexMethod">
@@ -46,6 +46,119 @@
         </el-pagination>
     </div>
 </template>
+<script type="babel">
+    import { SET_ARTICLE_LIST, DELETE_ARTICLE } from "../store/app/mutation-type"
+    export default {
+      components: {},
+      data() {
+        return {
+          pickerOptions: {
+            shortcuts: [
+              {
+                text: "最近一周",
+                onClick(picker) {
+                  const end = new Date()
+                  const start = new Date()
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+                  picker.$emit("pick", [start, end])
+                }
+              },
+              {
+                text: "最近一个月",
+                onClick(picker) {
+                  const end = new Date()
+                  const start = new Date()
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+                  picker.$emit("pick", [start, end])
+                }
+              },
+              {
+                text: "最近三个月",
+                onClick(picker) {
+                  const end = new Date()
+                  const start = new Date()
+                  start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+                  picker.$emit("pick", [start, end])
+                }
+              }
+            ]
+          },
+          q: {
+            title: undefined,
+            categoryId: undefined,
+            statusId: undefined,
+            pageIndex: 1,
+            pageSize: 20,
+            dateRange: ""
+          },
+          //请求时的loading效果
+          loading: false
+        }
+      },
+      methods: {
+        indexMethod(index) {
+          return (this.q.pageIndex - 1) * this.q.pageSize + index + 1
+        },
+        fetchApi(store, json) {
+          return store.dispatch(SET_ARTICLE_LIST, json)
+        },
+        query() {
+          this.fetchApi(this.$store, this.q)
+        },
+        write() {
+          this.$router.push("/article/add")
+        },
+        handleSelectionChange(val) {
+          console.log("handleSelectionChange", val)
+        },
+        handleSizeChange(val) {
+          console.log(`每页 ${val} 条`)
+          this.q.pageSize = val
+          this.fetchApi(this.$store, this.q)
+        },
+        handleCurrentChange(val) {
+          console.log(`当前页: ${val}`)
+          this.q.pageIndex = val
+          this.fetchApi(this.$store, this.q)
+        },
+        handleEdit(index, row) {
+          this.$message(`你点击了编辑操作 index:${index}, id:${row.id}`)
+        },
+        handleDelete(index, row) {
+          this.$store.dispatch(DELETE_ARTICLE, { id: row.id })
+          this.$message(`删除[${row.title}]成功!`)
+        }
+      },
+      computed: {
+        status() {
+          return [
+            { status: undefined, name: "--请选择--" },
+            { status: 1, name: "已发布" },
+            { status: 2, name: "草稿" }
+          ]
+        },
+        categories() {
+          return [
+            { categoryId: 0, name: "--请选择--" },
+            { categoryId: 1, name: "Nodejs" },
+            { categoryId: 2, name: "Webpack" },
+            { categoryId: 3, name: "Egg" }
+          ]
+        },
+        total() {
+          return this.$store.state.articleTotal
+        },
+        articleList() {
+          return this.$store.state.articleList
+        }
+      },
+      beforeMount() {
+        if (!(this.articleList && this.articleList.length > 0)) {
+          this.fetchApi(this.$store, this.q)
+        }
+      }
+    }
+</script>
 <style lang="scss">
     .history-list {
       width: 1900px;
@@ -55,6 +168,21 @@
       .el-table {
         margin-top: 30px;
         min-height: 650px;
+      }
+      .search {
+        .el-range-editor {
+          border: none;
+        }
+        .el-range-editor .el-range-input {
+          background: none;
+          color: #dbdbdb;
+        }
+        .el-input__inner {
+          background: rgba($color: #fff, $alpha: 0.1);
+        }
+        .el-date-editor .el-range-separator {
+          color: #aaa;
+        }
       }
       .pager {
         margin: 30px 0;
@@ -148,84 +276,3 @@
       }
     }
 </style>
-<script type="babel">
-    import { SET_ARTICLE_LIST, DELETE_ARTICLE } from "../store/app/mutation-type"
-    export default {
-      components: {},
-      data() {
-        return {
-          q: {
-            title: undefined,
-            categoryId: undefined,
-            statusId: undefined,
-            pageIndex: 1,
-            pageSize: 20
-          },
-          //请求时的loading效果
-          loading: false
-        }
-      },
-      methods: {
-        indexMethod(index) {
-          return (this.q.pageIndex - 1) * this.q.pageSize + index + 1
-        },
-        fetchApi(store, json) {
-          return store.dispatch(SET_ARTICLE_LIST, json)
-        },
-        query() {
-          this.fetchApi(this.$store, this.q)
-        },
-        write() {
-          this.$router.push("/article/add")
-        },
-        handleSelectionChange(val) {
-          console.log("handleSelectionChange", val)
-        },
-        handleSizeChange(val) {
-          console.log(`每页 ${val} 条`)
-          this.q.pageSize = val
-          this.fetchApi(this.$store, this.q)
-        },
-        handleCurrentChange(val) {
-          console.log(`当前页: ${val}`)
-          this.q.pageIndex = val
-          this.fetchApi(this.$store, this.q)
-        },
-        handleEdit(index, row) {
-          this.$message(`你点击了编辑操作 index:${index}, id:${row.id}`)
-        },
-        handleDelete(index, row) {
-          this.$store.dispatch(DELETE_ARTICLE, { id: row.id })
-          this.$message(`删除[${row.title}]成功!`)
-        }
-      },
-      computed: {
-        status() {
-          return [
-            { status: undefined, name: "--请选择--" },
-            { status: 1, name: "已发布" },
-            { status: 2, name: "草稿" }
-          ]
-        },
-        categories() {
-          return [
-            { categoryId: 0, name: "--请选择--" },
-            { categoryId: 1, name: "Nodejs" },
-            { categoryId: 2, name: "Webpack" },
-            { categoryId: 3, name: "Egg" }
-          ]
-        },
-        total() {
-          return this.$store.state.articleTotal
-        },
-        articleList() {
-          return this.$store.state.articleList
-        }
-      },
-      beforeMount() {
-        if (!(this.articleList && this.articleList.length > 0)) {
-          this.fetchApi(this.$store, this.q)
-        }
-      }
-    }
-</script>

@@ -46,6 +46,11 @@
         window.onresize = () => {
           this.resize()
         }
+        this.$nextTick(() => {
+          window.ws.on("msg", m => {
+            console.log(m)
+          })
+        })
       },
       components: {
         imgStream,
