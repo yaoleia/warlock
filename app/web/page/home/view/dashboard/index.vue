@@ -5,11 +5,11 @@
     export default {
       data() {
         return {
-          imgMagnifier: {
-            src: ""
-          },
+          productList: [],
           opts: {},
-          msg: {},
+          curProduct: {
+            cutBase64: ""
+          },
           tagRadio: "1"
         }
       },
@@ -18,7 +18,7 @@
           return this.$store.state.serverUrl
         },
         ifOk() {
-          let type = this.msg.defect_type
+          let type = this.curProduct.defect_type
           if (type) {
             return "NG"
           }
@@ -28,7 +28,7 @@
           return ""
         },
         defectType() {
-          let type = this.msg.defect_type
+          let type = this.curProduct.defect_type
           if (type === 0) {
             return "无缺陷"
           }
@@ -63,33 +63,38 @@
         getWsMsg() {
           if (window.ws.connected) {
             this.emitChat()
+          } else {
+            window.ws.on("connect", () => {
+              this.emitChat()
+            })
           }
-          window.ws.on("connect", () => {
-            this.emitChat()
-          })
         },
         emitChat() {
+          let $imgMagnifier = $(".middle-img-col .img-stream:not(.img-big)",this.$el)
           window.ws
             .off("msg")
             .emit("chat", "get")
             .on("msg", m => {
-              this.msg = m
-              $(".middle-img-col .img-stream", this.$el)
+              this.curProduct = { ...this.curProduct, ...m }
+              this.curProduct.seg_img_path = `/img/${this.curProduct.seg_img_path}`
+              this.curProduct.sem_diff_path = `/img/${this.curProduct.sem_diff_path}`
+              this.curProduct.high_diff_path = `/img/2.jpg`
+              $imgMagnifier
                 .stop()
-                .fadeOut(500)
-                .fadeIn(500)
+                .fadeOut(200)
+                .fadeIn(200)
             })
         }
       },
       activated() {
-        this.resize()
-        window.onresize = () => {
-          this.resize()
-        }
-        let video = document.querySelectorAll("video")[0]
-        if (video) {
-          video.play()
-        }
+        // this.resize()
+        // window.onresize = () => {
+        //   this.resize()
+        // }
+        // let video = document.querySelectorAll("video")[0]
+        // if (video) {
+        //   video.play()
+        // }
         this.$nextTick(() => {
           this.getWsMsg()
         })
@@ -104,7 +109,7 @@
     <div class="dashboard">
         <div class="left-img-col col">
             <imgStream class="mb30" title="拍摄原图" :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
-            <imgStream class="" title="目标定位" :url="msg.seg_img_path?`/img/${msg.seg_img_path}`:''"></imgStream>
+            <imgStream title="目标定位" :url="curProduct.seg_img_path"></imgStream>
         </div>
         <div class="middle-img-col col">
             <p class="title">检测结果</p>
@@ -112,19 +117,19 @@
                 <el-radio-button label="1">原图</el-radio-button>
                 <el-radio-button label="2">标记</el-radio-button>
             </el-radio-group> -->
-            <magnifier :imgMagnifier="imgMagnifier" :pic="msg.sem_diff_path?`/img/${msg.sem_diff_path}`:''">
-                <img class="img-big" v-if="msg.sem_diff_path" :src="msg.sem_diff_path?`/img/2.jpg`:''">
-                <imgStream :url="msg.sem_diff_path?`/img/${msg.sem_diff_path}`:''"></imgStream>
+            <magnifier :imgMagnifier="curProduct">
+                <imgStream class="img-big" :url="curProduct.high_diff_path"></imgStream>
+                <imgStream :url="curProduct.sem_diff_path"></imgStream>
             </magnifier>
         </div>
         <div class="right-img-col col">
-            <imgStream class="result mb30" title="局部放大" :url="imgMagnifier.src"></imgStream>
+            <imgStream class="result mb30" title="局部放大" :url="curProduct.cutBase64"></imgStream>
             <!-- <el-card class="img-stream">
                 <webcam :opts="opts"></webcam>
             </el-card> -->
             <el-card class="msg mb30">
                 <p class="title">检测结果详情</p>
-                <span>{{msg.dm_code}}</span><br>
+                <span>{{curProduct.dm_code}}</span><br>
                 <span>{{ifOk}}</span>
                 <span>{{defectType}}</span>
             </el-card>
@@ -188,7 +193,6 @@
             border-radius: 12px;
           }
           .img-big {
-            border-radius: 12px;
             position: absolute;
             width: 100%;
             height: 100%;

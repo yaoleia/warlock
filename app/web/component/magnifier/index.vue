@@ -18,17 +18,14 @@
       props: {
         imgMagnifier: {
           required: false
-        },
-        pic: {
-          required: false
         }
       },
       methods: {
         close() {
           $(this.$refs.area).addClass("visibilityh")
-          $(".img,.img-big", this.$el).removeClass("filter")
+          $(".img", this.$el).removeClass("filter")
           this.$nextTick(() => {
-            this.imgMagnifier.src = ""
+            this.imgMagnifier.cutBase64 = ""
           })
         },
         mousedown(e) {
@@ -47,7 +44,7 @@
             .css({
               backgroundSize: `${$elw}px ${$elh}px`
             })
-          $(".img,.img-big", this.$el).addClass("filter")
+          $(".img", this.$el).addClass("filter")
           this.move()
         },
         mousemove(e) {
@@ -89,17 +86,17 @@
           this.cutPic(this.cut)
         },
         async cutPic(opt) {
-          let img = $(".img-big", this.$el)[0]
+          let img = $(".img-big .img", this.$el)[0]
           let scaleX = img.naturalWidth / img.clientWidth
           let scaleY = img.naturalHeight / img.clientHeight
-          let src = await this.cutImg(
+          let base64 = await this.cutImg(
             img.src,
             opt.left * scaleX,
             opt.top * scaleY,
             opt.width * scaleX,
             opt.height * scaleY
           )
-          this.imgMagnifier.src = src
+          this.imgMagnifier.cutBase64 = base64
         },
         cutImg(imgsrc, x, y, width, height, cutImgType) {
           cutImgType = cutImgType || "image/jpeg"
@@ -176,9 +173,7 @@
           this.cut.height = wh
         }
       },
-      mounted() {
-        this.$refs.area.style.backgroundImage = `url(${this.pic})`
-      },
+      mounted() {},
       watch: {
         "mouse.e": async function(e) {
           if (this.timer) {
@@ -188,12 +183,10 @@
           this.timer = setTimeout(() => {
             this.getArea()
             this.timer = null
-          }, 20)
+          }, 14)
         },
-        pic: {
-          handler: function(p) {
-            this.$refs.area.style.backgroundImage = `url(${p})`
-          }
+        imgMagnifier(i) {
+          this.$refs.area.style.backgroundImage = `url(${i.sem_diff_path})`
         }
       }
     }
