@@ -54,10 +54,16 @@
           this.show = true
         },
         error(e) {
-          let target = e.target
-          if (target.src) {
-            target.src = `${target.src}?t=${Math.random()}`
-          }
+          setTimeout(() => {
+            let url = e.target.src
+            if (url) {
+              let urlSplit = url.split("?")
+              if (urlSplit[2]) {
+                url = url.replace("?" + urlSplit[2], "")
+              }
+              e.target.src = `${url}?t=${Math.random()}`
+            }
+          }, 2000)
         }
       }
     }
