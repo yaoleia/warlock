@@ -4,18 +4,22 @@ const WebSocketClient = WebSocket.client;
 module.exports = app => {
 	return async function () {
 		const message = this.args[0];
+
 		// console.log(this.socket)
 		// wsClient("ws://ws.test.nemoface.com/wsconnect?appkey=3f2cf74b-2228-473e-850d-85d0cc019e18&appsecret=f853f869-594b-4546-8552-65230a33362b&debug=true", this.socket, "ak")
-		// ioClient("http://retail.test.nemoface.com/?ak=3f2cf74b-2228-473e-850d-85d0cc019e18&sk=f853f869-594b-4546-8552-65230a33362b", this.socket, "ak")
-		setInterval(() => {
-			this.socket.emit("msg", {
-				"dm_code": "FJW5675789734WTG",
-				"seg_img_path": "1.jpg",
-				"sem_diff_path": "3.jpg",
-				"defect_type": 0,
-				"timestamp": 15884679942
-			})
-		}, 3000)
+		if (!this.socket.ioClient) {
+			// this.socket.ioClient = ioClient("http://retail.test.nemoface.com/?ak=3f2cf74b-2228-473e-850d-85d0cc019e18&sk=f853f869-594b-4546-8552-65230a33362b", this.socket, "ak");
+			this.socket.ioClient = setInterval(() => {
+				this.socket.emit("msg", {
+					"dm_code": "FJW5675789734WTG",
+					"seg_img_path": "1.jpg",
+					"sem_diff_path": "3.jpg",
+					"defect_type": 0,
+					"timestamp": 15884679942
+				})
+			}, 3000)
+		}
+
 		this.socket.emit('res', `Hi! I've got your message: ${message}`);
 	};
 };
@@ -94,4 +98,5 @@ function ioClient(addr, socket, ak) {
 			console.log(`${socket.id} client leaves ${ak} room`);
 		});
 	})
+	return client;
 }

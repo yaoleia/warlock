@@ -59,29 +59,39 @@
           } else {
             this.opts = {}
           }
+        },
+        getWsMsg() {
+          if (window.ws.connected) {
+            this.emitChat()
+          }
+          window.ws.on("connect", () => {
+            this.emitChat()
+          })
+        },
+        emitChat() {
+          window.ws
+            .off("msg")
+            .emit("chat", "get")
+            .on("msg", m => {
+              this.msg = m
+              $(".middle-img-col .img-stream", this.$el)
+                .stop()
+                .fadeOut(500)
+                .fadeIn(500)
+            })
         }
       },
       activated() {
+        this.resize()
+        window.onresize = () => {
+          this.resize()
+        }
         let video = document.querySelectorAll("video")[0]
         if (video) {
           video.play()
         }
-      },
-      mounted() {
-        this.resize()
-        let self = this
-        window.onresize = () => {
-          this.resize()
-        }
         this.$nextTick(() => {
-          window.ws.emit("chat", "get")
-          window.ws.on("msg", m => {
-            self.msg = m
-            $(".middle-img-col .img-stream", this.$el)
-              .stop()
-              .fadeOut(500)
-              .fadeIn(500)
-          })
+          this.getWsMsg()
         })
       },
       components: {
@@ -178,6 +188,7 @@
             border-radius: 12px;
           }
           .img-big {
+            border-radius: 12px;
             position: absolute;
             width: 100%;
             height: 100%;

@@ -18,7 +18,7 @@
             <el-button class="search-button" type="text" @click="query()">查询</el-button>
             <!-- <el-button class="add-button" type="success" @click="write()">写文章</el-button> -->
         </div>
-        <el-table stripe :data="articleList" v-loading="loading" element-loading-text="拼命加载中" height="650">
+        <el-table stripe :data="articleList" v-loading="loading" element-loading-text="拼命加载中" :height="innerHeight">
             <el-table-column type="index" width="55" :index="indexMethod">
             </el-table-column>
             <el-table-column prop="title" label="二维码ID" width="355">
@@ -130,6 +130,13 @@
         }
       },
       computed: {
+        innerHeight() {
+          if (EASY_ENV_IS_BROWSER) {
+            return window.innerHeight - 310
+          } else {
+            return 400
+          }
+        },
         status() {
           return [
             { status: undefined, name: "--请选择--" },
@@ -162,12 +169,12 @@
 <style lang="scss">
     .history-list {
       width: 1900px;
-      min-height: 600px;
+      min-height: 500px;
       padding: 30px 0 0;
       margin: 0 auto;
       .el-table {
         margin-top: 30px;
-        min-height: 650px;
+        min-height: 300px;
       }
       .search {
         .el-range-editor {

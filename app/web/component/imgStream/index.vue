@@ -1,7 +1,7 @@
 <template>
     <el-card class="img-stream" :class="{visibility:!show}">
         <p class="title" v-if="title">{{title}}</p>
-        <img :src="url" class="img" @load="loaded" v-if="url">
+        <img :src="url" class="img" @load="loaded" v-if="url" @error="error">
     </el-card>
 </template>
 <style lang="scss">
@@ -52,6 +52,12 @@
       methods: {
         loaded() {
           this.show = true
+        },
+        error(e) {
+          let target = e.target
+          if (target.src) {
+            target.src = `${target.src}?t=${Math.random()}`
+          }
         }
       }
     }
