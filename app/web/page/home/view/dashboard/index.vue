@@ -1,6 +1,7 @@
 <script type="text/babel">
     import imgStream from "component/imgStream"
     import magnifier from "component/magnifier"
+    import utils from "framework/utils"
     import $ from "jquery"
     export default {
       data() {
@@ -19,26 +20,11 @@
         },
         ifOk() {
           let type = this.curProduct.defect_type
-          if (type) {
-            return "NG"
-          }
-          if (type === 0) {
-            return "OK"
-          }
-          return ""
+          return utils.ifOk(type)
         },
         defectType() {
           let type = this.curProduct.defect_type
-          if (type === 0) {
-            return "无缺陷"
-          }
-          if (type === 1) {
-            return "多螺丝"
-          }
-          if (type === 2) {
-            return "少螺丝"
-          }
-          return ""
+          return utils.defectType(type)
         }
       },
       beforeMount() {
@@ -76,9 +62,6 @@
             .emit("chat", "get")
             .on("msg", m => {
               this.curProduct = { ...this.curProduct, ...m }
-              this.curProduct.seg_img_path = `/img/${this.curProduct.seg_img_path}`
-              this.curProduct.sem_diff_path = `/img/${this.curProduct.sem_diff_path}`
-              this.curProduct.high_diff_path = `/img/2.jpg`
               $imgMagnifier
                 .stop()
                 .fadeOut(200)
@@ -108,7 +91,7 @@
 <template>
     <div class="dashboard">
         <div class="left-img-col col">
-            <imgStream class="mb30" title="拍摄原图" :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
+            <imgStream class="mb30" title="拍摄原图" :url="`/api/proxyurl?url=${serverUrl}/detect/video_feed_main`"></imgStream>
             <imgStream title="目标定位" :url="curProduct.seg_img_path"></imgStream>
         </div>
         <div class="middle-img-col col">
@@ -118,7 +101,7 @@
                 <el-radio-button label="2">标记</el-radio-button>
             </el-radio-group> -->
             <magnifier :imgMagnifier="curProduct">
-                <imgStream class="img-big" :url="curProduct.high_diff_path"></imgStream>
+                <imgStream class="img-big" :url="curProduct.mask_img_path"></imgStream>
                 <imgStream :url="curProduct.sem_diff_path"></imgStream>
             </magnifier>
         </div>
@@ -191,13 +174,6 @@
           .img-stream {
             padding: 0;
             border-radius: 12px;
-          }
-          .img-big {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            left: 0;
-            top: 0;
           }
         }
         &.right-img-col {

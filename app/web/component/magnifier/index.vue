@@ -173,7 +173,14 @@
           this.cut.height = wh
         }
       },
-      mounted() {},
+      mounted() {
+        if (this.imgMagnifier) {
+          let path = this.imgMagnifier.sem_diff_path
+          if (path) {
+            this.$refs.area.style.backgroundImage = `url(${path})`
+          }
+        }
+      },
       watch: {
         "mouse.e": async function(e) {
           if (this.timer) {
@@ -183,7 +190,7 @@
           this.timer = setTimeout(() => {
             this.getArea()
             this.timer = null
-          }, 14)
+          }, 15)
         },
         imgMagnifier(i) {
           this.$refs.area.style.backgroundImage = `url(${i.sem_diff_path})`
@@ -206,6 +213,13 @@
       height: 100%;
       position: relative;
       cursor: pointer;
+      .img-big {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+      }
       .img {
         pointer-events: none;
       }
@@ -213,7 +227,7 @@
         filter: grayscale(30%) brightness(70%);
       }
       .area {
-        border: 1px dashed #dddddd;
+        box-shadow: 0 0 0 1px #ccc;
         position: absolute;
         left: 0;
         top: 0;
@@ -234,7 +248,7 @@
         }
       }
       .close {
-        color: #dddddd;
+        color: #ccc;
         opacity: 0.7;
         position: absolute;
         background: none;
