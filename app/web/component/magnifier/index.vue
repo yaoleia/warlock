@@ -1,60 +1,3 @@
-<template>
-    <div class="magnifier" @mousedown="mousedown" @mousemove="mousemove" @mouseup="canMove=false" @mouseleave="canMove=false">
-        <slot></slot>
-        <div class="area visibilityh" ref="area">
-            <div class="close el-icon-close" @mousedown.stop @click.stop="close"></div>
-            <i @mousedown.stop="imousedown"></i>
-        </div>
-    </div>
-</template>
-<style lang='scss'>
-    .magnifier {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      cursor: pointer;
-      .img {
-        pointer-events: none;
-      }
-      .filter {
-        filter: grayscale(30%) brightness(70%);
-      }
-      .area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100px;
-        height: 100px;
-        border-radius: 2px;
-        background-color: rgba(0, 0, 235, 0.2);
-        background-repeat: no-repeat;
-        filter: brightness(110%);
-        // transition: left 0.02s, top 0.02s;
-        & > i {
-          position: absolute;
-          right: 0;
-          bottom: 0;
-          width: 10px;
-          height: 10px;
-          background: #000;
-          opacity: 0.2;
-          cursor: nwse-resize;
-        }
-      }
-      .close {
-        opacity: 0.3;
-        position: absolute;
-        background: none;
-        right: 0;
-        top: 0;
-        border: none;
-        padding: 0;
-      }
-      .visibilityh {
-        visibility: hidden;
-      }
-    }
-</style>
 <script type="text/babel">
     import $ from "jquery"
     export default {
@@ -62,9 +5,8 @@
         return {
           mouse: {},
           canMove: false,
-          timer: null,
           canI: false,
-          imouse: {},
+          timer: null,
           cut: {
             height: 100,
             width: 100,
@@ -76,17 +18,14 @@
       props: {
         imgMagnifier: {
           required: false
-        },
-        pic: {
-          required: false
         }
       },
       methods: {
         close() {
           $(this.$refs.area).addClass("visibilityh")
-          $(".img,.img-big", this.$el).removeClass("filter")
+          $(".img", this.$el).removeClass("filter")
           this.$nextTick(() => {
-            this.imgMagnifier.src = ""
+            this.imgMagnifier.cutBase64 = ""
           })
         },
         mousedown(e) {
@@ -100,18 +39,18 @@
           let $elh = $el.clientHeight
           this.mouse = { e, $areaw, $areah, $eltop, $elleft, $elw, $elh, $area }
           this.canMove = true
-          $(this.$refs.area).removeClass("visibilityh")
-          $(".img,.img-big", this.$el).addClass("filter")
-          $(this.$refs.area).css({
-            backgroundSize: `${$elw}px ${$elh}px`
-          })
+          $(this.$refs.area)
+            .removeClass("visibilityh")
+            .css({
+              backgroundSize: `${$elw}px ${$elh}px`
+            })
+          $(".img", this.$el).addClass("filter")
           this.move()
         },
         mousemove(e) {
           if (!this.canMove) return
           this.mouse.e = e
           this.move()
-          this.timer = null
         },
         move() {
           let { e, $areaw, $areah, $eltop, $elleft, $elw, $elh, $area } = this.mouse
@@ -131,10 +70,11 @@
           if (top > $elh - $areah) {
             top = $elh - $areah
           }
-          $(this.$refs.area).css({
-            backgroundPosition: `-${left}px -${top}px`
+          $($area).css({
+            backgroundPosition: `-${left}px -${top}px`,
+            left,
+            top
           })
-          $($area).css({ left, top })
         },
         getArea() {
           let $area = this.$refs.area
@@ -146,17 +86,17 @@
           this.cutPic(this.cut)
         },
         async cutPic(opt) {
-          let img = $(".img-big", this.$el)[0]
+          let img = $(".img-big .img", this.$el)[0]
           let scaleX = img.naturalWidth / img.clientWidth
           let scaleY = img.naturalHeight / img.clientHeight
-          let src = await this.cutImg(
+          let base64 = await this.cutImg(
             img.src,
             opt.left * scaleX,
             opt.top * scaleY,
             opt.width * scaleX,
             opt.height * scaleY
           )
-          this.imgMagnifier.src = src
+          this.imgMagnifier.cutBase64 = base64
         },
         cutImg(imgsrc, x, y, width, height, cutImgType) {
           cutImgType = cutImgType || "image/jpeg"
@@ -195,9 +135,9 @@
           })
         },
         imousedown(e) {
-          this.imouse.e = e
           document.onmousemove = ev => {
             this.imousemove(ev)
+            ev.preventDefault()
           }
           document.onmouseup = () => {
             document.onmousemove = null
@@ -206,16 +146,10 @@
           }
         },
         imousemove(e) {
-          let downE = this.imouse.e
           let down = this.mouse
-          let X = e.clientY - downE.clientY
-          let Y = e.clientX - downE.clientX
-          let value
-          if (X > 0 || Y > 0) {
-            value = Math.max(X, Y)
-          } else {
-            value = Math.min(X, Y)
-          }
+          let X = e.clientY - down.$eltop - this.cut.top - this.cut.height
+          let Y = e.clientX - down.$elleft - this.cut.left - this.cut.width
+          let value = Math.max(X, Y)
           let areaW = this.$refs.area.clientWidth
           let areaH = this.$refs.area.clientHeight
 
@@ -237,27 +171,99 @@
           $(this.$refs.area).css({ width: wh, height: wh })
           this.cut.width = wh
           this.cut.height = wh
-          this.imouse.e = e
         }
       },
       mounted() {
-        this.$refs.area.style.backgroundImage = `url(${this.pic})`
+        if (this.imgMagnifier) {
+          let path = this.imgMagnifier.sem_diff_path
+          if (path) {
+            this.$refs.area.style.backgroundImage = `url(${path})`
+          }
+        }
       },
       watch: {
         "mouse.e": async function(e) {
           if (this.timer) {
             clearTimeout(this.timer)
+            this.timer = null
           }
           this.timer = setTimeout(() => {
             this.getArea()
             this.timer = null
-          }, 200)
+          }, 15)
         },
-        pic: {
-          handler: function(p) {
-            this.$refs.area.style.backgroundImage = `url(${p})`
-          }
+        imgMagnifier(i) {
+          this.$refs.area.style.backgroundImage = `url(${i.sem_diff_path})`
         }
       }
     }
 </script>
+<template>
+    <div class="magnifier" @mousedown.prevent="mousedown" @mousemove.prevent="mousemove" @mouseup="canMove=false" @mouseleave="canMove=false">
+        <slot></slot>
+        <div class="area visibilityh" ref="area">
+            <div class="close el-icon-close" @mousedown.stop @click.stop="close"></div>
+            <i @mousedown.prevent.stop="imousedown"></i>
+        </div>
+    </div>
+</template>
+<style lang='scss'>
+    .magnifier {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      cursor: pointer;
+      .img-big {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+      }
+      .img {
+        pointer-events: none;
+      }
+      .filter {
+        filter: grayscale(30%) brightness(70%);
+      }
+      .area {
+        box-shadow: 0 0 0 1px #ccc;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100px;
+        height: 100px;
+        border-radius: 2px;
+        background-color: rgba(0, 0, 235, 0.2);
+        background-repeat: no-repeat;
+        filter: brightness(110%);
+        // transition: width 0.1s, height 0.1s;
+        & > i {
+          position: absolute;
+          right: -10px;
+          bottom: -10px;
+          width: 24px;
+          height: 24px;
+          cursor: nwse-resize;
+        }
+      }
+      .close {
+        color: #ccc;
+        opacity: 0.7;
+        position: absolute;
+        background: none;
+        right: 0;
+        top: 0;
+        border: none;
+        padding: 0;
+        transition: all 0.3s;
+      }
+      .close:hover {
+        opacity: 1;
+        font-size: 20px;
+      }
+      .visibilityh {
+        visibility: hidden;
+      }
+    }
+</style>

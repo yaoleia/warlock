@@ -5,8 +5,9 @@
 	"dm_code": "FJW5675789734WTG",
 	"seg_img_path": "/tmp/foxconn/seg/2_15884679942.jpg",
     "sem_diff_path": "/tmp/foxconn/sem/2_15884679942.jpg",
+    "mask_img_path": "3.jpg",
     "defect_type": 0,
-    "timestamp": 15884679942
+    "timestamp": 1537844475264
 }
 ```
 

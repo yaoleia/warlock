@@ -1,15 +1,16 @@
 <script type="text/babel">
     import imgStream from "component/imgStream"
     import magnifier from "component/magnifier"
+    import utils from "framework/utils"
     import $ from "jquery"
     export default {
       data() {
         return {
-          imgMagnifier: {
-            src: ""
-          },
+          productList: [],
           opts: {},
-          msg: {},
+          curProduct: {
+            cutBase64: ""
+          },
           tagRadio: "1"
         }
       },
@@ -18,27 +19,12 @@
           return this.$store.state.serverUrl
         },
         ifOk() {
-          let type = this.msg.defect_type
-          if (type) {
-            return "NG"
-          }
-          if (type === 0) {
-            return "OK"
-          }
-          return ""
+          let type = this.curProduct.defect_type
+          return utils.ifOk(type)
         },
         defectType() {
-          let type = this.msg.defect_type
-          if (type === 0) {
-            return "无缺陷"
-          }
-          if (type === 1) {
-            return "多螺丝"
-          }
-          if (type === 2) {
-            return "少螺丝"
-          }
-          return ""
+          let type = this.curProduct.defect_type
+          return utils.defectType(type)
         }
       },
       beforeMount() {
@@ -59,29 +45,41 @@
           } else {
             this.opts = {}
           }
+        },
+        getWsMsg() {
+          if (window.ws.connected) {
+            this.emitChat()
+          } else {
+            window.ws.on("connect", () => {
+              this.emitChat()
+            })
+          }
+        },
+        emitChat() {
+          let $imgMagnifier = $(".middle-img-col .img-stream:not(.img-big)",this.$el)
+          window.ws
+            .off("msg")
+            .emit("chat", "get")
+            .on("msg", m => {
+              this.curProduct = { ...this.curProduct, ...m }
+              $imgMagnifier
+                .stop()
+                .fadeOut(200)
+                .fadeIn(200)
+            })
         }
       },
       activated() {
-        let video = document.querySelectorAll("video")[0]
-        if (video) {
-          video.play()
-        }
-      },
-      mounted() {
-        this.resize()
-        let self = this
-        window.onresize = () => {
-          this.resize()
-        }
+        // this.resize()
+        // window.onresize = () => {
+        //   this.resize()
+        // }
+        // let video = document.querySelectorAll("video")[0]
+        // if (video) {
+        //   video.play()
+        // }
         this.$nextTick(() => {
-          window.ws.emit("chat", "get")
-          window.ws.on("msg", m => {
-            self.msg = m
-            $(".middle-img-col .img-stream", this.$el)
-              .stop()
-              .fadeOut(500)
-              .fadeIn(500)
-          })
+          this.getWsMsg()
         })
       },
       components: {
@@ -93,8 +91,8 @@
 <template>
     <div class="dashboard">
         <div class="left-img-col col">
-            <imgStream class="mb30" title="拍摄原图" :url="`/api/proxyurl?url=${serverUrl}/video_feed`"></imgStream>
-            <imgStream class="" title="目标定位" :url="msg.seg_img_path?`/img/${msg.seg_img_path}`:''"></imgStream>
+            <imgStream class="mb30" title="拍摄原图" :url="`/api/proxyurl?url=${serverUrl}/detect/video_feed_main`"></imgStream>
+            <imgStream title="目标定位" :url="curProduct.seg_img_path"></imgStream>
         </div>
         <div class="middle-img-col col">
             <p class="title">检测结果</p>
@@ -102,19 +100,19 @@
                 <el-radio-button label="1">原图</el-radio-button>
                 <el-radio-button label="2">标记</el-radio-button>
             </el-radio-group> -->
-            <magnifier :imgMagnifier="imgMagnifier" :pic="msg.sem_diff_path?`/img/${msg.sem_diff_path}`:''">
-                <img class="img-big" v-if="msg.sem_diff_path" :src="msg.sem_diff_path?`/img/2.jpg`:''">
-                <imgStream :url="msg.sem_diff_path?`/img/${msg.sem_diff_path}`:''"></imgStream>
+            <magnifier :imgMagnifier="curProduct">
+                <imgStream class="img-big" :url="curProduct.mask_img_path"></imgStream>
+                <imgStream :url="curProduct.sem_diff_path"></imgStream>
             </magnifier>
         </div>
         <div class="right-img-col col">
-            <imgStream class="result mb30" title="局部放大" :url="imgMagnifier.src"></imgStream>
+            <imgStream class="result mb30" title="局部放大" :url="curProduct.cutBase64"></imgStream>
             <!-- <el-card class="img-stream">
                 <webcam :opts="opts"></webcam>
             </el-card> -->
             <el-card class="msg mb30">
                 <p class="title">检测结果详情</p>
-                <span>{{msg.dm_code}}</span><br>
+                <span>{{curProduct.dm_code}}</span><br>
                 <span>{{ifOk}}</span>
                 <span>{{defectType}}</span>
             </el-card>
@@ -176,13 +174,6 @@
           .img-stream {
             padding: 0;
             border-radius: 12px;
-          }
-          .img-big {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            left: 0;
-            top: 0;
           }
         }
         &.right-img-col {
