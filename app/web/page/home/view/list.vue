@@ -205,8 +205,8 @@
         </el-pagination>
         <el-dialog :visible.sync="dialogDetailVisible">
             <magnifier :imgMagnifier="cur" ref="magnifier">
-                <imgStream class="img-big" :url="cur.mask_img_path"></imgStream>
-                <imgStream :url="cur.reg_img_path"></imgStream>
+                <imgStream class="img-big" :url="cur.reg_img_path"></imgStream>
+                <imgStream :url="cur.mask_img_path"></imgStream>
             </magnifier>
             <div class="right">
                 <imgStream class="result" title="局部放大" :url="cur.cutBase64"></imgStream>
