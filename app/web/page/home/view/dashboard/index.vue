@@ -174,6 +174,8 @@
     			.img-stream {
     				padding: 0;
     				border-radius: 12px;
+    				background: none;
+    				box-shadow: none;
     			}
     		}
     		&.right-img-col {

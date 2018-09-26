@@ -1,7 +1,7 @@
 <template>
-    <el-card class="img-stream" :class="{visibility:!show}">
+    <el-card class="img-stream">
         <p class="title" v-if="title">{{title}}</p>
-        <img :src="url" class="img" @load="loaded" v-if="url" @error="error">
+        <img :src="url" class="img" @load="loaded" v-if="url" @error="error" :class="{visibility:!show}">
   </el-card>
 </template>
 <style lang="scss">
@@ -34,9 +34,9 @@
     		text-align: center;
     		color: #ccc;
     	}
-    }
-    .visibility {
-    	// visibility: hidden;
+    	.visibility {
+    		visibility: hidden;
+    	}
     }
 </style>
 <script type="text/babel">

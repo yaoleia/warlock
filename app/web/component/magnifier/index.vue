@@ -215,7 +215,6 @@
     	width: 100%;
     	height: 100%;
     	position: relative;
-    	cursor: pointer;
     	.img-big {
     		position: absolute;
     		width: 100%;
@@ -224,12 +223,13 @@
     		top: 0;
     	}
     	.img {
-    		pointer-events: none;
+    		cursor: pointer;
     	}
     	.filter {
     		filter: grayscale(30%) brightness(70%);
     	}
     	.area {
+    		cursor: pointer;
     		box-shadow: 0 0 0 1px #ccc;
     		position: absolute;
     		left: 0;
