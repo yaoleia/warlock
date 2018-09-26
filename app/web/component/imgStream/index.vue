@@ -1,7 +1,7 @@
 <template>
-    <el-card class="img-stream" :class="{visibility:!show}">
+    <el-card class="img-stream">
         <p class="title" v-if="title">{{title}}</p>
-        <img :src="url" class="img" @load="loaded" v-if="url" @error="error">
+        <img :src="url" class="img" @load="loaded" v-if="url" @error="error" :class="{visibility:!show}">
   </el-card>
 </template>
 <style lang="scss">
@@ -34,16 +34,17 @@
     		text-align: center;
     		color: #ccc;
     	}
-    }
-    .visibility {
-    	// visibility: hidden;
+    	.visibility {
+    		visibility: hidden;
+    	}
     }
 </style>
 <script type="text/babel">
     export default {
         data() {
             return {
-                show: false
+                show: false,
+                try: 2
             };
         },
         props: ["url", "title"],
@@ -54,6 +55,8 @@
                 this.show = true
             },
             error(e) {
+                this.try--;
+                if (this.try <= 0) return;
                 setTimeout(() => {
                     let url = e.target.src;
 
@@ -64,7 +67,7 @@
                         }
                         e.target.src = `${url}?t=${Math.random()}`;
                     }
-                }, 2000);
+                }, 4000);
             }
         }
     };

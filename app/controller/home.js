@@ -15,33 +15,59 @@ module.exports = app => {
       });
     }
     async list(ctx) {
-      // console.log(this.ctx.http.post)
-      console.log(ctx.request.body);
-      // this.ctx.body = ctx.service.article.getArtilceList(ctx.request.body);
+      const body = ctx.request.body;
+      const serverUrl = app.config.serverUrl;
+      // this.ctx.body = ctx.service.article.getArtilceList(body);
+      let reqObj = null;
+      if (body.endTime) {
+        reqObj = {
+          limit: body.pageSize,
+          offset: (body.pageIndex - 1) * body.pageSize,
+          end_time: body.endTime
+        };
+        if (body.dateRange) {
+          reqObj.start_time = body.dateRange[0];
+          if (body.endTime > body.dateRange[1]) {
+            reqObj.end_time = body.dateRange[1];
+          }
+        }
+      } else {
+        reqObj = {
+          limit: 20,
+          offset: 0,
+          end_time: new Date().getTime()
+        };
+      }
+
+      console.log(body, reqObj);
+      // const p1 = this.ctx.http.post(`${serverUrl}/record_size`, reqObj);
+      // const p2 = this.ctx.http.post(`${serverUrl}/record`, reqObj);
+      // const resp = await Promise.all([p1, p2]);
+      // this.ctx.body = resp;
       this.ctx.body = {
         total: 32,
         list: [
           {
             dm_code: 'FJW5675789734WTG',
             seg_img_path: '/img/1.jpg',
-            mask_img_path: '/img/2.jpg',
-            sem_diff_path: '/img/3.jpg',
+            reg_img_path: '/img/2.jpg',
+            mask_img_path: '/img/3.jpg',
             defect_type: 0,
             timestamp: new Date().getTime()
           },
           {
             dm_code: 'FJW5675789734WTG',
             seg_img_path: '/img/1.jpg',
-            mask_img_path: '/img/2.jpg',
-            sem_diff_path: '/img/3.jpg',
+            mask_img_path: '/img/3.jpg',
+            reg_img_path: '/img/2.jpg',
             defect_type: 1,
             timestamp: new Date().getTime()
           },
           {
             dm_code: 'FJW5675789734WTG',
             seg_img_path: '/img/1.jpg',
-            mask_img_path: '/img/2.jpg',
-            sem_diff_path: '/img/3.jpg',
+            mask_img_path: '/img/3.jpg',
+            reg_img_path: '/img/2.jpg',
             defect_type: 2,
             timestamp: new Date().getTime()
           }
