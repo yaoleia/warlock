@@ -4,21 +4,26 @@ const WebSocketClient = WebSocket.client;
 module.exports = app => {
   return async function() {
     const message = this.args[0];
+    const serverUrl = app.config.serverUrl;
 
     // console.log(this.socket)
     // wsClient("ws://ws.test.nemoface.com/wsconnect?appkey=3f2cf74b-2228-473e-850d-85d0cc019e18&appsecret=f853f869-594b-4546-8552-65230a33362b&debug=true", this.socket, "ak")
     if (!this.socket.ioClient) {
-      // this.socket.ioClient = ioClient("http://retail.test.nemoface.com/?ak=3f2cf74b-2228-473e-850d-85d0cc019e18&sk=f853f869-594b-4546-8552-65230a33362b", this.socket, "ak");
-      this.socket.ioClient = setInterval(() => {
-        this.socket.emit('msg', {
-          dm_code: 'FJW5675789734WTG',
-          seg_img_path: '/img/1.jpg',
-          mask_img_path: '/img/2.jpg',
-          sem_diff_path: '/img/3.jpg',
-          defect_type: 0,
-          timestamp: new Date().getTime()
-        });
-      }, 3000);
+      this.socket.ioClient = ioClient(
+        `${serverUrl}/detect_push`,
+        this.socket,
+        'ak'
+      );
+      // this.socket.ioClient = setInterval(() => {
+      //   this.socket.emit('msg', {
+      //     dm_code: 'FJW5675789734WTG',
+      //     seg_img_path: '/img/1.jpg',
+      //     mask_img_path: '/img/3.jpg',
+      //     reg_img_path: '/img/2.jpg',
+      //     defect_type: 0,
+      //     timestamp: new Date().getTime()
+      //   });
+      // }, 3000);
     }
 
     this.socket.emit('res', `Hi! I've got your message: ${message}`);
@@ -76,16 +81,9 @@ function ioClient(addr, socket, ak) {
     console.log(`${addr} ${socket.id} connect!`);
   });
 
-  client.on('msg', message => {
+  client.on('server_response', message => {
     // 转发event-pusher到retail前端
-    // socket.emit("msg", message);
-    socket.emit('msg', {
-      dm_code: 'FJW5675789734WTG',
-      seg_img_path: '1.jpg',
-      sem_diff_path: '3.jpg',
-      defect_type: 0,
-      timestamp: new Date().getTime()
-    });
+    socket.emit('msg', message.data);
   });
 
   client.on('disconnect', () => {

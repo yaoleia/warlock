@@ -24,24 +24,24 @@ module.exports = app => {
           {
             dm_code: 'FJW5675789734WTG',
             seg_img_path: '/img/1.jpg',
-            mask_img_path: '/img/2.jpg',
-            sem_diff_path: '/img/3.jpg',
+            reg_img_path: '/img/2.jpg',
+            mask_img_path: '/img/3.jpg',
             defect_type: 0,
             timestamp: new Date().getTime()
           },
           {
             dm_code: 'FJW5675789734WTG',
             seg_img_path: '/img/1.jpg',
-            mask_img_path: '/img/2.jpg',
-            sem_diff_path: '/img/3.jpg',
+            mask_img_path: '/img/3.jpg',
+            reg_img_path: '/img/2.jpg',
             defect_type: 1,
             timestamp: new Date().getTime()
           },
           {
             dm_code: 'FJW5675789734WTG',
             seg_img_path: '/img/1.jpg',
-            mask_img_path: '/img/2.jpg',
-            sem_diff_path: '/img/3.jpg',
+            mask_img_path: '/img/3.jpg',
+            reg_img_path: '/img/2.jpg',
             defect_type: 2,
             timestamp: new Date().getTime()
           }

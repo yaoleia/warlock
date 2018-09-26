@@ -43,7 +43,8 @@
     export default {
         data() {
             return {
-                show: false
+                show: false,
+                try: 2
             };
         },
         props: ["url", "title"],
@@ -54,6 +55,8 @@
                 this.show = true
             },
             error(e) {
+                this.try--;
+                if (this.try <= 0) return;
                 setTimeout(() => {
                     let url = e.target.src;
 
@@ -64,7 +67,7 @@
                         }
                         e.target.src = `${url}?t=${Math.random()}`;
                     }
-                }, 2000);
+                }, 4000);
             }
         }
     };
