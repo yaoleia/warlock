@@ -14,7 +14,7 @@ export default function render(options) {
         return Promise.reject({ code: '404' });
       }
       return Promise.all(
-        matchedComponents.map((component) => {
+        matchedComponents.map(component => {
           if (component.methods && component.methods.fetchApi) {
             return component.methods.fetchApi(options.store);
           }
