@@ -177,8 +177,13 @@
         <el-table stripe :data="articleList" v-loading="loading" element-loading-text="加载中" :height="innerHeight">
             <el-table-column type="index" width="55" :index="indexMethod">
             </el-table-column>
-            <el-table-column prop="dm_code" label="二维码ID" width="355">
+            <el-table-column prop="dm_code" label="二维码ID">
             </el-table-column>
+            <!-- <el-table-column prop="dm_code_path" label="二维码">
+                <template slot-scope="props">
+                    <img class="dm-code-img" v-if="props.row.dm_code_path" :src="props.row.dm_code_path">
+                </template>
+            </el-table-column> -->
             <el-table-column prop="defect_type" label="OK/NG">
                 <template slot-scope="props">
                     <span :class="ifOk(props.row.defect_type) === 'OK'?'':'red'" v-text="ifOk(props.row.defect_type)"></span>
@@ -194,7 +199,7 @@
                     <span v-text="$moment(props.row.timestamp).format('YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="300">
                 <template slot-scope="props">
                     <!-- <router-link :to="{params: {id: props.row.id}}" tag="span">
                         <el-button type="info" size="small" icon="edit" @click="handleEdit(props.$index, props.row)">修改</el-button>

@@ -104,7 +104,10 @@
             <imgStream title="目标定位" :url="curProduct.seg_img_path"></imgStream>
         </div>
         <div class="middle-img-col col">
-            <p class="title">检测结果 <el-button type="text" class="control-btn" @click="controlWs">{{switchCraft?"暂停":"开始"}}</el-button>
+            <p class="title">
+                <span>检测结果</span>
+                <el-button type="text" class="control-btn" @click="controlWs">{{switchCraft?"暂停":"开始"}}</el-button>
+                <span class="ts" v-if="curProduct.timestamp">{{$moment(curProduct.timestamp).format('YYYY-MM-DD HH:mm:ss')}}</span>
             </p>
             <!-- <el-radio-group v-model="tagRadio" size="small">
                 <el-radio-button label="1">原图</el-radio-button>
@@ -166,6 +169,10 @@
     			left: 60px;
     			top: 0;
     			color: #9c9c9c;
+    			.ts {
+    				font-size: 14px;
+    				padding-left: 20px;
+    			}
     		}
     		&.left-img-col {
     			width: 720px;
