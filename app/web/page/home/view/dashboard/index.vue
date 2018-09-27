@@ -57,16 +57,10 @@
             },
             emitChat() {
                 let $imgMagnifier = $(".middle-img-col .img-stream:not(.img-big)", this.$el)
-                window.ws
-                    .off("msg")
-                    .emit("chat", "get")
-                    .on("msg", m => {
-                        this.curProduct = { ...this.curProduct, ...m }
-                        $imgMagnifier
-                            .stop()
-                            .fadeOut(200)
-                            .fadeIn(200)
-                    })
+                window.ws.off("msg").emit("chat", "get").on("msg", m => {
+                    this.curProduct = { ...this.curProduct, ...m }
+                    // $imgMagnifier.stop().fadeOut(200).fadeIn(200)
+                })
             }
         },
         activated() {
@@ -101,7 +95,7 @@
                 <el-radio-button label="2">标记</el-radio-button>
             </el-radio-group> -->
             <magnifier :imgMagnifier="curProduct">
-                <imgStream class="img-big" :url="curProduct.reg_img_path"></imgStream>
+                <imgStream class="img-big" v-if="curProduct.reg_img_path" :url="`/api/proxyurl?url=${curProduct.reg_img_path}`"></imgStream>
                 <imgStream :url="curProduct.mask_img_path"></imgStream>
             </magnifier>
         </div>

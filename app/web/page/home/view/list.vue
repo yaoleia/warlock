@@ -205,7 +205,7 @@
         </el-pagination>
         <el-dialog :visible.sync="dialogDetailVisible">
             <magnifier :imgMagnifier="cur" ref="magnifier">
-                <imgStream class="img-big" :url="cur.reg_img_path"></imgStream>
+                <imgStream class="img-big" :url="`/api/proxyurl?url=${cur.reg_img_path}`"></imgStream>
                 <imgStream :url="cur.mask_img_path"></imgStream>
             </magnifier>
             <div class="right">

@@ -29,9 +29,7 @@
                 })
             },
             mousedown(e) {
-                if (!this.imgMagnifier.reg_img_path) {
-                    return;
-                }
+                if (!this.imgMagnifier.reg_img_path) return;
                 let $el = this.$el
                 let $area = this.$refs.area
                 let $areaw = $area.clientWidth
@@ -93,7 +91,7 @@
                 let scaleX = img.naturalWidth / img.clientWidth
                 let scaleY = img.naturalHeight / img.clientHeight
                 let base64 = await this.cutImg(
-                    `/api/proxyurl?url=${img.src}`,
+                    img.src,
                     opt.left * scaleX,
                     opt.top * scaleY,
                     opt.width * scaleX,
