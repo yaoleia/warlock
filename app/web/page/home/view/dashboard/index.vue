@@ -125,8 +125,9 @@
                 <span>{{curProduct.dm_code}}</span><br>
                 <span>{{ifOk}}</span>
                 <span>{{defectType}}</span>
+                <img class="dm-code-img" v-if="curProduct.dm_code_path" :src="curProduct.dm_code_path">
             </el-card>
-            <imgStream title="监控" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
+                <imgStream title="监控" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
         </div>
     </div>
 </template>
@@ -212,6 +213,15 @@
     				border-radius: 18px;
     				height: 144px;
     				width: 100%;
+    				.dm-code-img {
+    					position: absolute;
+    					right: 40px;
+    					top: 0;
+    					bottom: 0;
+    					margin: auto;
+    					width: 80px;
+    					height: 80px;
+    				}
     				.el-card__body {
     					padding: 0;
     					color: #dbdbdb;
