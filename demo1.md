@@ -5,6 +5,7 @@
 	"dm_code": "FJW5675789734WTG",
 	"seg_img_path": "/tmp/foxconn/seg/2_15884679942.jpg", //目标定位
     "reg_img_path": "/tmp/foxconn/sem/2_15884679942.jpg", //高清图
+    "dm_code_path": 'http://127.0.0.1:7001/img/dmcode--1538018674.jpg',
     "mask_img_path": "3.jpg", //标记图
     "defect_type": 0,
     "timestamp": 1537844475264

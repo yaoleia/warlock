@@ -219,6 +219,7 @@
                     <span>{{cur.dm_code}}</span>
                     <span>{{ifOk(cur.defect_type)}}</span>
                     <span>{{defectType(cur.defect_type)}}</span>
+                    <img class="dm-code-img" v-if="cur.dm_code_path" :src="cur.dm_code_path">
                 </el-card>
             </div>
         </el-dialog>
@@ -259,6 +260,9 @@
     		.msg {
     			background: rgba(255, 255, 255, 0.03);
     			color: #dbdbdb;
+    			margin-top: 30px;
+    			height: 140px;
+    			position: relative;
     			.title {
     				color: #888;
     			}
@@ -266,10 +270,18 @@
     				padding: 0 30px 0 0;
     				line-height: 36px;
     			}
+    			.dm-code-img {
+    				position: absolute;
+    				right: 40px;
+    				top: 0;
+    				bottom: 0;
+    				margin: auto;
+    				width: 80px;
+    				height: 80px;
+    			}
     		}
     		.result {
     			height: 600px;
-    			margin-bottom: 50px;
     			p {
     				position: absolute;
     				line-height: 600px;
@@ -364,6 +376,9 @@
     					p {
     						line-height: 500px;
     					}
+    				}
+    				.msg {
+    					height: 120px;
     				}
     			}
     		}

@@ -20,6 +20,7 @@ module.exports = app => {
       //     seg_img_path: '/img/1.jpg',
       //     mask_img_path: '/img/3.jpg',
       //     reg_img_path: 'http://127.0.0.1:7001/img/2.jpg',
+      //     dm_code_path: 'http://127.0.0.1:7001/img/dmcode--1538018674.jpg',
       //     defect_type: 0,
       //     timestamp: new Date().getTime()
       //   });
