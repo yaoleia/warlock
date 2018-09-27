@@ -1,6 +1,7 @@
 <script type="babel">
     import imgStream from "component/imgStream"
     import magnifier from "component/magnifier"
+    import bigArea from "component/magnifier/bigArea"
     import { SET_ARTICLE_LIST, DELETE_ARTICLE } from "../store/app/mutation-type"
     import utils from "framework/utils"
     let curObj = {
@@ -10,11 +11,13 @@
         mask_img_path: "",
         seg_img_path: "",
         reg_img_path: "",
-        timestamp: ""
+        timestamp: "",
+        cut: {}
     }
     export default {
         components: {
             magnifier,
+            bigArea,
             imgStream
         },
         data() {
@@ -22,29 +25,29 @@
                 pickerOptions: {
                     shortcuts: [
                         {
-                            text: "最近一周",
+                            text: "最近3小时",
                             onClick(picker) {
                                 const end = new Date()
                                 const start = new Date()
-                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+                                start.setTime(start.getTime() - 3600 * 1000 * 3)
                                 picker.$emit("pick", [start, end])
                             }
                         },
                         {
-                            text: "最近一个月",
+                            text: "最近24小时",
                             onClick(picker) {
                                 const end = new Date()
                                 const start = new Date()
-                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+                                start.setTime(start.getTime() - 3600 * 1000 * 24)
                                 picker.$emit("pick", [start, end])
                             }
                         },
                         {
-                            text: "最近三个月",
+                            text: "最近72小时",
                             onClick(picker) {
                                 const end = new Date()
                                 const start = new Date()
-                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+                                start.setTime(start.getTime() - 3600 * 1000 * 72)
                                 picker.$emit("pick", [start, end])
                             }
                         }
@@ -205,11 +208,11 @@
         </el-pagination>
         <el-dialog :visible.sync="dialogDetailVisible">
             <magnifier :imgMagnifier="cur" ref="magnifier">
-                <imgStream class="img-big" :url="`/api/proxyurl?url=${cur.reg_img_path}`"></imgStream>
+                <imgStream class="img-big" :url="cur.reg_img_path"></imgStream>
                 <imgStream :url="cur.mask_img_path"></imgStream>
             </magnifier>
             <div class="right">
-                <imgStream class="result" title="局部放大" :url="cur.cutBase64"></imgStream>
+                <big-area class="result" title="局部放大" :opt="cur"></big-area>
                 <!-- <imgStream title="目标定位" :url="cur.seg_img_path"></imgStream> -->
                 <el-card class="msg">
                     <p class="title">检测结果详情</p>

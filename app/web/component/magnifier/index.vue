@@ -6,13 +6,7 @@
                 mouse: {},
                 canMove: false,
                 canI: false,
-                timer: null,
-                cut: {
-                    height: 100,
-                    width: 100,
-                    left: 0,
-                    top: 0
-                }
+                timer: null
             }
         },
         props: {
@@ -25,7 +19,8 @@
                 $(this.$refs.area).addClass("visibilityh")
                 $(".img", this.$el).removeClass("filter")
                 this.$nextTick(() => {
-                    this.imgMagnifier.cutBase64 = ""
+                    this.imgMagnifier.cutBase64 = "";
+                    this.imgMagnifier.cut = {};
                 })
             },
             mousedown(e) {
@@ -46,6 +41,7 @@
                         backgroundSize: `${$elw}px ${$elh}px`
                     })
                 $(".img", this.$el).addClass("filter")
+                this.imgMagnifier.cut = { ...this.imgMagnifier.cut, sizeW: $elw, sizeH: $elh }
                 this.move()
             },
             mousemove(e) {
@@ -78,13 +74,14 @@
                 })
             },
             getArea() {
-                let $area = this.$refs.area
-                let left = $area.offsetLeft
-                let top = $area.offsetTop
-                let width = $area.clientWidth
-                let height = $area.clientHeight
-                this.cut = { left, top, width, height }
-                this.cutPic(this.cut)
+                const $area = this.$refs.area
+                const left = $area.offsetLeft
+                const top = $area.offsetTop
+                const width = $area.clientWidth
+                const height = $area.clientHeight
+                const cut = { left, top, width, height }
+                this.imgMagnifier.cut = { ...this.imgMagnifier.cut, ...cut }
+                // this.cutPic(cut)
             },
             async cutPic(opt) {
                 let img = $(".img-big .img", this.$el)[0]
@@ -148,8 +145,9 @@
             },
             imousemove(e) {
                 let down = this.mouse
-                let X = e.clientY - down.$eltop - this.cut.top - this.cut.height
-                let Y = e.clientX - down.$elleft - this.cut.left - this.cut.width
+                let cut = this.imgMagnifier.cut;
+                let X = e.clientY - down.$eltop - cut.top - cut.height
+                let Y = e.clientX - down.$elleft - cut.left - cut.width
                 let value = Math.max(X, Y)
                 let areaW = this.$refs.area.clientWidth
                 let areaH = this.$refs.area.clientHeight
@@ -162,16 +160,16 @@
                     wh = areaW + value
                 }
 
-                if (areaH + value > down.$elh - this.cut.top) {
-                    wh = down.$elh - this.cut.top
+                if (areaH + value > down.$elh - cut.top) {
+                    wh = down.$elh - cut.top
                 }
-                if (areaW + value > down.$elw - this.cut.left) {
-                    wh = down.$elw - this.cut.left
+                if (areaW + value > down.$elw - cut.left) {
+                    wh = down.$elw - cut.left
                 }
 
                 $(this.$refs.area).css({ width: wh, height: wh })
-                this.cut.width = wh
-                this.cut.height = wh
+                this.imgMagnifier.cut = { ...this.imgMagnifier.cut, width: wh, height: wh }
+                this.mouse = { ...this.mouse, $areah: wh, $areaw: wh }
             }
         },
         mounted() {
@@ -191,7 +189,7 @@
                 this.timer = setTimeout(() => {
                     this.getArea()
                     this.timer = null
-                }, 15)
+                }, 14)
             },
             imgMagnifier(i) {
                 this.$refs.area.style.backgroundImage = `url(${i.mask_img_path})`
@@ -238,7 +236,7 @@
     		background-color: rgba(0, 0, 235, 0.2);
     		background-repeat: no-repeat;
     		filter: brightness(110%);
-    		// transition: width 0.1s, height 0.1s;
+    		// transition: all 0.05s;
     		& > i {
     			position: absolute;
     			right: -10px;
