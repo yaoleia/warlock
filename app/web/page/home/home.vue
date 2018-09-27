@@ -56,6 +56,9 @@
                 ws.on("disconnect", () => {
                     console.log("websocket successfully closed")
                 })
+                ws.on("connect_error", () => {
+                    this.$message.error('ws连接错误');
+                })
                 // this.setWebsocket(ws)
                 window.ws = ws
             }
