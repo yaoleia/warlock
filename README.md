@@ -4,20 +4,19 @@
 
 ## 1. 版本
 
-- Egg 版本： ^2.x.x
-- Node 版本: Node ^8.x.x+,  Node 6.x.x 版本请见 [Egg 1.0 + Node6分支](https://github.com/hubcarl/egg-vue-webpack-boilerplate/tree/node6)
-- Webpack 版本: ^4.x.x, 对应 `easywebpack-vue` 版本为 ^4.x.x; Webpack3 版本项目骨架请见 `webpack3` 分支, 对应 `easywebpack-react` 版本为 3.x.x
-- Vue 版本: ^2.5.0
+-   Egg 版本： ^2.x.x
+-   Node 版本: Node ^8.x.x+, Node 6.x.x 版本请见 [Egg 1.0 + Node6 分支](https://github.com/hubcarl/egg-vue-webpack-boilerplate/tree/node6)
+-   Webpack 版本: ^4.x.x, 对应 `easywebpack-vue` 版本为 ^4.x.x; Webpack3 版本项目骨架请见 `webpack3` 分支, 对应 `easywebpack-react` 版本为 3.x.x
+-   Vue 版本: ^2.5.0
 
 ## 2. 文档
 
-- http://hubcarl.github.io/easywebpack/vue/rule
-- https://zhuanlan.zhihu.com/easywebpack
-
+-   http://hubcarl.github.io/easywebpack/vue/rule
+-   https://zhuanlan.zhihu.com/easywebpack
 
 ## 3. 使用
 
-#### 3.1 安装cli(非必需)
+#### 3.1 安装 cli(非必需)
 
 ```bash
 npm install easywebpack-cli -g
@@ -31,64 +30,61 @@ npm install easywebpack-cli -g
 npm install
 ```
 
-
 #### 3.3 本地开发启动应用
 
 ```bash
 npm run dev
 ```
+
 应用访问: http://127.0.0.1:7001
 
 #### 3.4 发布模式启动应用
 
-- 首先在本地或者ci构建好jsbundle文件
+-   首先在本地或者 ci 构建好 jsbundle 文件
 
 ```bash
-npm run build 
+npm run build
 ```
 
-- 然后,启动应用
+-   然后,启动应用
 
 ```bash
-npm start 
+npm start
 ```
-
 
 详细打包部署请见： http://hubcarl.github.io/easywebpack/vue/dev/
 
 ## 4. 配置说明(支持三种方式)
 
-#### 4.1 方式一: `easywebpack-cli` 根据  `webpack.config.js` 自动创建Webpack Config 
+#### 4.1 方式一: `easywebpack-cli` 根据 `webpack.config.js` 自动创建 Webpack Config
 
 ```js
-`config/config.local.js` 
-const EasyWebpack = require('easywebpack-vue');
+;`config/config.local.js`
+const EasyWebpack = require("easywebpack-vue")
 exports.webpack = {
-    webpackConfigList:EasyWebpack.getWebpackConfig() 
-  };
+    webpackConfigList: EasyWebpack.getWebpackConfig()
+}
 ```
 
-#### 4.2 方式二: 自己编写Webpack配置
+#### 4.2 方式二: 自己编写 Webpack 配置
 
-编写配置请见 tag `1.0.0`  build目录代码实现
+编写配置请见 tag `1.0.0` build 目录代码实现
 
 ```js
-`config/config.local.js` 
+;`config/config.local.js`
 exports.webpack = {
     webpackConfigList: [
-      require(path.join(app.baseDir, 'build/client')), // http://127.0.0.1:9000
-      require(path.join(app.baseDir, 'build/server')), // http://127.0.0.1:9001
+        require(path.join(app.baseDir, "build/client")), // http://127.0.0.1:9000
+        require(path.join(app.baseDir, "build/server")) // http://127.0.0.1:9001
     ]
-  };
+}
 ```
 
 #### 4.3 方式三: 开启多进程编译
 
 [egg npm start 启动开启多进程编译](http://hubcarl.github.io/easywebpack/vue/version/)
 
-
-构建会同时启动两个 webpack 构建服务, 客户端js构建(build/client), 服务端构建(build/server), 默认端口9000,  webpackConfigList 端口依次递增. 
-
+构建会同时启动两个 webpack 构建服务, 客户端 js 构建(build/client), 服务端构建(build/server), 默认端口 9000, webpackConfigList 端口依次递增.
 
 ## 5. 项目结构和基本规范
 
@@ -155,7 +151,7 @@ exports.webpack = {
     │               └── toast.vue
     ├── build                                   //  webpack 自定义配置入口, 会与默认配置进行合并(看似这么多,其实这里只是占个位说明一下)
     │   ├── base
-    │   │   └── index.js                        // 公共配置        
+    │   │   └── index.js                        // 公共配置
     │   ├──  client                             // 客户端webpack编译配置
     │   │   ├── dev.js
     │   │   ├── prod.js
@@ -187,3 +183,17 @@ exports.webpack = {
     │   ├── test
     │   │   └── test.js
     │   └── vendor.js                         // 生成的公共打包库
+
+```bash
+$ cd baseDir
+$ npm install --production
+$ tar -zcvf ../release.tar.gz .
+```
+
+主题生成工具安装成功后，如果全局安装可以在命令行里通过 et 调用工具，如果安装在当前目录下，需要通过 node_modules/.bin/et 访问到命令。执行 -i 初始化变量文件。默认输出到 element-variables.scss，当然你可以传参数指定文件输出目录。
+保存文件后，到命令行里执行 et 编译主题，如果你想启用 watch 模式，实时编译主题，增加 -w 参数；如果你在初始化时指定了自定义变量文件，则需要增加 -c 参数，并带上你的变量文件名
+
+```bash
+// import "../../asset/theme/index.css"
+sudo node_modules/.bin/et -c ./app/web/asset/theme/theme.scss -w -o ./app/web/asset/theme/
+```
