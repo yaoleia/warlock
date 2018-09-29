@@ -1,6 +1,8 @@
 <template>
     <el-card class="img-stream big-area">
-        <p class="title" v-if="title">{{title}}</p>
+        <div slot="header">
+            <p class="title" v-if="title">{{title}}</p>
+        </div>
         <div class="big-area-box" ref="bigAreaBox"></div>
         <img :src="opt.cutBase64" v-if="opt.cutBase64" class="big-area-img" @load="loaded" :class="{visibility:!show}">
   </el-card>
@@ -14,9 +16,14 @@
     	&.el-card {
     		border: none;
     	}
+    	.el-card__header {
+    		border: none;
+    		padding: 0;
+    	}
     	.el-card__body {
     		padding: 0;
     		height: 100%;
+    		position: relative;
     	}
     	.big-area-box,
     	.big-area-img {
@@ -50,15 +57,16 @@
         },
         watch: {
             "opt.cut": function (cut) {
+                let bigAreaBox = this.$refs.bigAreaBox;
                 if (!cut.width) {
-                    this.$refs.bigAreaBox.style.cssText = "";
+                    bigAreaBox.style.cssText = "";
                     return;
                 }
-                let bigW = this.$el.clientWidth
-                let bigH = this.$el.clientHeight
+                let bigW = bigAreaBox.clientWidth
+                let bigH = bigAreaBox.clientHeight
                 let rateW = bigW / cut.width
                 let rateH = bigH / cut.height
-                this.$refs.bigAreaBox.style.cssText = `background-image: url(${this.opt.reg_img_path}); background-size: ${cut.sizeW * rateW}px ${cut.sizeH * rateH}px; background-position: -${cut.left * rateW}px -${cut.top * rateH}px;`
+                bigAreaBox.style.cssText = `background-image: url(${this.opt.reg_img_path}); background-size: ${cut.sizeW * rateW}px ${cut.sizeH * rateH}px; background-position: -${cut.left * rateW}px -${cut.top * rateH}px;`
             }
         }
     };
