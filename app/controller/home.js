@@ -99,7 +99,7 @@ module.exports = app => {
         })
       );
       const resp = await new Promise((resolve, reject) => {
-        form.submit(`${serverUrl}/USBCam_exposure`, function(err, res) {
+        form.submit(`${serverUrl}/detect/USBCam_exposure`, function(err, res) {
           resolve(res);
         });
       });
@@ -120,7 +120,10 @@ module.exports = app => {
           })
         );
         respb = new Promise((resolve, reject) => {
-          formb.submit(`${serverUrl}/mainCam_exposure`, function(err, res) {
+          formb.submit(`${serverUrl}/detect/mainCam_exposure`, function(
+            err,
+            res
+          ) {
             resolve(res);
           });
         });
@@ -135,7 +138,7 @@ module.exports = app => {
           })
         );
         respz = new Promise((resolve, reject) => {
-          formz.submit(`${serverUrl}/mainCam_gain`, function(err, res) {
+          formz.submit(`${serverUrl}/detect/mainCam_gain`, function(err, res) {
             resolve(res);
           });
         });
@@ -150,7 +153,7 @@ module.exports = app => {
           })
         );
         respg = new Promise((resolve, reject) => {
-          formg.submit(`${serverUrl}/mainCam_gamma`, function(err, res) {
+          formg.submit(`${serverUrl}/detect/mainCam_gamma`, function(err, res) {
             resolve(res);
           });
         });
@@ -174,7 +177,7 @@ module.exports = app => {
           })
         );
         respl = new Promise((resolve, reject) => {
-          forml.submit(`${serverUrl}/lightBright`, function(err, res) {
+          forml.submit(`${serverUrl}/detect/lightBright`, function(err, res) {
             resolve(res);
           });
         });
@@ -184,7 +187,9 @@ module.exports = app => {
         formon.append('data', data.on);
         respon = new Promise((resolve, reject) => {
           formon.submit(
-            data.on == '1' ? `${serverUrl}/lightOn` : `${serverUrl}/lightOff`,
+            data.on == '1'
+              ? `${serverUrl}/detect/lightOn`
+              : `${serverUrl}/lightOff`,
             function(err, res) {
               resolve(res);
             }
@@ -221,7 +226,10 @@ module.exports = app => {
       const form = new FormData();
       form.append('data', 0);
       const resp = await new Promise((resolve, reject) => {
-        form.submit(`${serverUrl}/LaserTriggerTriggerOnce`, function(err, res) {
+        form.submit(`${serverUrl}/detect/LaserTriggerTriggerOnce`, function(
+          err,
+          res
+        ) {
           resolve(res);
         });
       });
