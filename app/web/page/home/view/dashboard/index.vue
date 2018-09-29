@@ -3,7 +3,6 @@
     import magnifier from "component/magnifier"
     import bigArea from "component/magnifier/bigArea"
     import utils from "framework/utils"
-    import $ from "jquery"
     export default {
         data() {
             return {
@@ -67,11 +66,9 @@
                 }
             },
             emitChat() {
-                // let $imgMagnifier = $(".middle-img-col .img-stream:not(.img-big)", this.$el)
                 window.ws.off("msg").emit("chat", "get").on("msg", m => {
                     this.curProduct = { ...this.curProduct, ...m }
                     console.log(m)
-                    // $imgMagnifier.stop().fadeOut(200).fadeIn(200)
                 })
             }
         },

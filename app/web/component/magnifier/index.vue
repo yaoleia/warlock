@@ -6,7 +6,8 @@
                 mouse: {},
                 canMove: false,
                 canI: false,
-                timer: null
+                timer: null,
+                timerCut: null
             }
         },
         props: {
@@ -81,20 +82,36 @@
                 const height = $area.clientHeight
                 const cut = { left, top, width, height }
                 this.imgMagnifier.cut = { ...this.imgMagnifier.cut, ...cut }
-                // this.cutPic(cut)
+                this.imgMagnifier.cutBase64 = ''
+                if (this.timerCut) {
+                    clearTimeout(this.timerCut)
+                    this.timerCut = null
+                }
+                this.timerCut = setTimeout(() => {
+                    this.cutPic(cut)
+                    this.timerCut = null;
+                }, 400);
             },
             async cutPic(opt) {
-                let img = $(".img-big .img", this.$el)[0]
-                let scaleX = img.naturalWidth / img.clientWidth
-                let scaleY = img.naturalHeight / img.clientHeight
-                let base64 = await this.cutImg(
-                    img.src,
-                    opt.left * scaleX,
-                    opt.top * scaleY,
-                    opt.width * scaleX,
-                    opt.height * scaleY
-                )
-                this.imgMagnifier.cutBase64 = base64
+                let $img = $(".img-big .img", this.$el)[0]
+                let img = new Image()
+                img.onload = async e => {
+                    let scaleX = img.naturalWidth / $img.clientWidth
+                    let scaleY = img.naturalHeight / $img.clientHeight
+                    let base64 = await this.cutImg(
+                        img.src,
+                        opt.left * scaleX,
+                        opt.top * scaleY,
+                        opt.width * scaleX,
+                        opt.height * scaleY
+                    )
+                    this.imgMagnifier.cutBase64 = base64
+                    img = null;
+                }
+                img.onerror = e => {
+                    img = null
+                }
+                img.src = `/api/proxyurl?url=${$img.src}`
             },
             cutImg(imgsrc, x, y, width, height, cutImgType) {
                 cutImgType = cutImgType || "image/jpeg"
@@ -170,15 +187,24 @@
                 $(this.$refs.area).css({ width: wh, height: wh })
                 this.imgMagnifier.cut = { ...this.imgMagnifier.cut, width: wh, height: wh }
                 this.mouse = { ...this.mouse, $areah: wh, $areaw: wh }
+            },
+            showAnimateSetBackground() {
+                if (this.imgMagnifier) {
+                    let path = this.imgMagnifier.mask_img_path
+                    if (path) {
+                        this.$refs.area.style.backgroundImage = `url(${path})`
+                        let $imgMagnifier = $(".img-stream:not(.img-big)", this.$el)
+                        $imgMagnifier.stop().fadeOut(200, function () {
+                            setTimeout(() => {
+                                $(this).show()
+                            }, 250);
+                        })
+                    }
+                }
             }
         },
         mounted() {
-            if (this.imgMagnifier) {
-                let path = this.imgMagnifier.mask_img_path
-                if (path) {
-                    this.$refs.area.style.backgroundImage = `url(${path})`
-                }
-            }
+            this.showAnimateSetBackground()
         },
         watch: {
             "mouse.e": async function (e) {
@@ -189,10 +215,11 @@
                 this.timer = setTimeout(() => {
                     this.getArea()
                     this.timer = null
-                }, 14)
+                }, 13)
             },
-            imgMagnifier(i) {
-                this.$refs.area.style.backgroundImage = `url(${i.mask_img_path})`
+            imgMagnifier() {
+                this.imgMagnifier.cutBase64 = ''
+                this.showAnimateSetBackground()
             }
         }
     }
