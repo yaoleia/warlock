@@ -7,6 +7,12 @@ module.exports = app => {
 
   exports.serverUrl = env.SERVER_URL || 'http://0.0.0.0:5000';
 
+  exports.cluster = {
+    listen: {
+      port: 7501
+    }
+  };
+
   exports.io = {
     namespace: {
       '/': {

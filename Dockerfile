@@ -16,6 +16,6 @@ ENV SERVER_URL UNSET
 
 RUN yarn build
 
-EXPOSE 7001
+EXPOSE 7501
 
 CMD [ "pm2-runtime", "yarn", "--", "start" ]
