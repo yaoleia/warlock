@@ -20,6 +20,6 @@ export default function createStore() {
     actions,
     getters,
     mutations,
-    plugins: debug ? [createLogger()] : []
+    plugins: debug && EASY_ENV_IS_BROWSER ? [createLogger()] : []
   });
 }

@@ -28,7 +28,7 @@ class RecordService extends Service {
       };
     }
 
-    console.log(json, reqObj);
+    console.log(reqObj);
     // const p1 = this.ctx.http.post(`${this.serverUrl}/record_size`, reqObj);
     // const p2 = this.ctx.http.post(`${this.serverUrl}/record`, reqObj);
     // const resp = await Promise.all([p1, p2]);

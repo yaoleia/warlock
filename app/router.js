@@ -8,7 +8,6 @@ module.exports = app => {
   router.post('/api/article/add', controller.home.add);
   router.get('/api/article/del/:id', controller.home.del);
   router.get('/api/article/:id', controller.home.detail);
-  router.get('/api/proxyurl', controller.proxy.proxyUrl);
   router.post('/api/assist', controller.home.assist);
   router.post('/api/main', controller.home.main);
   router.post('/api/light', controller.home.light);

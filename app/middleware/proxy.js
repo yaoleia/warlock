@@ -1,6 +1,5 @@
 const httpProxy = require('http-proxy');
 const URL = require('url-parse');
-
 const proxy = httpProxy.createProxyServer();
 
 proxy.on('proxyRes', (proxyRes, req, res) => {
@@ -10,16 +9,6 @@ proxy.on('proxyRes', (proxyRes, req, res) => {
     }, msg=${proxyRes.statusMessage}`
   );
 });
-
-async function proxyUrl(ctx, next) {
-  const url = ctx.query.url;
-  const urlObj = new URL(url);
-  ctx.req.url = encodeURI(url);
-  ctx.body = await _webAsync(ctx.req, ctx.res, {
-    target: urlObj.origin
-  });
-  await next();
-}
 
 function _webAsync(req, res, opts) {
   console.log(`Proxying request ${req.url} to ${opts.target}`);
@@ -37,4 +26,13 @@ function _webAsync(req, res, opts) {
   });
 }
 
-exports.proxyUrl = proxyUrl;
+module.exports = () => {
+  return async function(ctx, next) {
+    const url = ctx.query.url;
+    const urlObj = new URL(url);
+    ctx.req.url = encodeURI(url);
+    ctx.body = await _webAsync(ctx.req, ctx.res, {
+      target: urlObj.origin
+    });
+  };
+};
