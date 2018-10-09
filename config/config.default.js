@@ -55,9 +55,18 @@ module.exports = app => {
     dir: path.join(app.baseDir, 'public')
   };
 
+  exports.static = {
+    prefix: '/img/',
+    dir: path.join(app.baseDir, 'images')
+  };
+
   exports.keys = '123456';
 
-  exports.middleware = ['locals', 'access'];
+  exports.middleware = ['locals', 'access', 'gzip'];
+
+  exports.gzip = {
+    threshold: 1024 // 小于 1k 的响应体不压缩
+  };
 
   exports.security = {
     csrf: {

@@ -6,6 +6,7 @@ module.exports = app => {
       await ctx.renderClient('login/login.js', {});
     }
     async home(ctx) {
+      // console.log(ctx.get('user-agent'));
       const serverUrl = app.config.serverUrl;
       const url = ctx.url.replace(/\/index/, '');
       await ctx.render('home/home.js', {
@@ -16,67 +17,9 @@ module.exports = app => {
     }
     async list(ctx) {
       const body = ctx.request.body;
-      const serverUrl = app.config.serverUrl;
-      // this.ctx.body = ctx.service.article.getArtilceList(body);
-      let reqObj = null;
-      if (body.endTime) {
-        reqObj = {
-          limit: body.pageSize,
-          offset: (body.pageIndex - 1) * body.pageSize,
-          end_time: body.endTime
-        };
-        if (body.dateRange) {
-          reqObj.start_time = body.dateRange[0];
-          if (body.endTime > body.dateRange[1]) {
-            reqObj.end_time = body.dateRange[1];
-          }
-        }
-      } else {
-        reqObj = {
-          limit: 20,
-          offset: 0,
-          end_time: new Date().getTime()
-        };
-      }
-
-      console.log(body, reqObj);
-      // const p1 = this.ctx.http.post(`${serverUrl}/record_size`, reqObj);
-      // const p2 = this.ctx.http.post(`${serverUrl}/record`, reqObj);
-      // const resp = await Promise.all([p1, p2]);
-      // this.ctx.body = resp;
-      this.ctx.body = {
-        total: 32,
-        list: [
-          {
-            dm_code: 'FJW5675789734WTG',
-            seg_img_path: '/img/1.jpg',
-            reg_img_path: '/img/2.jpg',
-            dm_code_path: '/img/dmcode--1538018674.jpg',
-            mask_img_path: '/img/3.jpg',
-            defect_type: 0,
-            timestamp: new Date().getTime()
-          },
-          {
-            dm_code: 'FJW5675789734WTG',
-            seg_img_path: '/img/1.jpg',
-            mask_img_path: '/img/3.jpg',
-            reg_img_path: '/img/2.jpg',
-            dm_code_path: '/img/dmcode--1538018674.jpg',
-            defect_type: 1,
-            timestamp: new Date().getTime()
-          },
-          {
-            dm_code: 'FJW5675789734WTG',
-            seg_img_path: '/img/1.jpg',
-            mask_img_path: '/img/3.jpg',
-            reg_img_path: '/img/2.jpg',
-            dm_code_path: '/img/dmcode--1538018674.jpg',
-            defect_type: 2,
-            timestamp: new Date().getTime()
-          }
-        ]
-      };
+      this.ctx.body = await ctx.service.record.getRecordList(body);
     }
+
     async add(ctx) {
       ctx.body = this.service.article.saveArticle(ctx.request.body);
     }
@@ -90,20 +33,16 @@ module.exports = app => {
     }
     async assist(ctx) {
       const serverUrl = app.config.serverUrl;
-      const data = ctx.request.body;
-      const form = new FormData();
-      form.append(
-        'data',
-        JSON.stringify({
-          num: data.b
-        })
-      );
-      const resp = await new Promise((resolve, reject) => {
-        form.submit(`${serverUrl}/detect/USBCam_exposure`, function(err, res) {
-          resolve(res);
-        });
+      const { b } = ctx.request.body;
+
+      const result = await ctx.curl(`${serverUrl}/detect/USBCam_exposure`, {
+        method: 'POST',
+        // 不需要设置 contentType，HttpClient 会默认以 application/x-www-form-urlencoded 格式发送请求
+        data: {
+          data: JSON.stringify({ num: b })
+        }
       });
-      ctx.body = resp;
+      ctx.body = result.data;
     }
     async main(ctx) {
       const serverUrl = app.config.serverUrl;
