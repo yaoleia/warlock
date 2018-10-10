@@ -83,14 +83,14 @@
                 const cut = { left, top, width, height }
                 this.imgMagnifier.cut = { ...this.imgMagnifier.cut, ...cut }
                 this.imgMagnifier.cutBase64 = ''
-                if (this.timerCut) {
-                    clearTimeout(this.timerCut)
-                    this.timerCut = null
-                }
-                this.timerCut = setTimeout(() => {
-                    this.cutPic(cut)
-                    this.timerCut = null;
-                }, 400);
+                // if (this.timerCut) {
+                //     clearTimeout(this.timerCut)
+                //     this.timerCut = null
+                // }
+                // this.timerCut = setTimeout(() => {
+                //     this.cutPic(cut)
+                //     this.timerCut = null;
+                // }, 400);
             },
             async cutPic(opt) {
                 let $img = $(".img-big .img", this.$el)[0]

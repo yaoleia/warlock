@@ -15,9 +15,9 @@ module.exports = app => {
       //     seg_img_path: '/img/1.jpg',
       //     mask_img_path: '/img/3.jpg',
       //     reg_img_path: '/img/2.jpg',
-      //     dm_code_path: '/img/dmcode--1538018674.jpg',
+      //     dm_img_path: '/img/dmcode--1538018674.jpg',
       //     defect_type: 0,
-      //     timestamp: new Date().getTime()
+      //     detect_time: new Date().getTime()
       //   });
       // }, 3000);
     }
