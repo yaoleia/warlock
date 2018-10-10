@@ -5,10 +5,10 @@
 	"dm_code": "FJW5675789734WTG",
 	"seg_img_path": "/tmp/foxconn/seg/2_15884679942.jpg", //目标定位
     "reg_img_path": "/tmp/foxconn/sem/2_15884679942.jpg", //高清图
-    "dm_code_path": "/img/dmcode--1538018674.jpg',
+    "dm_img_path": "/img/dmcode--1538018674.jpg',
     "mask_img_path": "3.jpg", //标记图
     "defect_type": 0,
-    "timestamp": 1537844475264
+    "detect_time": 1537844475264
 }
 ```
 
@@ -20,7 +20,7 @@
 | seg_img_path | int       | true     | 分割图的存储路径                         |      |
 | reg_img_path | str       | true     | 检测结果图存储路径                       |      |
 | defect_type  | int       | true     | 缺陷类型：0: 无缺陷; 1:多螺丝; 2:少螺丝; |      |
-| timestamp    | timestamp | true     | 时间戳                                   |      |
+| detect_time  | timestamp | true     | 时间戳                                   |      |
 
 ### 请求示例
 

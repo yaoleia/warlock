@@ -11,7 +11,8 @@
         mask_img_path: "",
         seg_img_path: "",
         reg_img_path: "",
-        timestamp: "",
+        detect_time: "",
+        dm_img_path: "",
         cut: {}
     }
     export default {
@@ -79,6 +80,9 @@
                 return (this.q.pageIndex - 1) * this.q.pageSize + index + 1
             },
             fetchApi(store, json) {
+                if (EASY_ENV_IS_BROWSER) {
+                    this.loading = true;
+                }
                 return store.dispatch(SET_ARTICLE_LIST, json)
             },
             query() {
@@ -146,6 +150,10 @@
                     this.query()
                 }
             },
+            "articleList": function (i) {
+                $(".el-table__body-wrapper", this.$el)[0].scrollTop = 0;
+                this.loading = false;
+            },
             dialogDetailVisible(bol) {
                 if (!bol) {
                     this.$refs.magnifier.close()
@@ -172,16 +180,16 @@
                 </el-select> -->
             <el-date-picker v-model="q.dateRange" type="datetimerange" :picker-options="pickerOptions" start-placeholder="开始时间" end-placeholder="结束时间" align="left" value-format="timestamp">
             </el-date-picker>
-            <el-button class="search-button" type="text" @click="query()">查询</el-button>
+            <el-button class="search-button" type="text" @click="q.pageIndex = 1;query()">查询</el-button>
         </div>
-        <el-table stripe :data="articleList" v-loading="loading" element-loading-text="加载中" :height="innerHeight">
+        <el-table stripe :data="articleList" v-loading="loading" :height="innerHeight">
             <el-table-column type="index" width="55" :index="indexMethod">
             </el-table-column>
             <el-table-column prop="dm_code" label="二维码ID">
             </el-table-column>
-            <!-- <el-table-column prop="dm_code_path" label="二维码">
+            <!-- <el-table-column prop="dm_img_path" label="二维码">
                 <template slot-scope="props">
-                    <img class="dm-code-img" v-if="props.row.dm_code_path" :src="props.row.dm_code_path">
+                    <img class="dm-code-img" v-if="props.row.dm_img_path" :src="props.row.dm_img_path">
                 </template>
             </el-table-column> -->
             <el-table-column prop="defect_type" label="OK/NG">
@@ -194,9 +202,9 @@
                     <span v-text="defectType(props.row.defect_type)"></span>
                 </template>
             </el-table-column>
-            <el-table-column prop="timestamp" label="时间">
+            <el-table-column prop="detect_time" label="时间">
                 <template slot-scope="props">
-                    <span v-text="$moment(props.row.timestamp).format('YYYY-MM-DD HH:mm:ss')"></span>
+                    <span v-text="$moment(props.row.detect_time-0).format('YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="300">
@@ -224,7 +232,7 @@
                     <span>{{cur.dm_code}}</span>
                     <span>{{ifOk(cur.defect_type)}}</span>
                     <span>{{defectType(cur.defect_type)}}</span>
-                    <img class="dm-code-img" v-if="cur.dm_code_path" :src="cur.dm_code_path">
+                    <img class="dm-code-img" v-if="cur.dm_img_path" :src="cur.dm_img_path">
                 </el-card>
             </div>
         </el-dialog>
@@ -239,6 +247,12 @@
     	.el-table {
     		.cell .red {
     			color: #f44336;
+    		}
+    		.el-loading-mask {
+    			background: none;
+    			.el-loading-spinner .path {
+    				stroke: #ff8800;
+    			}
     		}
     	}
     	.el-dialog {
