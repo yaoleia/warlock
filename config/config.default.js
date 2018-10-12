@@ -7,6 +7,12 @@ module.exports = app => {
 
   exports.serverUrl = env.SERVER_URL || 'http://0.0.0.0:5000';
 
+  exports.cluster = {
+    listen: {
+      port: 7501
+    }
+  };
+
   exports.io = {
     namespace: {
       '/': {
@@ -49,9 +55,22 @@ module.exports = app => {
     dir: path.join(app.baseDir, 'public')
   };
 
+  exports.static = {
+    prefix: '/img/',
+    dir: path.join(app.baseDir, 'images')
+  };
+
   exports.keys = '123456';
 
-  exports.middleware = ['locals', 'access'];
+  exports.middleware = ['locals', 'access', 'gzip', 'proxy'];
+
+  exports.proxy = {
+    match: '/api/proxyurl'
+  };
+
+  exports.gzip = {
+    threshold: 1024 // 小于 1k 的响应体不压缩
+  };
 
   exports.security = {
     csrf: {

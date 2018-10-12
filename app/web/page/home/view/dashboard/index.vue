@@ -104,7 +104,7 @@
             <p class="title">
                 <span>检测结果</span>
                 <el-button type="text" class="control-btn" @click="controlWs">{{switchCraft?"暂停":"开始"}}</el-button>
-                <span class="ts" v-if="curProduct.timestamp">{{$moment(curProduct.timestamp).format('YYYY-MM-DD HH:mm:ss')}}</span>
+                <span class="ts" v-if="curProduct.detect_time">{{$moment(curProduct.detect_time).format('YYYY-MM-DD HH:mm:ss')}}</span>
             </p>
             <!-- <el-radio-group v-model="tagRadio" size="small">
                 <el-radio-button label="1">原图</el-radio-button>
@@ -125,7 +125,7 @@
                 <span>{{curProduct.dm_code}}</span><br>
                 <span>{{ifOk}}</span>
                 <span>{{defectType}}</span>
-                <img class="dm-code-img" v-if="curProduct.dm_code_path" :src="curProduct.dm_code_path">
+                <img class="dm-code-img" v-if="curProduct.dm_img_path" :src="curProduct.dm_img_path">
             </el-card>
             <imgStream title="监控" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
         </div>
