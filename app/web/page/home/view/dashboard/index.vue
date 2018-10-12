@@ -127,7 +127,7 @@
                 <span>{{defectType}}</span>
                 <img class="dm-code-img" v-if="curProduct.dm_code_path" :src="curProduct.dm_code_path">
             </el-card>
-                <imgStream title="监控" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
+            <imgStream title="监控" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
         </div>
     </div>
 </template>

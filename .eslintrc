@@ -5,6 +5,9 @@
 		"sourceType": "module"
 	},
 	"rules": {
+		"semi": [
+			0
+		],
 		"arrow-parens": "off",
 		"valid-jsdoc": "off",
 		"eol-last": "off",
