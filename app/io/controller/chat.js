@@ -1,6 +1,6 @@
 const io = require('socket.io-client');
 module.exports = app => {
-  return async function() {
+  return async function () {
     const message = this.args[0];
     const serverUrl = app.config.serverUrl;
     if (!this.socket.ioClient) {
@@ -19,7 +19,7 @@ module.exports = app => {
       //     defect_type: 0,
       //     detect_time: new Date().getTime()
       //   });
-      // }, 3000);
+      // }, 5000);
     }
 
     this.socket.emit('res', `Hi! I've got your message: ${message}`);

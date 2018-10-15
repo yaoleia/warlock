@@ -12,8 +12,8 @@
                     cutBase64: "",
                     cut: {}
                 },
-                tagRadio: "1",
-                switchCraft: true
+                switchCraft: true,
+                showSwitch: false
             }
         },
         computed: {
@@ -51,23 +51,19 @@
             getWsMsg() {
                 if (window.ws.connected) {
                     this.emitChat()
+                    if (!this.showSwitch) this.showSwitch = true;
                 } else {
                     window.ws.on("connect", () => {
+                        if (!this.showSwitch) this.showSwitch = true;
                         this.emitChat()
                     })
                 }
             },
-            controlWs() {
-                this.switchCraft = !this.switchCraft;
-                if (this.switchCraft) {
-                    this.emitChat();
-                } else {
-                    window.ws.off("msg");
-                }
-            },
             emitChat() {
                 window.ws.off("msg").emit("chat", "get").on("msg", m => {
-                    this.curProduct = { ...this.curProduct, ...m }
+                    if (this.switchCraft) {
+                        this.curProduct = { ...this.curProduct, ...m }
+                    }
                     console.log(m)
                 })
             }
@@ -82,10 +78,11 @@
             //   video.play()
             // }
             this.$nextTick(() => {
-                if (this.switchCraft) {
-                    this.getWsMsg()
-                }
+                this.getWsMsg()
             })
+        },
+        watch: {
+
         },
         components: {
             imgStream,
@@ -103,13 +100,10 @@
         <div class="middle-img-col col">
             <p class="title">
                 <span>检测结果</span>
-                <el-button type="text" class="control-btn" @click="controlWs">{{switchCraft?"暂停":"开始"}}</el-button>
+                <el-switch v-if="showSwitch" v-model="switchCraft" active-color="#ff8800">
+                </el-switch>
                 <span class="ts" v-if="curProduct.detect_time">{{$moment(curProduct.detect_time).format('YYYY-MM-DD HH:mm:ss')}}</span>
             </p>
-            <!-- <el-radio-group v-model="tagRadio" size="small">
-                <el-radio-button label="1">原图</el-radio-button>
-                <el-radio-button label="2">标记</el-radio-button>
-            </el-radio-group> -->
             <magnifier :imgMagnifier="curProduct">
                 <imgStream class="img-big" v-if="curProduct.reg_img_path" :url="curProduct.reg_img_path"></imgStream>
                 <imgStream :url="curProduct.mask_img_path"></imgStream>

@@ -41,7 +41,7 @@ class RecordService extends Service {
       //     total: 32,
       //     list: [
       //       {
-      //         dm_code: 'FJW5675789734WTG',
+      //         dm_code: 'FJW5675789734WTG1',
       //         seg_img_path: '/img/1.jpg',
       //         reg_img_path: '/img/2.jpg',
       //         dm_img_path: '/img/dmcode--1538018674.jpg',
@@ -50,7 +50,7 @@ class RecordService extends Service {
       //         detect_time: new Date().getTime()
       //       },
       //       {
-      //         dm_code: 'FJW5675789734WTG',
+      //         dm_code: 'FJW5675789734WTG2',
       //         seg_img_path: '/img/1.jpg',
       //         mask_img_path: '/img/3.jpg',
       //         reg_img_path: '/img/2.jpg',
@@ -59,7 +59,7 @@ class RecordService extends Service {
       //         detect_time: new Date().getTime()
       //       },
       //       {
-      //         dm_code: 'FJW5675789734WTG',
+      //         dm_code: 'FJW5675789734WTG3',
       //         seg_img_path: '/img/1.jpg',
       //         mask_img_path: '/img/3.jpg',
       //         reg_img_path: '/img/2.jpg',

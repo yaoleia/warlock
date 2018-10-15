@@ -96,7 +96,103 @@
     .el-table--striped .el-table__body tr.el-table__row--striped td {
         background: rgba(255, 255, 255, 0.09);
     }
+
+    .pager {
+        margin: 30px 0;
+        text-align: right;
+        .el-input__inner {
+            background: rgba($color: #fff, $alpha: 0.1);
+            border: none;
+            color: #dbdbdb;
+        }
+    }
+    .el-pagination.is-background .el-pager li:not(.disabled).active {
+        background: rgba($color: #fff, $alpha: 0.1);
+        color: #ff8800;
+        box-shadow: 0 0 0 1px #ff8800;
+    }
+    .el-pagination.is-background .el-pager li:not(.disabled):hover {
+        color: #ff8800;
+    }
+    .el-pagination.is-background .btn-next,
+    .el-pagination.is-background .btn-prev,
+    .el-pagination.is-background .el-pager li {
+        color: #dbdbdb;
+        background: rgba($color: #fff, $alpha: 0.1);
+    }
+    .el-pagination.is-background .btn-next.disabled,
+    .el-pagination.is-background .btn-next:disabled,
+    .el-pagination.is-background .btn-prev.disabled,
+    .el-pagination.is-background .btn-prev:disabled,
+    .el-pagination.is-background .el-pager li.disabled {
+        color: #777;
+    }
 }
+
+body {
+    .el-button--text:focus {
+        color: #dbdbdb;
+    }
+    .el-button--text:hover {
+        color: #ff8800;
+    }
+    .el-button--text {
+        color: #dbdbdb;
+    }
+    .el-popper.dm-popper {
+        background: #606266;
+        border-color: #909399;
+        .popper__arrow {
+            border-right-color: #909399;
+            &::after {
+                border-right-color: #606266;
+            }
+        }
+        .dm-pop {
+            img {
+                vertical-align: top;
+                height: 124px;
+            }
+        }
+    }
+}
+
+.dialog-detail-wrap.el-dialog {
+    border-radius: 18px;
+    background: #363636;
+    max-width: 1700px;
+    width: 72%;
+    min-width: 1000px;
+    // height: 80%;
+    min-height: 750px;
+    margin-top: 13vh !important;
+    .btn-left,.btn-right {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 45px;
+        color: #909399;
+        &:hover {
+            color: #ff8800;
+        }
+        &.is-disabled {
+            color: #606266;
+        }
+    }
+    .btn-right {
+        left: auto;
+        right: 10px;
+    }
+    .el-dialog__close {
+        font-size: 24px;
+    }
+    .el-dialog__headerbtn:focus .el-dialog__close,
+    .el-dialog__headerbtn:hover .el-dialog__close {
+        color: #ff8800;
+    }
+}
+
 
 @media screen and (max-width: 1920px) {
     #app .main {
