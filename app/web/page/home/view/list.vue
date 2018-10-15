@@ -190,7 +190,7 @@
             </el-table-column>
             <el-table-column prop="dm_code" label="二维码ID">
             </el-table-column>
-            <el-table-column prop="dm_img_path" label="二维码">
+            <el-table-column prop="dm_img_path" label="二维码" width="220">
                 <template slot-scope="props">
                     <el-popover placement="right" trigger="hover" popper-class="dm-popper">
                         <div class="dm-pop">
@@ -282,7 +282,7 @@
     			}
     		}
     		.dm-code-img-wrap {
-    			cursor: pointer;
+    			cursor: zoom-in;
     			height: 40px;
     			margin: 0 70px;
     			img {
