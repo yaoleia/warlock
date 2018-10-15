@@ -9,8 +9,9 @@ Vue.use(Vuex);
 
 const actions = {
   SET_ARTICLE_LIST: async (store, json) => {
-    const response = await request.post('/api/article/list', json, store);
-    return store.commit(Type.SET_ARTICLE_LIST, response.data);
+    return request.post('/api/article/list', json, store).then(response => {
+      store.commit(Type.SET_ARTICLE_LIST, response.data);
+    })
   },
   SET_ARTICLE_DETAIL: (store, { id }) => {
     const { commit, dispatch, state } = store;
