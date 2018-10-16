@@ -19,10 +19,12 @@
             close() {
                 $(this.$refs.area).addClass("visibilityh")
                 $(".img", this.$el).removeClass("filter")
-                this.$nextTick(() => {
+                this.canMove = false;
+                this.canI = false;
+                setTimeout(() => {
                     this.imgMagnifier.cutBase64 = "";
                     this.imgMagnifier.cut = {};
-                })
+                }, 13)
             },
             mousedown(e) {
                 if (!this.imgMagnifier.reg_img_path) return;
@@ -150,13 +152,18 @@
                 })
             },
             imousedown(e) {
+                this.canI = true;
                 document.onmousemove = ev => {
+                    if (!this.canI) return;
                     this.imousemove(ev)
                     ev.preventDefault()
                 }
                 document.onmouseup = () => {
                     document.onmousemove = null
-                    this.getArea()
+                    if (this.canI) {
+                        this.getArea()
+                    };
+                    this.canI = false;
                     document.onmouseup = null
                 }
             },

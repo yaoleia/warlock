@@ -3,15 +3,23 @@
     import magnifier from "component/magnifier"
     import bigArea from "component/magnifier/bigArea"
     import utils from "framework/utils"
+    let curObj = {
+        cutBase64: "",
+        defect_type: "",
+        dm_code: "",
+        mask_img_path: "",
+        seg_img_path: "",
+        reg_img_path: "",
+        detect_time: "",
+        dm_img_path: "",
+        cut: {}
+    }
     export default {
         data() {
             return {
                 productList: [],
                 opts: {},
-                curProduct: {
-                    cutBase64: "",
-                    cut: {}
-                },
+                curProduct: { ...curObj },
                 switchCraft: true,
                 showSwitch: false
             }
@@ -62,9 +70,23 @@
             emitChat() {
                 window.ws.off("msg").emit("chat", "get").on("msg", m => {
                     if (this.switchCraft) {
-                        this.curProduct = { ...this.curProduct, ...m }
+                        this.$refs.magnifier.close();
+                        this.curProduct = { ...curObj, ...m }
                     }
-                    console.log(m)
+
+                    if (m.defect_type != 0) {
+                        // this.$notify({
+                        //     title: `${m.dm_code}`,
+                        //     customClass: "warlock-warning-notify",
+                        //     dangerouslyUseHTMLString: true,
+                        //     message: `<img src="${m.mask_img_path}">`,
+                        //     type: "warning",
+                        //     position: "bottom-right",
+                        //     onClick() {
+                        //         console.log(m)
+                        //     }
+                        // });
+                    }
                 })
             }
         },
@@ -82,7 +104,11 @@
             })
         },
         watch: {
-
+            'curProduct.cut': function (c) {
+                if (c.width) {
+                    this.switchCraft = false;
+                }
+            }
         },
         components: {
             imgStream,
@@ -104,7 +130,7 @@
                 </el-switch>
                 <span class="ts" v-if="curProduct.detect_time">{{$moment(curProduct.detect_time).format('YYYY-MM-DD HH:mm:ss')}}</span>
             </p>
-            <magnifier :imgMagnifier="curProduct">
+            <magnifier :imgMagnifier="curProduct" ref="magnifier">
                 <imgStream class="img-big" v-if="curProduct.reg_img_path" :url="curProduct.reg_img_path"></imgStream>
                 <imgStream :url="curProduct.mask_img_path"></imgStream>
             </magnifier>
