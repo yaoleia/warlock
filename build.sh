@@ -45,7 +45,7 @@ cp -r config $targetDir
 cp -r images $targetDir
 cp -r public $targetDir
 cp package.json $targetDir
-cp run.sh $targetDir
+cp prod.sh $targetDir
 echo $version > $targetDir/Version
 
 echo "npm i --production..."
