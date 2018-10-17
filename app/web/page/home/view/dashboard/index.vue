@@ -34,6 +34,14 @@
 			// 只会在浏览器执行
 			// this.$options.components.webcam = () => import("component/webcam")
 		},
+		mounted() {
+			this.$request.post('/api/article/list', {}).then(resp => {
+				if (!this.productList.length) {
+					this.productList = resp.data.list;
+					this.curProduct = { ...curObj, ...this.productList[0] }
+				}
+			})
+		},
 		methods: {
 			ifOk(type) {
 				return utils.ifOk(type)

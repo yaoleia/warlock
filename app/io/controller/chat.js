@@ -13,10 +13,10 @@ module.exports = app => {
       //   let random = Math.random() * 10
       //   this.socket.emit('msg', {
       //     dm_code: `FJW5675789734WTG${random.toFixed(3)}`,
-      //     seg_img_path: '/img/1.jpg',
-      //     mask_img_path: '/img/3.jpg',
-      //     reg_img_path: '/img/2.jpg',
-      //     dm_img_path: '/img/dmcode--1538018674.jpg',
+      //     seg_img_path: '/public/mock-img/1.jpg',
+      //     mask_img_path: '/public/mock-img/3.jpg',
+      //     reg_img_path: '/public/mock-img/2.jpg',
+      //     dm_img_path: '/public/mock-img/dmcode--1538018674.jpg',
       //     defect_type: random > 5 ? 0 : random > 7 ? 1 : 2,
       //     detect_time: new Date().getTime()
       //   });
