@@ -12,7 +12,7 @@ module.exports = app => {
       // this.socket.ioClient = setInterval(() => {
       //   let random = Math.random() * 10
       //   this.socket.emit('msg', {
-      //     dm_code: 'FJW5675789734WTG',
+      //     dm_code: `FJW5675789734WTG${random.toFixed(3)}`,
       //     seg_img_path: '/img/1.jpg',
       //     mask_img_path: '/img/3.jpg',
       //     reg_img_path: '/img/2.jpg',

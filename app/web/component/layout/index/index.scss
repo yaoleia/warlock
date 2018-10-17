@@ -193,6 +193,18 @@ body {
     }
 }
 
+.list-complete-item {
+    transition: all 0.5s;
+}
+.list-complete-enter,
+.list-complete-leave-to {
+    opacity: 0;
+    transform: translateY(-30px);
+}
+.list-complete-leave-active {
+    position: absolute;
+}
+
 
 @media screen and (max-width: 1920px) {
     #app .main {
@@ -237,6 +249,16 @@ body {
                     .img-stream {
                         height: 395px;
                     }
+                    .msg-box {
+                        .ts {
+                            left: 54px;
+                            top: 60px;
+                        }
+                        .qa {
+                            right: 50px;
+                            bottom: 50px;
+                        }
+                    }
                 }
 
                 &.middle-img-col {
@@ -254,20 +276,9 @@ body {
 
                 &.right-img-col {
                     width: 390px;
-
-                    .result.img-stream {
-                        height: 395px;
-                    }
-
-                    .img-stream {
-                        height: 264px;
-                    }
-
-                    .msg {
-                        padding: 50px 45px 0;
-                        border-radius: 14px;
-                        height: 108px;
-                    }
+                    height: 812px;
+                    padding: 50px 10px 45px 45px;
+                    border-radius: 14px;
                 }
             }
         }

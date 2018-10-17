@@ -2,7 +2,8 @@
     <el-card class="img-stream">
         <p class="title" v-if="title">{{title}}</p>
         <img :src="url" class="img" @load="loaded" v-if="url" @error="error" :class="{visibility:!show}">
-  </el-card>
+        <slot></slot>
+    </el-card>
 </template>
 <style lang="scss">
     .img-stream {
@@ -21,18 +22,6 @@
     		width: 100%;
     		height: 100%;
     		vertical-align: top;
-    	}
-    	.msg {
-    		position: absolute;
-    		left: 0;
-    		top: 0;
-    		right: 0;
-    		bottom: 0;
-    		margin: auto;
-    		height: 30px;
-    		line-height: 30px;
-    		text-align: center;
-    		color: #ccc;
     	}
     	.visibility {
     		visibility: hidden;
