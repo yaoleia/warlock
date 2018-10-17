@@ -75,16 +75,15 @@
 					this.productList.unshift(m);
 					if (m.defect_type != 0) {
 						this.$notify({
-							title: `缺陷通知`,
+							title: `PID: ${m.dm_code}`,
 							customClass: "warlock-warning-notify",
 							dangerouslyUseHTMLString: true,
-							message: `<div class="img"><img src="${m.mask_img_path}"></div>
-                                <div class="dm-img">
-                                <img class="seg-img" src="${m.seg_img_path}">
-                                <img class="dm" src="${m.dm_img_path}">
-                                <p>${m.dm_code}</p>
-                                <p>${this.defectType(m.defect_type)}</p></div>
-                            `,
+							message: `<div class="dm-img">
+													<p>缺陷: ${this.defectType(m.defect_type)}</p>
+													<img class="dm" src="${m.dm_img_path}">
+													<img class="seg-img" src="${m.seg_img_path}">
+												</div>
+												<div class="img"><img src="${m.mask_img_path}"></div>`,
 							type: "warning",
 							position: "bottom-right",
 							onClick() {
@@ -127,6 +126,11 @@
 				})
 				if (this.switchCraft && this.canScroll) {
 					$(".list-wrap", this.$el)[0].scrollTop = 0;
+				}
+			},
+			productList(list) {
+				while (list.length > 100) {
+					list.pop();
 				}
 			}
 		},
@@ -171,15 +175,15 @@
 			<p class="title">
 				<span>实时记录</span>
 			</p>
-
 			<div class="list-wrap">
 				<transition-group name="list-complete" tag="p">
-					<div class="list-complete-item" :class="p.act?'red':''" :key="p.detect_time" v-for="p in productList" @click="listItemClick(p)">
+					<div class="list-complete-item" :class="p.act?'act':''" :key="p.detect_time" v-for="(p) in productList" @click="listItemClick(p)">
 						<div class="dm-img">
-							<p class="ts">{{$moment(p.detect_time).format('YYYY-MM-DD HH:mm:ss')}}</p>
-							<img class="dm" :src="p.dm_img_path">
-							<p>{{p.dm_code}}</p>
-							<p>{{defectType(p.defect_type)}}</p>
+							<!-- <img class="dm" :src="p.dm_img_path"> -->
+							<p>PID: {{p.dm_code}}</p>
+							<p class="ts">检测时间: {{$moment(p.detect_time).format('YYYY-MM-DD HH:mm:ss')}}</p>
+							<p class="defect" v-if='p.defect_type != 0'>缺陷: <span class="red">{{defectType(p.defect_type)}}</span></p>
+							<span class="ng" v-if='p.defect_type != 0'>NG</span>
 						</div>
 					</div>
 				</transition-group>
@@ -194,10 +198,10 @@
 
 	.warlock-warning-notify {
 		color: #ddd;
-		background-color: #f44336;
+		background-color: rgba(244, 67, 54, 0.7);
 		border: none;
-		height: 300px;
-		width: 360px;
+		height: 280px;
+		width: 400px;
 		.el-notification__group {
 			height: 100%;
 			width: 100%;
@@ -206,30 +210,43 @@
 			color: #ddd;
 		}
 		.img {
-			width: 120px;
-			height: 240px;
+			width: 100px;
+			height: 200px;
 		}
 		img {
 			width: 100%;
 			height: 100%;
 		}
 		.el-notification__content > p {
+			padding-top: 15px;
 			display: flex;
 		}
 		.dm-img {
-			width: 60px;
+			width: 150px;
 			height: 200px;
-			margin-left: 20px;
+			margin-right: 40px;
 			color: #ddd;
 			line-height: 25px;
+			> p {
+				display: inline-block;
+				border-radius: 4px;
+				line-height: 20px;
+				padding: 8px;
+				background: rgba(204, 204, 204, 0.2);
+				margin-bottom: 10px;
+				color: #fff;
+			}
 			.dm {
 				width: 60px;
 				height: 60px;
 			}
 			.seg-img {
-				width: 150px;
-				height: 100px;
+				width: 120px;
+				height: 80px;
 			}
+		}
+		.el-notification__closeBtn.el-icon-close {
+			color: #eee;
 		}
 	}
 	.dashboard {
@@ -353,6 +370,7 @@
 				height: 1082px;
 				padding: 66px 20px 60px 40px;
 				display: block;
+				overflow: hidden;
 				.list-wrap {
 					overflow: auto;
 					width: 100%;
@@ -365,11 +383,19 @@
 						padding: 10px 20px;
 						cursor: pointer;
 						border-radius: 5px;
-						&.red {
+						border-bottom: 1px solid #444;
+						line-height: 30px;
+						position: relative;
+						&.act {
 							background: #222;
 						}
 						&:last-child {
 							border: none;
+						}
+						.ts,
+						.defect {
+							font-size: 14px;
+							color: #888;
 						}
 						img {
 							width: 100%;
@@ -386,6 +412,26 @@
 						.img {
 							width: 100px;
 							height: 200px;
+						}
+						.dm-img {
+							span.red {
+								color: #f44336;
+							}
+							.ng {
+								position: absolute;
+								top: 20px;
+								right: 20px;
+								z-index: 1;
+								width: 24px;
+								height: 24px;
+								line-height: 24px;
+								font-size: 13px;
+								background-color: #f44336;
+								color: #373535;
+								text-align: center;
+								border-radius: 50%;
+								box-shadow: 0 0 0 4px rgba(218, 37, 29, 0.5);
+							}
 						}
 					}
 				}

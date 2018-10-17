@@ -201,7 +201,7 @@
                     if (path) {
                         this.$refs.area.style.backgroundImage = `url(${path})`
                         let $imgMagnifier = $(".img-stream:not(.img-big)", this.$el)
-                        $imgMagnifier.finish().fadeOut().fadeIn();
+                        $imgMagnifier.finish().fadeOut("fast").fadeIn();
                     }
                 }
             }
