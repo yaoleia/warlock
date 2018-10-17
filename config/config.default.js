@@ -52,12 +52,7 @@ module.exports = app => {
 
   exports.static = {
     prefix: '/public/',
-    dir: path.join(app.baseDir, 'public')
-  };
-
-  exports.static = {
-    prefix: '/img/',
-    dir: path.join(app.baseDir, 'images')
+    dir: [path.join(app.baseDir, 'images'), path.join(app.baseDir, 'public')]
   };
 
   exports.keys = '123456';

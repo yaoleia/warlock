@@ -42,28 +42,28 @@ class RecordService extends Service {
       //     list: [
       //       {
       //         dm_code: 'FJW5675789734WTG1',
-      //         seg_img_path: '/img/1.jpg',
-      //         reg_img_path: '/img/2.jpg',
-      //         dm_img_path: '/img/dmcode--1538018674.jpg',
-      //         mask_img_path: '/img/3.jpg',
+      //         seg_img_path: '/public/mock-img/1.jpg',
+      //         reg_img_path: '/public/mock-img/2.jpg',
+      //         dm_img_path: '/public/mock-img/dmcode--1538018674.jpg',
+      //         mask_img_path: '/public/mock-img/3.jpg',
       //         defect_type: 0,
       //         detect_time: new Date().getTime()
       //       },
       //       {
       //         dm_code: 'FJW5675789734WTG2',
-      //         seg_img_path: '/img/1.jpg',
-      //         mask_img_path: '/img/3.jpg',
-      //         reg_img_path: '/img/2.jpg',
-      //         dm_img_path: '/img/dmcode--1538018674.jpg',
+      //         seg_img_path: '/public/mock-img/1.jpg',
+      //         mask_img_path: '/public/mock-img/3.jpg',
+      //         reg_img_path: '/public/mock-img/2.jpg',
+      //         dm_img_path: '/public/mock-img/dmcode--1538018674.jpg',
       //         defect_type: 1,
       //         detect_time: new Date().getTime()
       //       },
       //       {
       //         dm_code: 'FJW5675789734WTG3',
-      //         seg_img_path: '/img/1.jpg',
-      //         mask_img_path: '/img/3.jpg',
-      //         reg_img_path: '/img/2.jpg',
-      //         dm_img_path: '/img/dmcode--1538018674.jpg',
+      //         seg_img_path: '/public/mock-img/1.jpg',
+      //         mask_img_path: '/public/mock-img/3.jpg',
+      //         reg_img_path: '/public/mock-img/2.jpg',
+      //         dm_img_path: '/public/mock-img/dmcode--1538018674.jpg',
       //         defect_type: 2,
       //         detect_time: new Date().getTime()
       //       }
