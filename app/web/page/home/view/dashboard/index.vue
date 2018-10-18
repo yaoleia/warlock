@@ -81,6 +81,7 @@
 					}
 					m.act = false;
 					this.productList.unshift(m);
+					let self = this;
 					if (m.defect_type != 0) {
 						this.$notify({
 							title: `PID: ${m.dm_code}`,
@@ -95,7 +96,10 @@
 							type: "warning",
 							position: "bottom-right",
 							onClick() {
-								console.log(m)
+								if (self.$route.path != "/") {
+									self.$router.push("/")
+								}
+								self.listItemClick(m);
 							}
 						});
 					}
@@ -210,6 +214,7 @@
 		border: none;
 		height: 280px;
 		width: 400px;
+		cursor: pointer;
 		.el-notification__group {
 			height: 100%;
 			width: 100%;
