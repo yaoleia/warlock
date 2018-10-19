@@ -3,6 +3,7 @@
 	import magnifier from "component/magnifier"
 	import bigArea from "component/magnifier/bigArea"
 	import utils from "framework/utils"
+	import * as d3 from "d3";
 	let curObj = {
 		cutBase64: "",
 		defect_type: "",
@@ -22,7 +23,11 @@
 				curProduct: { ...curObj },
 				switchCraft: true,
 				showSwitch: false,
-				canScroll: true
+				canScroll: true,
+				svg: {
+					width: 600,
+					height: 400
+				}
 			}
 		},
 		computed: {
@@ -39,6 +44,8 @@
 				if (!this.productList.length) {
 					this.productList = resp.data.list;
 					this.curProduct = { ...curObj, ...this.productList[0] }
+					let data = [[30, 30], [200, 30], [200, 200], [30, 200], [30, 30]];
+					this.drawArea(data)
 				}
 			})
 		},
@@ -108,6 +115,39 @@
 			listItemClick(p) {
 				this.switchCraft = false;
 				this.curProduct = { ...curObj, ...p }
+			},
+			drawArea(data) {
+				data = Object.values(data);
+				data.push(data[0]);
+				let $msgBox = $(".msg.flicker", this.$el);
+				let mWidth = $msgBox[0].clientWidth, mHeight = $msgBox[0].clientHeight;
+				this.svg.width = mWidth;
+				this.svg.height = mHeight;
+
+				let img = new Image()
+				img.onload = e => {
+					let scaleX = img.naturalWidth / mWidth
+					let scaleY = img.naturalHeight / mHeight
+					let boardArea = d3.select("#board-area"), lineGenerator = d3.line()
+						.x(function (d) {
+							return d.x / scaleX
+						})
+						.y(function (d) {
+							return d.y / scaleY
+						});
+					boardArea.selectAll("*").remove();
+					boardArea.append('path')
+						.attr('stroke', '#f44336')
+						.attr('stroke-width', '2')
+						.attr('fill', 'none')
+						.attr('d', lineGenerator(data));
+
+					img = null;
+				}
+				img.onerror = e => {
+					img = null
+				}
+				img.src = this.curProduct.seg_img_path
 			}
 		},
 		activated() {
@@ -139,6 +179,8 @@
 				if (this.switchCraft && this.canScroll) {
 					$(".list-wrap", this.$el)[0].scrollTop = 0;
 				}
+
+				this.drawArea(p.phone_box)
 			},
 			productList(list) {
 				while (list.length > 100) {
@@ -158,7 +200,8 @@
 		<div class="left-img-col col">
 			<imgStream class="mb30" title="拍摄原图" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
 			<imgStream title="目标定位" class="msg-box" :url="curProduct.seg_img_path">
-				<div class="msg flicker" v-if="curProduct.detect_time">
+				<div class="msg flicker" v-show="curProduct.detect_time">
+					<svg id="board-area" :width="svg.width" :height="svg.height"></svg>
 					<p class="ts">{{$moment(curProduct.detect_time).format('YYYY-MM-DD HH:mm:ss')}}</p>
 					<div class="qa">
 						<span :class="ifOk(curProduct.defect_type) === 'OK'?'':'red'">{{ifOk(curProduct.defect_type)}}</span>
@@ -306,30 +349,31 @@
 				}
 				.msg {
 					position: absolute;
-					left: 0;
-					top: 0;
-					width: 100%;
-					height: 100%;
-					padding: 60px;
+					left: 60px;
+					top: 66px;
+					width: calc(100% - 120px);
+					height: calc(100% - 126px);
 					color: #9c9c9c;
 					line-height: 25px;
 					.ts {
 						border-radius: 5px;
 						position: absolute;
-						left: 65px;
-						top: 71px;
+						left: 0;
+						top: 0;
 						background: rgba($color: #ccc, $alpha: 0.2);
 						padding: 5px;
+						margin: 10px;
 					}
 					.qa {
 						position: absolute;
-						right: 65px;
-						bottom: 65px;
+						right: 0;
+						bottom: 0;
 						height: 70px;
 						padding: 10px 70px 10px 0;
 						text-align: right;
 						background: rgba(204, 204, 204, 0.2);
 						border-radius: 5px;
+						margin: 10px;
 						.dm-code-img {
 							position: absolute;
 							right: 5px;

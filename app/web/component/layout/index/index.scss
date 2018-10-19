@@ -249,15 +249,12 @@ body {
                     .img-stream {
                         height: 395px;
                     }
-                    .msg-box {
-                        .ts {
-                            left: 54px;
-                            top: 60px;
-                        }
-                        .qa {
-                            right: 50px;
-                            bottom: 50px;
-                        }
+
+                    .msg {
+                        left: 45px;
+                        top: 50px;
+                        width: calc(100% - 90px);
+                        height: calc(100% - 95px);
                     }
                 }
 
