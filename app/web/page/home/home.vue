@@ -11,6 +11,9 @@
     import IndexLayout from "component/layout/index"
     import navs from "./view/nav.vue"
     import io from "socket.io-client"
+    import ElementUI from 'element-ui';
+    import 'asset/css/element-variables.scss'
+    Vue.use(ElementUI);
 
     const store = createStore()
     const router = createRouter()
