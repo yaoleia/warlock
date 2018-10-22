@@ -42,11 +42,14 @@
         methods: {
             loaded() {
                 this.show = true
-                this.$emit("loaded")
+                this.$emit("loaded");
             },
             error(e) {
                 this.try--;
-                if (this.try <= 0) return;
+                if (this.try <= 0) {
+                    this.$emit("error");
+                    return;
+                };
                 setTimeout(() => {
                     let url = e.target.src;
 
