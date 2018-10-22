@@ -82,9 +82,6 @@
 			color: #ff8800;
 			opacity: 1;
 		}
-		.el-tabs__active-bar {
-			background-color: #ff8800;
-		}
 		.el-tabs__nav-wrap::after {
 			background: none;
 		}

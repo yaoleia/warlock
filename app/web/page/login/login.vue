@@ -2,7 +2,7 @@
   <div class="login">
     <div class="login-form">
       <div class="login-header">
-        <img src="../../asset/images/logo.png" height="100" alt="">
+        <img src="../../asset/images/logo_nav.png" height="100" alt="">
         <p>IBlog</p>
       </div>
       <div class="login-info">
@@ -23,7 +23,7 @@
 </template>
 
 <style lang="scss">
-  @import "login.scss";
+  @import 'login.scss';
 </style>
 
 <script type="text/babel">

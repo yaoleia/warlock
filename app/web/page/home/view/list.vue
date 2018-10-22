@@ -264,9 +264,6 @@
     		}
     		.el-loading-mask {
     			background: none;
-    			.el-loading-spinner .path {
-    				stroke: #ff8800;
-    			}
     		}
     		.dm-code-img-wrap {
     			cursor: zoom-in;

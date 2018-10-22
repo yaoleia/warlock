@@ -193,7 +193,7 @@
         <div class="middle-img-col col">
             <p class="title">
                 <span>检测结果</span>
-                <el-switch v-if="showSwitch" v-model="switchCraft" active-color="#ff8800">
+                <el-switch v-if="showSwitch" v-model="switchCraft">
                 </el-switch>
             </p>
             <transition name="el-fade-in-linear">
@@ -324,13 +324,6 @@
     				width: 660px;
     				height: 660px;
     				box-shadow: 10px 10px 8px 0 #000;
-    			}
-    			.control-btn {
-    				color: #9c9c9c;
-    				padding-left: 30px;
-    			}
-    			.el-button--text:hover {
-    				color: #ff8800;
     			}
     			.img-stream {
     				padding: 0;
