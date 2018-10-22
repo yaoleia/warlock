@@ -47,7 +47,13 @@ class RecordService extends Service {
       //         dm_img_path: '/public/mock-img/dmcode--1538018674.jpg',
       //         mask_img_path: '/public/mock-img/3.jpg',
       //         defect_type: 0,
-      //         detect_time: new Date().getTime()
+      //         detect_time: new Date().getTime(),
+      //         phone_box: {
+      //           point1: { x: 3142, y: 1776 },
+      //           point2: { x: 2079, y: 1761 },
+      //           point3: { x: 2106, y: -113 },
+      //           point4: { x: 3169, y: -98 }
+      //         }
       //       },
       //       {
       //         dm_code: 'FJW5675789734WTG2',
