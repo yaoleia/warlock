@@ -32,7 +32,10 @@ export default function createRouter() {
       },
       {
         path: '/debug',
-        component: Debug
+        component: Debug,
+        meta: {
+          noKeepAlive: true
+        }
       },
       {
         path: '/article/add',

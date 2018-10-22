@@ -38,9 +38,16 @@
         },
         mounted() {
             this.$request.post('/api/article/list', {}).then(resp => {
-                if (!this.productList.length) {
-                    this.productList = resp.data.list;
-                    this.curProduct = { ...curObj, ...this.productList[0] }
+                if (resp.data.list) {
+                    if (this.productList.length === 0 && resp.data.list[0]) {
+                        this.curProduct = { ...curObj, ...resp.data.list[0] }
+                    }
+                    resp.data.list.forEach(l => {
+                        let prod = this.productList.find(ll => ll.dm_code === l.dm_code)
+                        if (!prod) {
+                            this.productList.push(l)
+                        }
+                    })
                 }
             })
         },
@@ -154,7 +161,7 @@
                 this.drawArea(p.phone_box)
             },
             productList(list) {
-                while (list.length > 200) {
+                while (list && list.length > 200) {
                     list.pop();
                 }
             }

@@ -42,6 +42,7 @@
         methods: {
             loaded() {
                 this.show = true
+                this.$emit("loaded")
             },
             error(e) {
                 this.try--;
