@@ -1,13 +1,13 @@
 <template>
 	<div class="debug">
-		<headerBtns />
+		<header-btns />
 		<div class="right-content">
 			<el-tabs v-model="activeName">
 				<el-tab-pane label="主摄像机" name="main"></el-tab-pane>
-				<el-tab-pane label="辅助摄像机" name="assist"></el-tab-pane>
+				<el-tab-pane label="辅助摄像机" name="usb"></el-tab-pane>
 			</el-tabs>
 			<imgStream class="detect-main" v-show="activeName=='main'" @loaded="loaded('main')" @error="error('main')" :url="`${serverUrl}/detect/video_feed_main`"></imgStream>
-			<imgStream class="detect-assist" v-show="activeName=='assist'" @loaded="loaded('assist')" @error="error('assist')" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
+			<imgStream class="detect-usb" v-show="activeName=='usb'" @loaded="loaded('usb')" @error="error('usb')" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
 		</div>
 	</div>
 </template>
@@ -20,7 +20,7 @@
 			return {
 				activeName: "main",
 				mainLoad: false,
-				assistLoad: false
+				usbLoad: false
 			}
 		},
 		components: {
@@ -44,7 +44,7 @@
 		mounted() {
 			let opt = { fullscreen: false, background: "transparent" }
 			this.mainLoad = this.$loading({ target: '.detect-main', ...opt })
-			this.assistLoad = this.$loading({ target: '.detect-assist', ...opt })
+			this.usbLoad = this.$loading({ target: '.detect-usb', ...opt })
 		}
 	}
 </script>
