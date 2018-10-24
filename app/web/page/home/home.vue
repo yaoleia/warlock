@@ -1,6 +1,6 @@
 <template>
     <IndexLayout>
-        <param-nav />
+        <header-nav />
     </IndexLayout>
 </template>
 <script type="text/babel">
@@ -9,7 +9,7 @@
     import createStore from "./store/app"
     import createRouter from "./router"
     import IndexLayout from "component/layout/index"
-    import ParamNav from "./view/ParamNav.vue"
+    import HeaderNav from "./view/HeaderNav.vue"
     import io from "socket.io-client"
     import ElementUI from 'element-ui';
     import 'asset/css/element-variables.scss'
@@ -29,7 +29,7 @@
         },
         components: {
             IndexLayout,
-            ParamNav
+            HeaderNav
         },
         mounted() {
             this.startWsConnection()
