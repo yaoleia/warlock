@@ -161,7 +161,7 @@
                 this.drawArea(p.phone_box)
             },
             productList(list) {
-                while (list && list.length > 200) {
+                while (list && list.length > 100) {
                     list.pop();
                 }
             }
