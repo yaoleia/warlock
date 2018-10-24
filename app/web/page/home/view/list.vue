@@ -69,7 +69,7 @@
     </div>
 </template>
 <script type="babel">
-    import dialogDetail from "./dialogDetail.vue"
+    import DialogDetail from "./DialogDetail.vue"
     import { SET_ARTICLE_LIST, DELETE_ARTICLE } from "../store/app/mutation-type"
     import utils from "framework/utils"
     let curObj = {
@@ -85,7 +85,7 @@
     }
     export default {
         components: {
-            dialogDetail
+            DialogDetail
         },
         data() {
             return {

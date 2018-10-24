@@ -7,7 +7,7 @@
 </style>
 <script type="text/babel">
     export default {
-      methods: {},
-      beforeMount() {}
+        methods: {},
+        beforeMount() { }
     }
 </script>
