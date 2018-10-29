@@ -13,7 +13,7 @@
         seg_img_path: "",
         reg_img_path: "",
         detect_time: "",
-        dm_img_path: "",
+        dm_path: "",
         cut: {}
     }
     export default {
@@ -91,7 +91,7 @@
                             dangerouslyUseHTMLString: true,
                             message: `<div class="dm-img">
 													<p>缺陷: ${this.defectType(m.defect_type)}</p>
-													<img class="dm" src="${m.dm_img_path}">
+													<img class="dm" src="${m.dm_path}">
 													<img class="seg-img" src="${m.seg_img_path}">
 												</div>
 												<div class="img"><img src="${m.mask_img_path}"></div>`,
@@ -185,7 +185,7 @@
                         <span :class="ifOk(curProduct.defect_type) === 'OK'?'':'red'">{{ifOk(curProduct.defect_type)}}</span>
                         <span> {{defectType(curProduct.defect_type)}} </span><br>
                         <span> {{curProduct.dm_code}} </span>
-                        <img class="dm-code-img" v-if="curProduct.dm_img_path" :src="curProduct.dm_img_path">
+                        <img class="dm-code-img" v-if="curProduct.dm_path" :src="curProduct.dm_path">
                     </div>
                 </div>
             </imgStream>

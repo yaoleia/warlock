@@ -22,14 +22,14 @@
             </el-table-column>
             <el-table-column prop="dm_code" label="二维码ID">
             </el-table-column>
-            <el-table-column prop="dm_img_path" label="二维码" width="220">
+            <el-table-column prop="dm_path" label="二维码" width="220">
                 <template slot-scope="props">
                     <el-popover placement="right" trigger="hover" popper-class="dm-popper">
                         <div class="dm-pop">
-                            <img :src="props.row.dm_img_path">
+                            <img :src="props.row.dm_path">
                         </div>
                         <div class="dm-code-img-wrap" slot="reference">
-                            <img class="dm-code-img" v-if="props.row.dm_img_path" :src="props.row.dm_img_path">
+                            <img class="dm-code-img" v-if="props.row.dm_path" :src="props.row.dm_path">
                         </div>
                     </el-popover>
                 </template>
@@ -80,7 +80,7 @@
         seg_img_path: "",
         reg_img_path: "",
         detect_time: "",
-        dm_img_path: "",
+        dm_path: "",
         cut: {}
     }
     export default {

@@ -12,7 +12,7 @@
 				<span>{{cur.dm_code}}</span>
 				<span>{{ifOk(cur.defect_type)}}</span>
 				<span>{{defectType(cur.defect_type)}}</span>
-				<img class="dm-code-img" v-if="cur.dm_img_path" :src="cur.dm_img_path">
+				<img class="dm-code-img" v-if="cur.dm_path" :src="cur.dm_path">
 				<p>{{$moment(cur.detect_time-0).format('YYYY-MM-DD HH:mm:ss')}}</p>
 			</el-card>
 		</div>

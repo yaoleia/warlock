@@ -17,7 +17,7 @@ module.exports = app => {
       //     seg_img_path: '/public/mock-img/1.jpg',
       //     mask_img_path: '/public/mock-img/3.jpg',
       //     reg_img_path: '/public/mock-img/2.jpg',
-      //     dm_img_path: '/public/mock-img/dmcode--1538018674.jpg',
+      //     dm_path: '/public/mock-img/dmcode--1538018674.jpg',
       //     defect_type: random > 5 ? 0 : random > 7 ? 1 : 2,
       //     detect_time: new Date().getTime(),
       //     phone_box: {

@@ -44,7 +44,7 @@ class RecordService extends Service {
       //         dm_code: 'FJW5675789734WTG1',
       //         seg_img_path: '/public/mock-img/1.jpg',
       //         reg_img_path: '/public/mock-img/2.jpg',
-      //         dm_img_path: '/public/mock-img/dmcode--1538018674.jpg',
+      //         dm_path: '/public/mock-img/dmcode--1538018674.jpg',
       //         mask_img_path: '/public/mock-img/3.jpg',
       //         defect_type: 0,
       //         detect_time: new Date().getTime(),
@@ -60,7 +60,7 @@ class RecordService extends Service {
       //         seg_img_path: '/public/mock-img/1.jpg',
       //         mask_img_path: '/public/mock-img/3.jpg',
       //         reg_img_path: '/public/mock-img/2.jpg',
-      //         dm_img_path: '/public/mock-img/dmcode--1538018674.jpg',
+      //         dm_path: '/public/mock-img/dmcode--1538018674.jpg',
       //         defect_type: 1,
       //         detect_time: new Date().getTime()
       //       },
@@ -69,7 +69,7 @@ class RecordService extends Service {
       //         seg_img_path: '/public/mock-img/1.jpg',
       //         mask_img_path: '/public/mock-img/3.jpg',
       //         reg_img_path: '/public/mock-img/2.jpg',
-      //         dm_img_path: '/public/mock-img/dmcode--1538018674.jpg',
+      //         dm_path: '/public/mock-img/dmcode--1538018674.jpg',
       //         defect_type: 2,
       //         detect_time: new Date().getTime()
       //       }
@@ -86,7 +86,7 @@ class RecordService extends Service {
             'http://0.0.0.0:5000',
             this.serverUrl
           );
-          l.dm_img_path = l.dm_img_path.replace(
+          l.dm_path = l.dm_path.replace(
             'http://0.0.0.0:5000',
             this.serverUrl
           );
