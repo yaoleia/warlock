@@ -36,7 +36,7 @@
                 try: 2
             };
         },
-        props: ["url", "title"],
+        props: ["url", "title", "alwaysTry"],
         components: {},
         mounted() { },
         methods: {
@@ -45,7 +45,9 @@
                 this.$emit("loaded");
             },
             error(e) {
-                this.try--;
+                if (!this.alwaysTry) {
+                    this.try--;
+                }
                 if (this.try <= 0) {
                     this.$emit("error");
                     return;

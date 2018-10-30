@@ -115,8 +115,21 @@
                 let boardArea = d3.select("#board-area");
                 boardArea.selectAll("*").remove();
                 if (!data) return;
-                data = Object.values(data);
-                data.push(data[0]);
+
+                // 排序画框4点
+                let [p0, ...ps] = Object.values(data), p0max = 0, p2, p13 = [];
+                ps.forEach(p => {
+                    let max = Math.abs(p0.x - p.x) + Math.abs(p0.y - p.y);
+                    if (max >= p0max) {
+                        p0max = max;
+                        p2 && p13.push(p2)
+                        p2 = p;
+                    } else {
+                        p13.push(p)
+                    }
+                })
+                data = [p0, p13[0], p2, p13[1], p0];
+
                 let $msgBox = $(".msg.flicker", this.$el);
                 let mWidth = $msgBox[0].clientWidth, mHeight = $msgBox[0].clientHeight;
                 this.svg.width = mWidth;
@@ -176,11 +189,11 @@
 <template>
     <div class="dashboard">
         <div class="left-img-col col">
-            <imgStream class="mb30" title="拍摄原图" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
-            <imgStream title="目标定位" class="msg-box" :url="curProduct.seg_img_path">
+            <imgStream :alwaysTry="true" class="mb30" title="拍摄原图" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
+            <imgStream :alwaysTry="true" title="目标定位" class="msg-box" :url="curProduct.seg_img_path">
                 <div class="msg flicker" v-show="curProduct.detect_time">
                     <svg id="board-area" :width="svg.width" :height="svg.height"></svg>
-                    <p class="ts">{{$moment(curProduct.detect_time).format('YYYY-MM-DD HH:mm:ss')}}</p>
+                    <p class="ts">{{$moment(curProduct.detect_time-0).format('YYYY-MM-DD HH:mm:ss')}}</p>
                     <div class="qa">
                         <span :class="ifOk(curProduct.defect_type) === 'OK'?'':'red'">{{ifOk(curProduct.defect_type)}}</span>
                         <span> {{defectType(curProduct.defect_type)}} </span><br>
@@ -200,8 +213,8 @@
                 <big-area v-show="curProduct.cut.width" class="result" :opt="curProduct"></big-area>
             </transition>
             <magnifier :imgMagnifier="curProduct" ref="magnifier">
-                <imgStream class="img-big" v-if="curProduct.reg_img_path" :url="curProduct.reg_img_path"></imgStream>
-                <imgStream :url="curProduct.mask_img_path"></imgStream>
+                <imgStream :alwaysTry="true" class="img-big" v-if="curProduct.reg_img_path" :url="curProduct.reg_img_path"></imgStream>
+                <imgStream :alwaysTry="true" :url="curProduct.mask_img_path"></imgStream>
             </magnifier>
         </div>
         <div class="right-img-col col" @mousemove.prevent="canScroll=false" @mouseleave.prevent="canScroll=true">
@@ -213,7 +226,7 @@
                     <div class="list-complete-item" :class="p.act?'act':''" :key="p.dm_code" v-for="(p) in productList" @click="listItemClick(p)">
                         <div class="dm-img">
                             <p>PID: {{p.dm_code}}</p>
-                            <p class="ts">检测时间: {{$moment(p.detect_time).format('YYYY-MM-DD HH:mm:ss')}}</p>
+                            <p class="ts">检测时间: {{$moment(p.detect_time-0).format('YYYY-MM-DD HH:mm:ss')}}</p>
                             <p class="defect" v-if='p.defect_type != 0'>缺陷: <span class="red">{{defectType(p.defect_type)}}</span></p>
                             <span class="ng" v-if='p.defect_type != 0'>NG</span>
                         </div>
