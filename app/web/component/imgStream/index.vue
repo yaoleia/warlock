@@ -45,6 +45,7 @@
                 this.$emit("loaded");
             },
             error(e) {
+                if (!e.target) return;
                 if (!this.alwaysTry) {
                     this.try--;
                 }

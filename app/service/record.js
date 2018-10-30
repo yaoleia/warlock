@@ -78,22 +78,11 @@ class RecordService extends Service {
       // };
       if (resp.data && resp.code === 1) {
         resp.data.list.forEach(l => {
-          l.seg_img_path = l.seg_img_path.replace(
-            'http://0.0.0.0:5000',
-            this.serverUrl
-          );
-          l.reg_img_path = l.reg_img_path.replace(
-            'http://0.0.0.0:5000',
-            this.serverUrl
-          );
-          l.dm_path = l.dm_path.replace(
-            'http://0.0.0.0:5000',
-            this.serverUrl
-          );
-          l.mask_img_path = l.mask_img_path.replace(
-            'http://0.0.0.0:5000',
-            this.serverUrl
-          );
+          for (let attr in l) {
+            if (attr.indexOf("_path") !== -1) {
+              l[attr] = l[attr].replace('http://0.0.0.0:5001', this.serverUrl).replace("5000", "5001");
+            }
+          }
         });
         return resp.data;
       } else {

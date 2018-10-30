@@ -7,7 +7,7 @@ module.exports = app => {
       this.socket.ioClient = ioClient(
         `${serverUrl}/detect_push`,
         this.socket,
-        'ak'
+        'ak', serverUrl
       );
       // this.socket.ioClient = setInterval(() => {
       //   let random = Math.random() * 10
@@ -34,7 +34,7 @@ module.exports = app => {
   };
 };
 
-function ioClient(addr, socket, ak) {
+function ioClient(addr, socket, ak, serverUrl) {
   let client = io(addr); // 实例detect_push的ws
   client.on('connect', () => {
     console.log(`==== ${addr} ${socket.id} connect! ====`);
@@ -42,6 +42,11 @@ function ioClient(addr, socket, ak) {
 
   client.on('server_response', message => {
     // 转发detect_push到warlock前端
+    for (let attr in message.data) {
+      if (attr.indexOf("_path") !== -1) {
+        message.data[attr] = message.data[attr].replace('http://0.0.0.0:5001', serverUrl).replace("5000", "5001");
+      }
+    }
     socket.emit('msg', message.data);
   });
 
