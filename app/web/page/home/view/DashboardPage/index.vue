@@ -52,6 +52,10 @@
             })
         },
         methods: {
+            close() {
+                this.switchCraft = true;
+                this.curProduct = { ...curObj, ...this.productList[0] }
+            },
             ifOk(type) {
                 return utils.ifOk(type)
             },
@@ -117,18 +121,21 @@
                 if (!data) return;
 
                 // 排序画框4点
-                let [p0, ...ps] = Object.values(data), p0max = 0, p2, p13 = [];
-                ps.forEach(p => {
-                    let max = Math.abs(p0.x - p.x) + Math.abs(p0.y - p.y);
-                    if (max >= p0max) {
-                        p0max = max;
-                        p2 && p13.push(p2)
-                        p2 = p;
-                    } else {
-                        p13.push(p)
-                    }
-                })
-                data = [p0, p13[0], p2, p13[1], p0];
+                // let [p0, ...ps] = Object.values(data), p0max = 0, p2, p13 = [];
+                // ps.forEach(p => {
+                //     let max = Math.abs(p0.x - p.x) + Math.abs(p0.y - p.y);
+                //     if (max >= p0max) {
+                //         p0max = max;
+                //         p2 && p13.push(p2)
+                //         p2 = p;
+                //     } else {
+                //         p13.push(p)
+                //     }
+                // })
+                // data = [p0, p13[0], p2, p13[1], p0];
+
+                const { point1, point2, point3, point4 } = data;
+                data = [point1, point2, point3, point4, point1];
 
                 let $msgBox = $(".msg.flicker", this.$el);
                 let mWidth = $msgBox[0].clientWidth, mHeight = $msgBox[0].clientHeight;
@@ -137,6 +144,7 @@
 
                 let img = new Image()
                 img.onload = e => {
+                    boardArea.selectAll("*").remove();
                     let scaleX = img.naturalWidth / mWidth
                     let scaleY = img.naturalHeight / mHeight
                     let lineGenerator = d3.line().x(d => d.x / scaleX).y(d => d.y / scaleY);
@@ -159,6 +167,12 @@
             'curProduct.cut': function (c) {
                 if (c.width) {
                     this.switchCraft = false;
+                }
+            },
+            switchCraft(s) {
+                if (s) {
+                    this.$refs.magnifier.close();
+                    this.curProduct = { ...curObj, ...this.productList[0] }
                 }
             },
             curProduct(p) {
@@ -212,7 +226,7 @@
             <transition name="el-fade-in-linear">
                 <big-area v-show="curProduct.cut.width" class="result" :opt="curProduct"></big-area>
             </transition>
-            <magnifier :imgMagnifier="curProduct" ref="magnifier">
+            <magnifier @close="close" :imgMagnifier="curProduct" ref="magnifier">
                 <imgStream :alwaysTry="true" class="img-big" v-if="curProduct.reg_img_path" :url="curProduct.reg_img_path"></imgStream>
                 <imgStream :alwaysTry="true" :url="curProduct.mask_img_path"></imgStream>
             </magnifier>

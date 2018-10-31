@@ -16,7 +16,10 @@
             }
         },
         methods: {
-            close() {
+            close(hand) {
+                if (hand) {
+                    this.$emit("close");
+                }
                 $(this.$refs.area).addClass("visibilityh")
                 $(".img", this.$el).removeClass("filter")
                 this.canMove = false;
@@ -231,7 +234,7 @@
     <div class="magnifier" @mousedown.prevent="mousedown" @mousemove.prevent="mousemove" @mouseup="canMove=false" @mouseleave="canMove=false">
         <slot></slot>
         <div class="area visibilityh" ref="area">
-            <div class="close el-icon-close" @mousedown.stop @click.stop="close"></div>
+            <div class="close el-icon-close" @mousedown.stop @click.stop="close(true)"></div>
             <i @mousedown.prevent.stop="imousedown"></i>
         </div>
     </div>
