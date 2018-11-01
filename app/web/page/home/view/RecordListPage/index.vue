@@ -17,7 +17,10 @@
             </el-date-picker>
             <el-button class="search-button" type="text" @click="q.pageIndex = 1;query()">查询</el-button>
         </div>
-        <el-table empty-text='No Content' stripe :data="articleList" v-loading="loading" :height="innerHeight">
+        <el-table stripe :data="articleList" v-loading="loading" :height="innerHeight">
+            <div slot="empty">
+                <p v-if='!loading'>No Content</p>
+            </div>
             <el-table-column type="index" width="55" :index="indexMethod">
             </el-table-column>
             <el-table-column prop="dm_code" label="二维码ID">
@@ -263,7 +266,7 @@
     			color: #f44336;
     		}
     		.el-loading-mask {
-    			background: none;
+    			background: rgba(0, 0, 0, 0.2);
     		}
     		.dm-code-img-wrap {
     			cursor: zoom-in;
