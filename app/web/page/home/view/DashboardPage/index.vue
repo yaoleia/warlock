@@ -88,7 +88,7 @@
                     }
 
                     let self = this;
-                    if (m.defect_type != 0) {
+                    if (m.defect_type !== 0) {
                         this.$notify({
                             title: `PID: ${m.dm_code}`,
                             customClass: "warlock-warning-notify",
@@ -102,7 +102,7 @@
                             type: "warning",
                             position: "bottom-right",
                             onClick() {
-                                if (self.$route.path != "/") {
+                                if (self.$route.path !== "/") {
                                     self.$router.push("/")
                                 }
                                 self.listItemClick(m);
@@ -241,8 +241,8 @@
                         <div class="dm-img">
                             <p>PID: {{p.dm_code}}</p>
                             <p class="ts">检测时间: {{$moment(p.detect_time-0).format('YYYY-MM-DD HH:mm:ss')}}</p>
-                            <p class="defect" v-if='p.defect_type != 0'>缺陷: <span class="red">{{defectType(p.defect_type)}}</span></p>
-                            <span class="ng" v-if='p.defect_type != 0'>NG</span>
+                            <!-- <p class="defect" v-if='p.defect_type !== 0'>缺陷: <span class="red">{{defectType(p.defect_type)}}</span></p> -->
+                            <span class="ng" v-if='p.defect_type !== 0'>NG</span>
                         </div>
                     </div>
                 </transition-group>

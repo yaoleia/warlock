@@ -70,7 +70,7 @@ class RecordService extends Service {
       //         mask_img_path: '/public/mock-img/3.jpg',
       //         reg_img_path: '/public/mock-img/2.jpg',
       //         dm_path: '/public/mock-img/dmcode--1538018674.jpg',
-      //         defect_type: 2,
+      //         defect_type: 1,
       //         detect_time: new Date().getTime()
       //       }
       //     ]

@@ -181,8 +181,8 @@
 
                 let wh
 
-                if (areaW + value < 30 || areaH + value < 30) {
-                    wh = 30
+                if (areaW + value < 50 || areaH + value < 50) {
+                    wh = 50
                 } else {
                     wh = areaW + value
                 }
@@ -263,8 +263,8 @@
     		position: absolute;
     		left: 0;
     		top: 0;
-    		width: 100px;
-    		height: 100px;
+    		width: 240px;
+    		height: 240px;
     		border-radius: 2px;
     		background-color: rgba(0, 0, 235, 0.2);
     		background-repeat: no-repeat;
@@ -280,6 +280,7 @@
     		}
     	}
     	.close {
+    		font-size: 25px;
     		color: #ccc;
     		opacity: 0.7;
     		position: absolute;
@@ -287,12 +288,13 @@
     		right: 0;
     		top: 0;
     		border: none;
-    		padding: 0;
-    		transition: all 0.3s;
+    		padding: 5px;
+    		margin: -5px;
+    		transition: font-size 0.2s;
     	}
     	.close:hover {
     		opacity: 1;
-    		font-size: 20px;
+    		font-size: 30px;
     	}
     	.visibilityh {
     		visibility: hidden;
