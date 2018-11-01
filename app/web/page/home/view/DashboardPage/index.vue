@@ -375,16 +375,20 @@
     			border-radius: 18px;
     			.result {
     				position: absolute;
-    				left: -640px;
+    				left: -460px;
     				top: 66px;
-    				width: 660px;
-    				height: 660px;
+    				width: 500px;
+    				height: 500px;
     				box-shadow: 10px 10px 8px 0 #000;
+    				background-color: rgba($color: #373737, $alpha: 0.6);
+    				padding: 5px;
+    				z-index: 100;
+    				border-radius: 14px;
     			}
     			.img-stream {
     				padding: 0;
-    				border-radius: 12px;
     				background: none;
+    				border-radius: 12px;
     			}
     		}
     		&.right-img-col {
