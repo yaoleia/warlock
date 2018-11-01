@@ -3,7 +3,7 @@
         <div slot="header">
             <p class="title" v-if="title">{{title}}</p>
         </div>
-        <div class="big-area-template" ref="bigAreaTemplate"></div>
+        <div class="big-area-template" style="visibility: hidden;" ref="bigAreaTemplate"></div>
         <div class="big-area-box" ref="bigAreaBox"></div>
         <img :src="opt.cutBase64" v-if="opt.cutBase64" class="big-area-img" @load="loaded" :class="{visibility:!show}">
         <el-button :class="primaryBtn" type="text" title="查看模板" class="show-temp" icon="el-icon-refresh" @click="showTemp(showTemplate=!showTemplate)"></el-button>
@@ -62,8 +62,10 @@
             "opt.cut": function (cut) {
                 this.showTemplate = false;
                 let bigAreaBox = this.$refs.bigAreaBox;
+                let bigAreaTemplate = this.$refs.bigAreaTemplate;
                 if (!cut.width) {
                     bigAreaBox.style.cssText = "";
+                    bigAreaTemplate.style.cssText = "visibility: hidden;";
                     return;
                 }
                 let bigW = bigAreaBox.clientWidth
@@ -71,7 +73,7 @@
                 let rateW = bigW / cut.width
                 let rateH = bigH / cut.height
                 bigAreaBox.style.cssText = `background-image: url(${this.opt.reg_img_path}); background-size: ${cut.sizeW * rateW}px ${cut.sizeH * rateH}px; background-position: -${cut.left * rateW}px -${cut.top * rateH}px;`
-                this.$refs.bigAreaTemplate.style.cssText = `background-size: ${cut.sizeW * rateW}px ${cut.sizeH * rateH}px; background-position: -${cut.left * rateW}px -${cut.top * rateH}px;`
+                bigAreaTemplate.style.cssText = `background-size: ${cut.sizeW * rateW}px ${cut.sizeH * rateH}px; background-position: -${cut.left * rateW}px -${cut.top * rateH}px;`
                 this.showTemp();
             }
         }
@@ -83,9 +85,9 @@
     	position: relative;
     	width: 100%;
     	height: 100%;
-    	overflow: initial;
     	&.el-card {
     		border: none;
+    		overflow: initial;
     	}
     	.el-card__header {
     		border: none;
@@ -110,7 +112,8 @@
     		border-radius: 10px;
     	}
     	.show-temp {
-    		background: rgba($color: #373737, $alpha: 0.6);
+    		background: rgba($color: #373737, $alpha: 0.9);
+    		background-color: transparent;
     		position: absolute;
     		bottom: -50px;
     		right: -10px;
