@@ -36,6 +36,10 @@
                 return this.$store.state.serverUrl
             }
         },
+        beforeMount() {
+            // 只会在浏览器执行
+            this.$options.components.webcam = () => import("component/webcam")
+        },
         mounted() {
             this.$request.post('/api/article/list', {}).then(resp => {
                 if (resp.data.list) {
@@ -52,6 +56,20 @@
             })
         },
         methods: {
+            resize() {
+                if (window.innerWidth <= 1920) {
+                    this.opts = {
+                        width: 450,
+                        height: 300,
+                        dest_width: 320,
+                        dest_height: 240,
+                        crop_width: 450,
+                        crop_height: 338
+                    }
+                } else {
+                    this.opts = {}
+                }
+            },
             close() {
                 this.switchCraft = true;
                 this.curProduct = { ...curObj, ...this.productList[0] }
@@ -159,6 +177,14 @@
             }
         },
         activated() {
+            this.resize()
+            window.onresize = () => {
+                this.resize()
+            }
+            let video = document.querySelectorAll("video")[0]
+            if (video) {
+                video.play()
+            }
             this.$nextTick(() => {
                 this.getWsMsg()
             })
@@ -203,7 +229,10 @@
 <template>
     <div class="dashboard">
         <div class="left-img-col col">
-            <imgStream :alwaysTry="true" class="mb30" title="拍摄原图" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
+            <!-- <imgStream :alwaysTry="true" class="mb30" title="拍摄原图" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream> -->
+            <imgStream class="mb30" title="拍摄原图">
+                <webcam :opts="opts"></webcam>
+            </imgStream>
             <imgStream :alwaysTry="true" title="目标定位" class="msg-box" :url="curProduct.seg_img_path">
                 <div class="msg flicker" v-show="curProduct.detect_time">
                     <svg id="board-area" :width="svg.width" :height="svg.height"></svg>
