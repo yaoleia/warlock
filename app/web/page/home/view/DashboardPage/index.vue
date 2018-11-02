@@ -249,8 +249,10 @@
         <div class="middle-img-col col">
             <p class="title">
                 <span>检测结果</span>
-                <el-switch v-if="showSwitch" v-model="switchCraft">
-                </el-switch>
+                <span class='switch-name'>实时详情:</span>
+                <el-tooltip v-if="showSwitch" :content="switchCraft?'on':'off'" placement="top">
+                    <el-switch v-model="switchCraft"></el-switch>
+                </el-tooltip>
             </p>
             <transition name="el-fade-in-linear">
                 <big-area v-show="curProduct.cut.width" class="result" :opt="curProduct"></big-area>
@@ -373,6 +375,10 @@
     			padding: 66px 60px 60px;
     			background: rgba(255, 255, 255, 0.06);
     			border-radius: 18px;
+    			.switch-name {
+    				margin-left: 25px;
+    				font-size: 14px;
+    			}
     			.result {
     				position: absolute;
     				left: -460px;

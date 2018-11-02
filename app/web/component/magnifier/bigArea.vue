@@ -6,7 +6,7 @@
         <div class="big-area-template" style="visibility: hidden;" ref="bigAreaTemplate"></div>
         <div class="big-area-box" ref="bigAreaBox"></div>
         <img :src="opt.cutBase64" v-if="opt.cutBase64" class="big-area-img" @load="loaded" :class="{visibility:!show}">
-        <el-button :class="primaryBtn" type="text" title="查看模板" class="show-temp" icon="el-icon-refresh" @click="showTemp(showTemplate=!showTemplate)"></el-button>
+        <el-button :class="primaryBtn" type="text" title="查看模板" class="show-temp" icon="el-icon-view" @click="showTemp(showTemplate=!showTemplate)"></el-button>
     </el-card>
 </template>
 <script type="text/babel">
@@ -112,22 +112,21 @@
     		border-radius: 10px;
     	}
     	.show-temp {
-    		background: rgba($color: #373737, $alpha: 0.9);
     		background-color: transparent;
     		position: absolute;
-    		bottom: -50px;
-    		right: -10px;
+    		bottom: 0;
+    		right: 0;
     		z-index: 101;
     		padding: 10px;
-    		box-shadow: 6px 6px 6px 0 #000;
     		&.primary {
     			> i {
-    				color: #000;
+    				color: #ff8800;
     			}
     		}
     		> i {
-    			font-size: 20px;
-    			color: #ff8800;
+    			font-size: 24px;
+    			color: #373737;
+    			text-shadow: 4px 6px 7px #000;
     		}
     	}
     	.big-area-template {
