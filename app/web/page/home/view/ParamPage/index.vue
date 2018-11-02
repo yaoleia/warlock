@@ -62,7 +62,7 @@
 		}
 		.right-content {
 			width: 1400px;
-			height: 1030px;
+			height: 1052px;
 			.el-tabs__nav-wrap {
 				height: 40px;
 			}
@@ -95,7 +95,7 @@
 			}
 			.right-content {
 				width: 1100px;
-				height: 730px;
+				height: 790px;
 				.el-tabs__nav-wrap {
 					height: 40px;
 				}

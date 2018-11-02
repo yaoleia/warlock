@@ -203,7 +203,11 @@
         computed: {
             innerHeight() {
                 if (EASY_ENV_IS_BROWSER) {
-                    return window.innerHeight - 335
+                    if (window.innerWidth <= 1920) {
+                        return 621;
+                    } else {
+                        return 891;
+                    }
                 } else {
                     return 400
                 }
@@ -262,6 +266,7 @@
     	padding: 30px 0 0;
     	margin: 0 auto;
     	.el-table {
+    		height: 891px;
     		.cell .red {
     			color: #f44336;
     		}
@@ -296,6 +301,9 @@
     @media screen and (max-width: 1920px) {
     	.history-list {
     		width: 1420px;
+    		.el-table {
+    			height: 621px;
+    		}
     	}
     }
 </style>

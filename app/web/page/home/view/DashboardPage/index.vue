@@ -57,6 +57,9 @@
             this.startServer();
         },
         methods: {
+            changeServerSwitch(s) {
+                s ? this.startServer() : this.stopServer();
+            },
             startServer() {
                 this.$request.get('/api/start').then(resp => {
                     if (resp.data) {
@@ -64,6 +67,7 @@
                     }
                 }).catch(error => {
                     this.switchServer = false;
+                    this.$message.error('开启服务失败！');
                     console.log(error)
                 })
             },
@@ -74,6 +78,7 @@
                     }
                 }).catch(error => {
                     this.switchServer = true;
+                    this.$message.error('停止服务失败！');
                     console.log(error)
                 })
             },
@@ -216,9 +221,6 @@
                     this.switchCraft = false;
                 }
             },
-            switchServer(s) {
-                s ? this.startServer() : this.stopServer();
-            },
             switchCraft(s) {
                 if (s) {
                     this.$refs.magnifier.close();
@@ -291,7 +293,7 @@
                 <span>实时记录</span>
                 <span class='switch-name'>实时检测:</span>
                 <el-tooltip v-if="switchServer!==null" :content="switchServer?'on':'off'" placement="top">
-                    <el-switch v-model="switchServer"></el-switch>
+                    <el-switch @change="changeServerSwitch" v-model="switchServer"></el-switch>
                 </el-tooltip>
             </p>
             <div class="list-wrap">
