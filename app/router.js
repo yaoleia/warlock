@@ -8,6 +8,8 @@ module.exports = app => {
   router.post('/api/article/add', controller.home.add);
   router.get('/api/article/del/:id', controller.home.del);
   router.get('/api/article/:id', controller.home.detail);
+  router.get('/api/start', controller.home.start);
+  router.get('/api/stop', controller.home.stop);
   router.post('/api/usb', controller.home.usb);
   router.post('/api/main', controller.home.main);
   router.post('/api/light', controller.home.light);

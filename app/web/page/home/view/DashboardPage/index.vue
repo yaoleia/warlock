@@ -22,8 +22,8 @@
                 productList: [],
                 opts: {},
                 curProduct: { ...curObj },
-                switchCraft: true,
-                showSwitch: false,
+                switchCraft: null,
+                switchServer: null,
                 canScroll: true,
                 svg: {
                     width: 600,
@@ -54,8 +54,29 @@
                     })
                 }
             })
+            this.startServer();
         },
         methods: {
+            startServer() {
+                this.$request.get('/api/start').then(resp => {
+                    if (resp.data) {
+                        this.switchServer = true;
+                    }
+                }).catch(error => {
+                    this.switchServer = false;
+                    console.log(error)
+                })
+            },
+            stopServer() {
+                this.$request.get('/api/stop').then(resp => {
+                    if (resp.data) {
+                        this.switchServer = false;
+                    }
+                }).catch(error => {
+                    this.switchServer = true;
+                    console.log(error)
+                })
+            },
             resize() {
                 if (window.innerWidth <= 1920) {
                     this.opts = {
@@ -83,10 +104,10 @@
             getWsMsg() {
                 if (window.ws.connected) {
                     this.emitChat()
-                    if (!this.showSwitch) this.showSwitch = true;
+                    this.switchCraft = true;
                 } else {
                     window.ws.on("connect", () => {
-                        if (!this.showSwitch) this.showSwitch = true;
+                        this.switchCraft = true;
                         this.emitChat()
                     })
                 }
@@ -195,6 +216,9 @@
                     this.switchCraft = false;
                 }
             },
+            switchServer(s) {
+                s ? this.startServer() : this.stopServer();
+            },
             switchCraft(s) {
                 if (s) {
                     this.$refs.magnifier.close();
@@ -250,7 +274,7 @@
             <p class="title">
                 <span>检测结果</span>
                 <span class='switch-name'>实时详情:</span>
-                <el-tooltip v-if="showSwitch" :content="switchCraft?'on':'off'" placement="top">
+                <el-tooltip v-if="switchCraft!==null" :content="switchCraft?'on':'off'" placement="top">
                     <el-switch v-model="switchCraft"></el-switch>
                 </el-tooltip>
             </p>
@@ -265,6 +289,10 @@
         <div class="right-img-col col" @mousemove.prevent="canScroll=false" @mouseleave.prevent="canScroll=true">
             <p class="title">
                 <span>实时记录</span>
+                <span class='switch-name'>实时检测:</span>
+                <el-tooltip v-if="switchServer!==null" :content="switchServer?'on':'off'" placement="top">
+                    <el-switch v-model="switchServer"></el-switch>
+                </el-tooltip>
             </p>
             <div class="list-wrap">
                 <transition-group name="list-complete" tag="p">
@@ -317,6 +345,10 @@
     				font-size: 14px;
     				padding-left: 20px;
     			}
+    		}
+    		.switch-name {
+    			margin-left: 25px;
+    			font-size: 14px;
     		}
     		&.left-img-col {
     			width: 720px;
@@ -375,10 +407,6 @@
     			padding: 66px 60px 60px;
     			background: rgba(255, 255, 255, 0.06);
     			border-radius: 18px;
-    			.switch-name {
-    				margin-left: 25px;
-    				font-size: 14px;
-    			}
     			.result {
     				position: absolute;
     				left: -460px;

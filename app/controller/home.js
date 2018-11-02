@@ -50,6 +50,16 @@ module.exports = app => {
       ctx.body = await this.service.hardware.setTrigger(body);
     }
 
+    async start(ctx) {
+      const query = ctx.query;
+      ctx.body = await this.service.hardware.start(query);
+    }
+
+    async stop(ctx) {
+      const query = ctx.query;
+      ctx.body = await this.service.hardware.stop(query);
+    }
+
     async tonce(ctx) {
       const serverUrl = app.config.serverUrl;
       const form = new FormData();

@@ -6,6 +6,25 @@ class hardwareService extends Service {
     this.ctx = ctx;
     this.serverUrl = this.app.config.serverUrl;
   }
+
+  async start(json) {
+    try {
+      const result = await this.ctx.http.get(`${this.serverUrl}/api/control/start_img_processing`);
+      return result;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async stop(json) {
+    try {
+      const result = await this.ctx.http.get(`${this.serverUrl}/api/control/stop_img_processing`);
+      return result;
+    } catch (error) {
+      return error;
+    }
+  }
+
   async setMainCam(json) {
     try {
       const result = await this.ctx.http.post(`${this.serverUrl}/api/hardware/main_cam`, { param: { ...json } });
