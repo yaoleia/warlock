@@ -38,11 +38,11 @@ export default function createRouter() {
         }
       },
       {
-        path: '/article/add',
-        component: () => import('../view/WritePage')
+        path: '/design',
+        component: () => import('../view/designPage')
       },
       {
-        path: '/article/detail/:id',
+        path: '/detail/:id',
         component: () => import('../view/DetailPage')
       },
       {

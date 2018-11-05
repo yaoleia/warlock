@@ -20,6 +20,7 @@
 	}
 	.main {
 		max-height: 1252px;
+		height: 1252px;
 		padding-bottom: 30px;
 		margin: 0 auto;
 		position: relative;

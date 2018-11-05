@@ -31,6 +31,7 @@
         "http-proxy": "^1.17.0",
         "imagemin-webpack-plugin": "^2.2.0",
         "jquery": "^3.3.1",
+        "jsplumb": "^2.8.4",
         "lodash": "^4.17.4",
         "lodash-id": "^0.14.0",
         "lowdb": "^1.0.0",

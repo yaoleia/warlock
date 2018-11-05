@@ -204,9 +204,9 @@
             innerHeight() {
                 if (EASY_ENV_IS_BROWSER) {
                     if (window.innerWidth <= 1920) {
-                        return 621;
+                        return 620;
                     } else {
-                        return 891;
+                        return 890;
                     }
                 } else {
                     return 400
@@ -266,7 +266,7 @@
     	padding: 30px 0 0;
     	margin: 0 auto;
     	.el-table {
-    		height: 891px;
+    		height: 890px;
     		.cell .red {
     			color: #f44336;
     		}
@@ -283,6 +283,7 @@
     		}
     	}
     	.search {
+    		height: 40px;
     		.el-range-editor {
     			border: none;
     		}

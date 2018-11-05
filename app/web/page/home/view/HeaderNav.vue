@@ -4,7 +4,7 @@
 			<el-menu-item index="/">首页</el-menu-item>
 			<el-menu-item index="/record">历史记录</el-menu-item>
 			<el-menu-item index="/param">参数调试</el-menu-item>
-			<!-- <el-menu-item index="/help">帮助</el-menu-item> -->
+			<el-menu-item index="/design">设计</el-menu-item>
 		</el-menu>
 	</div>
 </template>
