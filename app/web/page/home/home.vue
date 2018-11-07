@@ -12,7 +12,8 @@
     import HeaderNav from "./view/HeaderNav.vue"
     import io from "socket.io-client"
     import ElementUI from 'element-ui';
-    import 'asset/css/element-variables.scss'
+    import 'asset/css/element-variables.scss';
+
     Vue.use(ElementUI);
 
     const store = createStore()

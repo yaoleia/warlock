@@ -6,6 +6,7 @@ import RecordListPage from '../view/RecordListPage';
 import HelpPage from '../view/HelpPage';
 import DetailPage from '../view/DetailPage';
 import ParamPage from '../view/ParamPage';
+import DesignPage from '../view/designPage';
 
 Vue.use(VueRouter);
 
@@ -39,7 +40,7 @@ export default function createRouter() {
       },
       {
         path: '/design',
-        component: () => import('../view/designPage')
+        component: DesignPage
       },
       {
         path: '/detail/:id',

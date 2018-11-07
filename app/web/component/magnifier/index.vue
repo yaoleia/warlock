@@ -1,5 +1,4 @@
 <script type="text/babel">
-    import $ from "jquery"
     export default {
         data() {
             return {

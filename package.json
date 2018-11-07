@@ -26,6 +26,7 @@
         "egg-validate": "^1.0.0",
         "egg-view-vue-ssr": "^3.0.5",
         "element-ui": "^2.0.8",
+        "expose-loader": "^0.7.5",
         "extend": "~3.0.0",
         "form-data": "^2.3.2",
         "http-proxy": "^1.17.0",
