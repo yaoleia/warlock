@@ -44,7 +44,8 @@ module.exports = {
 			$: "jquery",
 			jQuery: "jquery",
 			"window.jQuery": "jquery",
-			"window.$": "jquery"
+			"window.$": "jquery",
+			_: 'lodash'
 		})
 	],
 	done() {
