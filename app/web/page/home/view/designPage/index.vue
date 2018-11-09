@@ -4,6 +4,9 @@
     </div>
 </template>
 <style>
+    .editor-wrap {
+    	height: 100%;
+    }
 </style>
 <script type="babel">
     export default {

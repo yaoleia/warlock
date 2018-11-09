@@ -1,8 +1,8 @@
 <template>
-    <div id="navigator">
+    <div class="navigator">
         <div class="pannel-title">导航器</div>
-        <div id="minimap" />
-        <div id="zoom-slider">
+        <slot name='minimap' />
+        <div class="zoom-slider">
             <el-slider v-model="curZoomValue" :min="minZoom" :max="maxZoom" :step="0.01" :format-tooltip="formatTooltip" />
         </div>
     </div>
@@ -30,7 +30,10 @@
         watch: {
             curZoomValue: _.throttle(function (value) {
                 this.$emit('change-zoom', value);
-            }, 100)
+            }, 100),
+            curZoom(z) {
+                this.curZoomValue = z;
+            }
         },
         methods: {
             formatTooltip(value) {
@@ -40,7 +43,7 @@
     };
 </script>
 <style lang="scss">
-    #navigator {
+    .navigator {
     	width: 200px;
     	height: 182px;
     	position: absolute;
@@ -48,16 +51,16 @@
     	right: 0px;
     	z-index: 3;
     }
-    #navigator .slider {
+    .navigator .slider {
     	margin: 7px 10px 10px;
     	float: left;
     	width: 120px;
     }
-    #navigator #minimap {
+    .navigator .minimap {
     	width: 200px;
     	height: 120px;
     }
-    #zoom-slider {
+    .zoom-slider {
     	padding: 0 20px;
     	.el-slider__runway {
     		margin-top: 10px;

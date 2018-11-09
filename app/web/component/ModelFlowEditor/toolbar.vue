@@ -1,5 +1,5 @@
 <template>
-    <div id="toolbar">
+    <div class="toolbar">
         <i data-command="undo" class="command iconfont icon-undo" title="撤销" />
         <i data-command="redo" class="command iconfont icon-redo" title="重做" />
         <span class="separator" />
@@ -20,12 +20,14 @@
         <i data-command="unGroup" class="command iconfont icon-ungroup" title="解组" />
         <span class="separator" />
         <el-radio-group v-model="lineType" size="mini">
-            <el-radio-button label="line">虚线线</el-radio-button>
-            <el-radio-button label="flow-smooth">圆线</el-radio-button>
-            <el-radio-button label="flow-polyline-round">折线</el-radio-button>
+            <el-radio-button label="flow-polyline-round">圆角折线</el-radio-button>
+            <el-radio-button label="flow-polyline">直角折线</el-radio-button>
+            <el-radio-button label="flow-smooth">曲线</el-radio-button>
+            <el-radio-button label="line">虚线</el-radio-button>
         </el-radio-group>
         <span class="separator" />
         <el-button size="mini" @click="$emit('save')">保存</el-button>
+        <el-button size="mini" @click="$emit('read')">读取</el-button>
         <span class="separator" />
     </div>
 </template>
@@ -36,7 +38,7 @@
         data() {
             return {
                 name: 'toolbar',
-                lineType: 'line'
+                lineType: 'flow-polyline-round'
             };
         },
         watch: {
@@ -48,7 +50,7 @@
 </script>
 <style lang="scss">
     @import url('~asset/css/editer.css');
-    #toolbar {
+    .toolbar {
     	width: 100%;
     	border: 1px solid #e9e9e9;
     	height: 45px;
@@ -58,23 +60,23 @@
     	display: flex;
     	align-items: center;
     }
-    #toolbar .iconfont {
+    .toolbar .iconfont {
     	vertical-align: middle;
     }
-    #toolbar *::before {
+    .toolbar *::before {
     	font-size: 20px;
     }
-    #toolbar .disable {
+    .toolbar .disable {
     	color: rgba(0, 0, 0, 0.25);
     }
-    #toolbar .icon-select.disable {
+    .toolbar .icon-select.disable {
     	background: #eeeeee;
     }
-    #toolbar .separator {
+    .toolbar .separator {
     	margin: 4px;
     	border-left: 1px solid #e9e9e9;
     }
-    #toolbar .command {
+    .toolbar .command {
     	width: 27px;
     	height: 27px;
     	margin: 0px 6px;
@@ -83,18 +85,18 @@
     	display: inline-block;
     	border: 1px solid rgba(2, 2, 2, 0);
     }
-    #toolbar .command:nth-of-type(1) {
+    .toolbar .command:nth-of-type(1) {
     	margin-left: 24px;
     }
-    #toolbar .command:hover {
+    .toolbar .command:hover {
     	cursor: pointer;
     	border: 1px solid #e9e9e9;
     }
-    #toolbar .disable:hover {
+    .toolbar .disable:hover {
     	cursor: default;
     	border: 1px solid rgba(2, 2, 2, 0);
     }
-    #toolbar {
+    .toolbar {
     	.el-radio-group {
     		font-size: 0;
     	}

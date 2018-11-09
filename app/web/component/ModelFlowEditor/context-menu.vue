@@ -1,5 +1,5 @@
 <template>
-    <div id="contextmenu">
+    <div class="context-menu">
         <div data-status="node-selected" class="menu">
             <div data-command="copy" class="command">
                 <span>复制</span>
@@ -76,7 +76,7 @@
     };
 </script>
 <style lang="scss">
-    #contextmenu {
+    .context-menu {
     	margin: 0px;
     	width: 200px;
     	background: white;
@@ -85,26 +85,26 @@
     	font-size: 12px;
     	display: none;
     }
-    #contextmenu .disable {
+    .context-menu .disable {
     	color: rgba(0, 0, 0, 0.25);
     }
-    #contextmenu .command {
+    .context-menu .command {
     	height: 12px;
     	padding: 8px;
     	box-sizing: content-box;
     }
-    #contextmenu .command:hover {
+    .context-menu .command:hover {
     	cursor: pointer;
     	background: #e6f7ff;
     }
-    #contextmenu .command.disable:hover {
+    .context-menu .command.disable:hover {
     	cursor: default;
     	background: none;
     }
-    #contextmenu span:nth-of-type(1) {
+    .context-menu span:nth-of-type(1) {
     	float: left;
     }
-    #contextmenu span:nth-of-type(2) {
+    .context-menu span:nth-of-type(2) {
     	float: right;
     }
 </style>

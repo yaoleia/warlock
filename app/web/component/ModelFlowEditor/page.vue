@@ -1,5 +1,5 @@
 <template>
-    <div id="page" />
+    <div class="editor-page"></div>
 </template>
 
 <script>
@@ -13,7 +13,8 @@
     };
 </script>
 <style lang="scss">
-    #page {
+    .editor-page {
+    	height: 100%;
     	margin-left: 200px;
     	margin-right: 200px;
     	canvas {

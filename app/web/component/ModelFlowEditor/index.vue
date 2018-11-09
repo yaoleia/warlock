@@ -1,150 +1,85 @@
 <template>
-    <div id="editor">
-        <toolbar @save="saveData" @change-eage="changeEage" />
+    <div class="editor">
+        <toolbar ref='toolbar' @save="saveData" @read='readData' @change-eage="changeEage" />
         <div class="bottom-container">
-            <context-menu />
-            <div id="itempannel">
-                <ul>
-                    <li class="getItem" data-shape="k-means" data-type="node" data-size="170*34">
-                        <span class="pannel-type-icon" />K 均值聚类
-                    </li>
-                    <li class="getItem" data-shape="random-forest" data-type="node" data-size="170*34">
-                        <span class="pannel-type-icon" />随机森林
-                    </li>
-                    <li class="getItem" data-shape="PS-SMART" data-type="node" data-size="170*34">
-                        <span class="pannel-type-icon" />PS-SMART 分类
-                    </li>
-                    <li class="getItem" data-shape="read-data-base" data-type="node" data-size="170*34">
-                        <span class="pannel-type-icon" />读数据表
-                    </li>
-                    <li class="getItem" data-shape="Bayes" data-type="node" data-size="170*34">
-                        <span class="pannel-type-icon" />朴素贝叶斯
-                    </li>
-                    <li class="getItem" data-shape="factory-card" data-type="node" data-size="100*100">
-                        <span class="pannel-type-icon" />工厂图标
-                    </li>
-                </ul>
-            </div>
-            <div id="detailpannel">
-                <div id="node_detailpannel" data-status="node-selected" class="pannel">
-                    <div class="pannel-title">模型详情</div>
-                    <div class="block-container">
-                        <div v-if="selectedModel && selectedModel.type === 'node'">
-                            <div v-if="selectedModel.shape === 'factory-card'">
-                                <el-form label-width="80px" label-position="left">
-                                    <el-form-item label="名称：" prop="label">
-                                        <el-input v-model="inputingLabel" />
-                                    </el-form-item>
-                                    <el-form-item label="字体颜色：" prop="color">
-                                        <el-color-picker v-model="color" size="mini" />
-                                    </el-form-item>
-                                </el-form>
-                            </div>
-                            <div v-if="selectedModel.shape === 'k-means' || selectedModel.shape === 'random-forest'">
-                                <el-form label-width="60px">
-                                    <el-form-item label="名称：">
-                                        <el-input v-model="inputingLabel" />
-                                    </el-form-item>
-                                </el-form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="node_detailpannel" data-status="group-selected" class="pannel">
-                    <div class="pannel-title">群组详情</div>
-                    <div class="block-container">
-                        <el-input v-model="inputingLabel" />
-                    </div>
-                </div>
-                <div id="canvas_detailpannel" data-status="canvas-selected" class="pannel">
-                    <div class="pannel-title">画布</div>
-                    <div class="block-container">
-                        <el-checkbox @change="toggleGrid">网格对齐</el-checkbox>
-                    </div>
-                </div>
-            </div>
-            <navigator :cur-zoom="curZoom" :min-zoom="minZoom" :max-zoom="maxZoom" @change-zoom="changeZoom" />
-            <page />
+            <item-pannel ref="itempannel" />
+            <detail-pannel ref='detailpannel' :selectedModel='selectedModel' @updateGraph='updateGraph' @toggleGrid='toggleGrid' />
+            <navigator :cur-zoom="curZoom" :min-zoom="minZoom" :max-zoom="maxZoom" @change-zoom="changeZoom">
+                <div ref="minimap" slot="minimap"></div>
+            </navigator>
+            <page ref="page" />
+            <context-menu ref="contextmenu" />
         </div>
     </div>
 </template>
 
 <script>
+    import DetailPannel from './detailpannel'
     import Navigator from './navigator';
+    import ItemPannel from './itempannel'
     import Toolbar from './toolbar';
     import ContextMenu from './context-menu';
     import Page from './page';
     import Editor from './editor.js';
-    import './register-items.js';
 
     export default {
         components: {
             Navigator,
             Toolbar,
             ContextMenu,
-            Page
+            Page,
+            ItemPannel,
+            DetailPannel
         },
         extends: Editor,
         data() {
             return {
-                temp: 'base-flow-editor',
-                tempInputingLabel: '',
-                tempColor: ''
+                data: { "nodes": [{ "shape": "k-means", "type": "node", "size": "170*34", "x": 133, "y": 53.5, "id": "937996f0", "index": 0 }, { "shape": "PS-SMART", "type": "node", "size": "170*34", "x": 424, "y": 229.5, "id": "30b4457e", "index": 1 }, { "shape": "PS-SMART", "type": "node", "size": "170*34", "x": 548, "y": -40.5, "id": "ce4e0569", "index": 2 }, { "shape": "factory-card", "type": "node", "size": "100*100", "x": 140, "y": 275.5, "id": "641c17b7", "index": 3 }, { "shape": "read-data-base", "type": "node", "size": "170*34", "x": 72, "y": -83.5, "id": "d86391f0", "index": 4 }], "edges": [{ "shape": "flow-polyline-round", "source": "d86391f0", "sourceAnchor": 0, "target": "937996f0", "targetAnchor": 0, "id": "910efbc3", "index": 5 }, { "shape": "flow-polyline-round", "source": "ce4e0569", "sourceAnchor": 1, "target": "30b4457e", "targetAnchor": 0, "id": "5110776b", "index": 6 }, { "shape": "flow-polyline-round", "source": "d86391f0", "sourceAnchor": 0, "target": "ce4e0569", "targetAnchor": 0, "id": "d7cc81b7", "index": 7 }, { "shape": "flow-polyline-round", "source": "ce4e0569", "sourceAnchor": 2, "target": "641c17b7", "targetAnchor": 1, "id": "ed14edea", "index": 8 }] }
             };
         },
         computed: {
-            inputingLabel: {
-                get() {
-                    return this.selectedModel.label ? this.selectedModel.label : '';
-                },
-                set(value) {
-                    this.updateGraph('label', value);
-                }
-            },
-            color: {
-                get() {
-                    return this.tempColor !== null ? this.tempColor : this.selectedModel.color;
-                },
-                set(value) {
-                    this.updateGraph('color', value);
-                    this.tempColor = null;
-                }
-            }
+
         },
         mounted() {
-            const page = this.page;
+            this.init()
 
-            page.changeAddEdgeModel({
-                shape: 'line'
+            const flow = this.flow;
+
+            flow.changeAddEdgeModel({
+                shape: 'flow-polyline-round'
             });
 
             // 输入锚点不可以连出边
-            page.on('hoveranchor:beforeaddedge', ev => {
+            flow.on('hoveranchor:beforeaddedge', ev => {
                 if (ev.anchor.type === 'input') {
                     ev.cancel = true;
                 }
             });
-            page.on('dragedge:beforeshowanchor', ev => {
+            flow.on('dragedge:beforeshowanchor', ev => {
                 // 只允许目标锚点是输入，源锚点是输出，才能连接
                 if (!(ev.targetAnchor.type === 'input' && ev.sourceAnchor.type === 'output')) {
                     ev.cancel = true;
                 }
                 // 如果拖动的是目标方向，则取消显示目标节点中已被连过的锚点
-                if (ev.dragEndPointType === 'target' && page.anchorHasBeenLinked(ev.target, ev.targetAnchor)) {
+                if (ev.dragEndPointType === 'target' && flow.anchorHasBeenLinked(ev.target, ev.targetAnchor)) {
                     ev.cancel = true;
                 }
                 // 如果拖动的是源方向，则取消显示源节点中已被连过的锚点
-                if (ev.dragEndPointType === 'source' && page.anchorHasBeenLinked(ev.source, ev.sourceAnchor)) {
+                if (ev.dragEndPointType === 'source' && flow.anchorHasBeenLinked(ev.source, ev.sourceAnchor)) {
                     ev.cancel = true;
                 }
             });
         },
         methods: {
+            readData() {
+                this.flow.read(this.data)
+            },
             saveData() {
-                console.log(JSON.stringify(this.page.save()));
+                this.data = this.flow.save()
+                console.log(this.data);
             },
             changeEage(type) {
-                this.page.changeAddEdgeModel({
+                this.flow.changeAddEdgeModel({
                     shape: type
                 });
             }
@@ -152,79 +87,12 @@
     };
 </script>
 <style lang="scss">
-    #editor {
+    .editor {
+    	height: 100%;
     	background: #eee;
     }
-    #itempannel {
-    	height: 100%;
-    	position: absolute;
-    	left: 0px;
-    	z-index: 2;
-    	background: #f7f9fb;
-    	width: 200px;
-    	padding-top: 8px;
-    	border-right: 1px solid #e6e9ed;
-    	text-align: left;
-    }
-    #itempannel ul {
-    	padding: 0px;
-    	padding-left: 16px;
-    }
-    #itempannel li {
-    	color: rgba(0, 0, 0, 0.65);
-    	border-radius: 4px;
-    	width: 160px;
-    	height: 28px;
-    	line-height: 26px;
-    	padding-left: 8px;
-    	border: 1px solid rgba(0, 0, 0, 0);
-    	list-style-type: none;
-    }
-    #itempannel .pannel-type-icon {
-    	width: 16px;
-    	height: 16px;
-    	display: inline-block;
-    	vertical-align: middle;
-    	margin-right: 8px;
-    	background: url(https://gw.alipayobjects.com/zos/rmsportal/czNEJAmyDpclFaSucYWB.svg);
-    }
-    #itempannel li:hover {
-    	background: white;
-    	border: 1px solid #ced4d9;
-    	cursor: move;
-    }
-    #detailpannel {
-    	height: 100%;
-    	position: absolute;
-    	right: 0px;
-    	z-index: 2;
-    	background: #f7f9fb;
-    	width: 200px;
-    	border-left: 1px solid #e6e9ed;
-    }
-    #detailpannel .pannel {
-    	display: none;
-    }
-    #detailpannel .block-containe {
-    	padding-top: 20px;
-    }
-    #detailpannel .input {
-    	margin-left: 16px;
-    }
-    #detailpannel .name-input {
-    	width: 120px;
-    }
-    #detailpannel .width-input {
-    	width: 52px;
-    }
-    #detailpannel .height-input {
-    	width: 52px;
-    }
-    #detailpannel .block-container {
-    	padding: 16px 8px;
-    	text-align: left;
-    }
     .bottom-container {
+    	height: calc(100% - 46px);
     	position: relative;
     }
     .pannel-title {
