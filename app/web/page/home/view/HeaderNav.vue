@@ -1,10 +1,10 @@
 <template>
-	<div class="navs-wrap">
+	<div class="header-nav">
 		<el-menu router :default-active="tabactive" class="el-menu-demo" mode="horizontal">
 			<el-menu-item index="/">首页</el-menu-item>
-			<el-menu-item index="/list">历史记录</el-menu-item>
-			<el-menu-item index="/debug">参数调试</el-menu-item>
-			<!-- <el-menu-item index="/help">帮助</el-menu-item> -->
+			<el-menu-item index="/record">历史记录</el-menu-item>
+			<el-menu-item index="/param">参数调试</el-menu-item>
+			<el-menu-item index="/design">设计</el-menu-item>
 		</el-menu>
 	</div>
 </template>
@@ -48,37 +48,37 @@
 		}
 	}
 
-	.navs-wrap {
+	.header-nav {
 		padding-top: 37px;
 		position: absolute;
 		right: 0;
 		top: 0;
 		margin: auto;
 		display: flex;
-		.el-menu--horizontal {
+		ul.el-menu--horizontal {
 			border: none;
 		}
 	}
 
 	.el-dropdown-menu__item--divided:before,
-	.el-menu,
-	.el-menu--horizontal > .el-menu-item:not(.is-disabled):focus,
-	.el-menu--horizontal > .el-menu-item:not(.is-disabled):hover,
-	.el-menu--horizontal > .el-submenu .el-submenu__title:hover {
+	ul.el-menu,
+	ul.el-menu--horizontal > .el-menu-item:not(.is-disabled):focus,
+	ul.el-menu--horizontal > .el-menu-item:not(.is-disabled):hover,
+	ul.el-menu--horizontal > .el-submenu .el-submenu__title:hover {
 		border-right: none;
 		background: none;
 		color: #ff8800;
 		opacity: 1;
 	}
 
-	.el-menu--horizontal > .el-menu-item.is-active {
+	ul.el-menu--horizontal > .el-menu-item.is-active {
 		color: #ff8800;
 		background: none;
 		border-bottom: 2px solid #ff8800;
 		opacity: 1;
 	}
 
-	.el-menu--horizontal > .el-menu-item {
+	ul.el-menu--horizontal > .el-menu-item {
 		line-height: 30px;
 		height: 33px;
 		color: #fff;

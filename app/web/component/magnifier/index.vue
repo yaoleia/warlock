@@ -1,5 +1,4 @@
 <script type="text/babel">
-    import $ from "jquery"
     export default {
         data() {
             return {
@@ -16,13 +15,18 @@
             }
         },
         methods: {
-            close() {
+            close(hand) {
+                if (hand) {
+                    this.$emit("close");
+                }
                 $(this.$refs.area).addClass("visibilityh")
                 $(".img", this.$el).removeClass("filter")
-                this.$nextTick(() => {
+                this.canMove = false;
+                this.canI = false;
+                setTimeout(() => {
                     this.imgMagnifier.cutBase64 = "";
                     this.imgMagnifier.cut = {};
-                })
+                }, 13)
             },
             mousedown(e) {
                 if (!this.imgMagnifier.reg_img_path) return;
@@ -150,13 +154,18 @@
                 })
             },
             imousedown(e) {
+                this.canI = true;
                 document.onmousemove = ev => {
+                    if (!this.canI) return;
                     this.imousemove(ev)
                     ev.preventDefault()
                 }
                 document.onmouseup = () => {
                     document.onmousemove = null
-                    this.getArea()
+                    if (this.canI) {
+                        this.getArea()
+                    };
+                    this.canI = false;
                     document.onmouseup = null
                 }
             },
@@ -171,8 +180,8 @@
 
                 let wh
 
-                if (areaW + value < 30 || areaH + value < 30) {
-                    wh = 30
+                if (areaW + value < 50 || areaH + value < 50) {
+                    wh = 50
                 } else {
                     wh = areaW + value
                 }
@@ -194,11 +203,7 @@
                     if (path) {
                         this.$refs.area.style.backgroundImage = `url(${path})`
                         let $imgMagnifier = $(".img-stream:not(.img-big)", this.$el)
-                        $imgMagnifier.stop().fadeOut(200, function () {
-                            setTimeout(() => {
-                                $(this).show()
-                            }, 250);
-                        })
+                        $imgMagnifier.finish().fadeOut("fast").fadeIn();
                     }
                 }
             }
@@ -228,7 +233,7 @@
     <div class="magnifier" @mousedown.prevent="mousedown" @mousemove.prevent="mousemove" @mouseup="canMove=false" @mouseleave="canMove=false">
         <slot></slot>
         <div class="area visibilityh" ref="area">
-            <div class="close el-icon-close" @mousedown.stop @click.stop="close"></div>
+            <div class="close el-icon-close" @mousedown.stop @click.stop="close(true)"></div>
             <i @mousedown.prevent.stop="imousedown"></i>
         </div>
     </div>
@@ -257,8 +262,8 @@
     		position: absolute;
     		left: 0;
     		top: 0;
-    		width: 100px;
-    		height: 100px;
+    		width: 240px;
+    		height: 240px;
     		border-radius: 2px;
     		background-color: rgba(0, 0, 235, 0.2);
     		background-repeat: no-repeat;
@@ -274,6 +279,7 @@
     		}
     	}
     	.close {
+    		font-size: 25px;
     		color: #ccc;
     		opacity: 0.7;
     		position: absolute;
@@ -281,12 +287,13 @@
     		right: 0;
     		top: 0;
     		border: none;
-    		padding: 0;
-    		transition: all 0.3s;
+    		padding: 5px;
+    		margin: -5px;
+    		transition: font-size 0.2s;
     	}
     	.close:hover {
     		opacity: 1;
-    		font-size: 20px;
+    		font-size: 30px;
     	}
     	.visibilityh {
     		visibility: hidden;

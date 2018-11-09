@@ -1,13 +1,13 @@
 <template>
     <div style="font-size: 24px; text-align: center">
-        detail
+        <div>help</div>
     </div>
 </template>
 <style>
 </style>
-<script type="text/babel">
+<script type="babel">
     export default {
-      methods: {},
-      beforeMount() {}
+        methods: {},
+        beforeMount() { }
     }
 </script>

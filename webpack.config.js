@@ -1,4 +1,5 @@
 'use strict';
+const webpack = require('webpack');
 module.exports = {
 	egg: true,
 	framework: 'vue',
@@ -16,8 +17,7 @@ module.exports = {
 		asset: 'app/web/asset',
 		component: 'app/web/component',
 		framework: 'app/web/framework',
-		vue: 'vue/dist/vue.esm.js',
-		jquery: 'jquery/src/jquery.js'
+		vue: 'vue/dist/vue.esm.js'
 	},
 	module: {
 		rules: [{
@@ -38,7 +38,15 @@ module.exports = {
 	node: {
 		console: true
 	},
-	plugins: {},
+	plugins: [
+		/* Use the ProvidePlugin constructor to inject jquery implicit globals */
+		new webpack.ProvidePlugin({
+			$: "jquery",
+			jQuery: "jquery",
+			"window.jQuery": "jquery",
+			"window.$": "jquery"
+		})
+	],
 	done() {
 		console.log('如果启动成功后, Chrome控制台浏览器脚本报错, 可以尝试执行 npm run clean 清除缓存解决');
 	}

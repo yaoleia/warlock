@@ -1,32 +1,40 @@
 const io = require('socket.io-client');
 module.exports = app => {
-  return async function() {
+  return async function () {
     const message = this.args[0];
     const serverUrl = app.config.serverUrl;
     if (!this.socket.ioClient) {
       this.socket.ioClient = ioClient(
         `${serverUrl}/detect_push`,
         this.socket,
-        'ak'
+        'ak', serverUrl
       );
       // this.socket.ioClient = setInterval(() => {
+      //   let random = Math.random() * 10
       //   this.socket.emit('msg', {
-      //     dm_code: 'FJW5675789734WTG',
-      //     seg_img_path: '/img/1.jpg',
-      //     mask_img_path: '/img/3.jpg',
-      //     reg_img_path: '/img/2.jpg',
-      //     dm_img_path: '/img/dmcode--1538018674.jpg',
-      //     defect_type: 0,
-      //     detect_time: new Date().getTime()
+      //     comb_uuid: "a9b64507db0445df98b7da1ed9339b72",
+      //     dm_code: `FJW5675789734WTG${random.toFixed(3)}`,
+      //     seg_img_path: '/public/mock-img/1.jpg',
+      //     mask_img_path: '/public/mock-img/3.jpg',
+      //     reg_img_path: '/public/mock-img/2.jpg',
+      //     dm_path: '/public/mock-img/dmcode--1538018674.jpg',
+      //     defect_type: random > 5 ? 0 : 1,
+      //     detect_time: new Date().getTime(),
+      //     phone_box: {
+      //       point1: { x: 3142, y: 1776 },
+      //       point2: { x: 2079, y: 1761 },
+      //       point3: { x: 2106, y: -113 },
+      //       point4: { x: 3169, y: -98 }
+      //     }
       //   });
-      // }, 3000);
+      // }, 5000);
     }
 
     this.socket.emit('res', `Hi! I've got your message: ${message}`);
   };
 };
 
-function ioClient(addr, socket, ak) {
+function ioClient(addr, socket, ak, serverUrl) {
   let client = io(addr); // 实例detect_push的ws
   client.on('connect', () => {
     console.log(`==== ${addr} ${socket.id} connect! ====`);
@@ -34,6 +42,11 @@ function ioClient(addr, socket, ak) {
 
   client.on('server_response', message => {
     // 转发detect_push到warlock前端
+    for (let attr in message.data) {
+      if (attr.indexOf("_path") !== -1) {
+        message.data[attr] = message.data[attr].replace('http://0.0.0.0:5001', serverUrl).replace("5000", "5001");
+      }
+    }
     socket.emit('msg', message.data);
   });
 

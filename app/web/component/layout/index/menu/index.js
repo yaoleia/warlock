@@ -11,12 +11,12 @@ const menu = {
       list: {
         name: 'menu.articlequery',
         icon: 'el-icon-edit-outline',
-        path: '/article/list'
+        path: '/record'
       },
       add: {
         name: 'menu.articleadd',
         icon: 'el-icon-edit-outline',
-        path: '/article/add'
+        path: '/design'
       }
     }
   }

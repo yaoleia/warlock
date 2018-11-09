@@ -2,7 +2,8 @@
     <el-card class="img-stream">
         <p class="title" v-if="title">{{title}}</p>
         <img :src="url" class="img" @load="loaded" v-if="url" @error="error" :class="{visibility:!show}">
-  </el-card>
+        <slot></slot>
+    </el-card>
 </template>
 <style lang="scss">
     .img-stream {
@@ -22,18 +23,6 @@
     		height: 100%;
     		vertical-align: top;
     	}
-    	.msg {
-    		position: absolute;
-    		left: 0;
-    		top: 0;
-    		right: 0;
-    		bottom: 0;
-    		margin: auto;
-    		height: 30px;
-    		line-height: 30px;
-    		text-align: center;
-    		color: #ccc;
-    	}
     	.visibility {
     		visibility: hidden;
     	}
@@ -47,16 +36,23 @@
                 try: 2
             };
         },
-        props: ["url", "title"],
+        props: ["url", "title", "alwaysTry"],
         components: {},
         mounted() { },
         methods: {
             loaded() {
                 this.show = true
+                this.$emit("loaded");
             },
             error(e) {
-                this.try--;
-                if (this.try <= 0) return;
+                if (!e.target) return;
+                if (!this.alwaysTry) {
+                    this.try--;
+                }
+                if (this.try <= 0) {
+                    this.$emit("error");
+                    return;
+                };
                 setTimeout(() => {
                     let url = e.target.src;
 

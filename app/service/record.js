@@ -41,30 +41,36 @@ class RecordService extends Service {
       //     total: 32,
       //     list: [
       //       {
-      //         dm_code: 'FJW5675789734WTG',
-      //         seg_img_path: '/img/1.jpg',
-      //         reg_img_path: '/img/2.jpg',
-      //         dm_img_path: '/img/dmcode--1538018674.jpg',
-      //         mask_img_path: '/img/3.jpg',
+      //         dm_code: 'FJW5675789734WTG1',
+      //         seg_img_path: '/public/mock-img/1.jpg',
+      //         reg_img_path: '/public/mock-img/2.jpg',
+      //         dm_path: '/public/mock-img/dmcode--1538018674.jpg',
+      //         mask_img_path: '/public/mock-img/3.jpg',
       //         defect_type: 0,
-      //         detect_time: new Date().getTime()
+      //         detect_time: new Date().getTime(),
+      //         phone_box: {
+      //           point1: { x: 3142, y: 1776 },
+      //           point2: { x: 2079, y: 1761 },
+      //           point3: { x: 2106, y: -113 },
+      //           point4: { x: 3169, y: -98 }
+      //         }
       //       },
       //       {
-      //         dm_code: 'FJW5675789734WTG',
-      //         seg_img_path: '/img/1.jpg',
-      //         mask_img_path: '/img/3.jpg',
-      //         reg_img_path: '/img/2.jpg',
-      //         dm_img_path: '/img/dmcode--1538018674.jpg',
+      //         dm_code: 'FJW5675789734WTG2',
+      //         seg_img_path: '/public/mock-img/1.jpg',
+      //         mask_img_path: '/public/mock-img/3.jpg',
+      //         reg_img_path: '/public/mock-img/2.jpg',
+      //         dm_path: '/public/mock-img/dmcode--1538018674.jpg',
       //         defect_type: 1,
       //         detect_time: new Date().getTime()
       //       },
       //       {
-      //         dm_code: 'FJW5675789734WTG',
-      //         seg_img_path: '/img/1.jpg',
-      //         mask_img_path: '/img/3.jpg',
-      //         reg_img_path: '/img/2.jpg',
-      //         dm_img_path: '/img/dmcode--1538018674.jpg',
-      //         defect_type: 2,
+      //         dm_code: 'FJW5675789734WTG3',
+      //         seg_img_path: '/public/mock-img/1.jpg',
+      //         mask_img_path: '/public/mock-img/3.jpg',
+      //         reg_img_path: '/public/mock-img/2.jpg',
+      //         dm_path: '/public/mock-img/dmcode--1538018674.jpg',
+      //         defect_type: 1,
       //         detect_time: new Date().getTime()
       //       }
       //     ]
@@ -72,22 +78,11 @@ class RecordService extends Service {
       // };
       if (resp.data && resp.code === 1) {
         resp.data.list.forEach(l => {
-          l.seg_img_path = l.seg_img_path.replace(
-            'http://0.0.0.0:5000',
-            this.serverUrl
-          );
-          l.reg_img_path = l.reg_img_path.replace(
-            'http://0.0.0.0:5000',
-            this.serverUrl
-          );
-          l.dm_img_path = l.dm_img_path.replace(
-            'http://0.0.0.0:5000',
-            this.serverUrl
-          );
-          l.mask_img_path = l.mask_img_path.replace(
-            'http://0.0.0.0:5000',
-            this.serverUrl
-          );
+          for (let attr in l) {
+            if (attr.indexOf("_path") !== -1) {
+              l[attr] = l[attr].replace('http://0.0.0.0:5001', this.serverUrl).replace("5000", "5001");
+            }
+          }
         });
         return resp.data;
       } else {

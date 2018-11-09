@@ -1,11 +1,12 @@
 import Vue from 'vue';
 
 import VueRouter from 'vue-router';
-import Dashboard from '../view/dashboard/index.vue';
-import ArticleList from '../view/list.vue';
-import Help from '../view/help.vue';
-import Detail from '../view/detail.vue';
-import Debug from '../view/debug.vue';
+import DashboardPage from '../view/DashboardPage';
+import RecordListPage from '../view/RecordListPage';
+import HelpPage from '../view/HelpPage';
+import DetailPage from '../view/DetailPage';
+import ParamPage from '../view/ParamPage';
+import DesignPage from '../view/designPage';
 
 Vue.use(VueRouter);
 
@@ -16,34 +17,37 @@ export default function createRouter() {
     routes: [
       {
         path: '/',
-        component: Dashboard
+        component: DashboardPage
       },
       {
-        path: '/list',
-        component: ArticleList
+        path: '/record',
+        component: RecordListPage
       },
       {
         path: '/help',
-        component: Help
+        component: HelpPage
       },
       {
         path: '/detail',
-        component: Detail
+        component: DetailPage
       },
       {
-        path: '/debug',
-        component: Debug
+        path: '/param',
+        component: ParamPage,
+        meta: {
+          noKeepAlive: true
+        }
       },
       {
-        path: '/article/add',
-        component: () => import('../view/write/index.vue')
+        path: '/design',
+        component: DesignPage
       },
       {
-        path: '/article/detail/:id',
-        component: () => import('../view/detail.vue')
+        path: '/detail/:id',
+        component: () => import('../view/DetailPage')
       },
       {
-        path: '*', component: () => import('../view/notfound.vue')
+        path: '*', component: () => import('../view/NotFound.vue')
       }
     ]
   });
