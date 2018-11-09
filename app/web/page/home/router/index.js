@@ -6,7 +6,7 @@ import RecordListPage from '../view/RecordListPage';
 import HelpPage from '../view/HelpPage';
 import DetailPage from '../view/DetailPage';
 import ParamPage from '../view/ParamPage';
-import DesignPage from '../view/designPage';
+import DesignPage from '../view/DesignPage';
 
 Vue.use(VueRouter);
 
