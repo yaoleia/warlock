@@ -60,6 +60,9 @@
     	width: 200px;
     	height: 120px;
     }
+    .g6-editor-minimap-container {
+    	background: none !important;
+    }
     .zoom-slider {
     	padding: 0 20px;
     	.el-slider__runway {

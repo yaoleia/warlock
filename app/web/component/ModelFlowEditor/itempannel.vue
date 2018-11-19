@@ -1,24 +1,27 @@
 <template>
-    <ul class="item-pannel">
-        <li class="getItem" data-shape="k-means" data-type="node" data-size="170*34">
-            <span class="pannel-type-icon" />K 均值聚类
-        </li>
-        <li class="getItem" data-shape="random-forest" data-type="node" data-size="170*34">
-            <span class="pannel-type-icon" />随机森林
-        </li>
-        <li class="getItem" data-shape="PS-SMART" data-type="node" data-size="170*34">
-            <span class="pannel-type-icon" />PS-SMART 分类
-        </li>
-        <li class="getItem" data-shape="read-data-base" data-type="node" data-size="170*34">
-            <span class="pannel-type-icon" />读数据表
-        </li>
-        <li class="getItem" data-shape="Bayes" data-type="node" data-size="170*34">
-            <span class="pannel-type-icon" />朴素贝叶斯
-        </li>
-        <li class="getItem" data-shape="factory-card" data-type="node" data-size="100*100">
-            <span class="pannel-type-icon" />工厂图标
-        </li>
-    </ul>
+    <div class="item-pannel">
+        <div class="title">工具箱</div>
+        <ul class="item-pannel-list">
+            <li class="getItem" data-shape="k-means" data-type="node" data-size="170*34">
+                <span class="pannel-type-icon" />K 均值聚类
+            </li>
+            <li class="getItem" data-shape="random-forest" data-type="node" data-size="170*34">
+                <span class="pannel-type-icon" />随机森林
+            </li>
+            <li class="getItem" data-shape="PS-SMART" data-type="node" data-size="170*34">
+                <span class="pannel-type-icon" />PS-SMART 分类
+            </li>
+            <li class="getItem" data-shape="read-data-base" data-type="node" data-size="170*34">
+                <span class="pannel-type-icon" />读数据表
+            </li>
+            <li class="getItem" data-shape="Bayes" data-type="node" data-size="170*34">
+                <span class="pannel-type-icon" />朴素贝叶斯
+            </li>
+            <li class="getItem" data-shape="factory-card" data-type="node" data-size="100*100">
+                <span class="pannel-type-icon" />工厂图标
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script>
@@ -359,11 +362,11 @@
                 // const MIN_ARROW_SIZE = 3;
                 Flow.registerEdge('line', {
                     draw(item) {
+                        const model = item.getModel();
                         const group = item.getGraphicGroup();
                         const path = this.getPath(item);
                         const x = (path[0][1] + path[1][1]) / 2
                         const y = (path[0][2] + path[1][2]) / 2
-                        console.log(x, y, path)
 
                         // const width = 20;
 
@@ -380,7 +383,7 @@
                         // 名称文本
                         group.addShape('text', {
                             attrs: {
-                                text: 'wade',
+                                text: model.label || '',
                                 x,
                                 y,
                                 textAlign: 'start',
@@ -466,25 +469,32 @@
     	position: absolute;
     	left: 0px;
     	z-index: 2;
-    	background: #f7f9fb;
     	width: 200px;
-    	padding-top: 8px;
-    	border-right: 1px solid #e6e9ed;
+    	border: 1px solid #444;
+    	border-top: 0;
     	text-align: left;
+    	.title {
+    		line-height: 32px;
+    		background: #666;
+    		color: #eee;
+    		font-size: 15px;
+    		padding-left: 12px;
+    	}
     }
     .item-pannel ul {
     	padding: 0px;
     	padding-left: 16px;
     }
     .item-pannel li {
-    	color: rgba(0, 0, 0, 0.65);
-    	border-radius: 4px;
     	width: 160px;
-    	height: 28px;
+    	font-size: 15px;
     	line-height: 26px;
-    	padding-left: 8px;
-    	border: 1px solid rgba(0, 0, 0, 0);
+    	padding: 3px 3px 3px 8px;
+    	margin: 7px 0;
+    	color: #ccc;
     	list-style-type: none;
+    	border-radius: 4px;
+    	border: 1px solid rgba(0, 0, 0, 0);
     }
     .item-pannel .pannel-type-icon {
     	width: 16px;
@@ -495,8 +505,8 @@
     	background: url(https://gw.alipayobjects.com/zos/rmsportal/czNEJAmyDpclFaSucYWB.svg);
     }
     .item-pannel li:hover {
-    	background: white;
-    	border: 1px solid #ced4d9;
+    	color: #ff8800;
     	cursor: move;
+    	border: 1px solid #ff8800;
     }
 </style>

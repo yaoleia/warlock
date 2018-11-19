@@ -1,14 +1,14 @@
 .header {
-    max-width: 1900px;
-    margin: 0 auto;
+	max-width: 1900px;
+	margin: 0 auto;
 	position: relative;
 	height: 120px;
 	z-index: 10;
-
+	overflow: hidden;
 	.logo {
 		.min {
 			display: none;
-        }
+    }
 		text-align: center;
 		color: #fff;
 		-webkit-transition: width 0.35s;
@@ -17,8 +17,8 @@
 
 	.right {
 		position: absolute;
-        right: 0;
-        top: 0;
+		right: 0;
+		top: 0;
 	}
 
 	.header-btn {

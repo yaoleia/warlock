@@ -76,7 +76,7 @@
             },
             saveData() {
                 this.data = this.flow.save()
-                console.log(this.data);
+                console.log(JSON.stringify(this.data));
             },
             changeEage(type) {
                 this.flow.changeAddEdgeModel({
@@ -89,20 +89,18 @@
 <style lang="scss">
     .editor {
     	height: 100%;
-    	background: #eee;
     }
     .bottom-container {
-    	height: calc(100% - 46px);
+    	height: calc(100% - 52px);
     	position: relative;
     }
     .pannel-title {
     	height: 32px;
-    	border-top: 1px solid #dce3e8;
-    	border-bottom: 1px solid #dce3e8;
-    	background: #ebeef2;
-    	color: #000;
-    	line-height: 28px;
+    	background: #666;
+    	color: #eee;
+    	line-height: 32px;
     	padding-left: 12px;
+    	font-size: 15px;
     }
     .color-picker {
     	vertical-align: middle;

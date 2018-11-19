@@ -18,37 +18,36 @@
 </template>
 <style lang="scss">
     .header {
-      .logo {
-        width: 180px;
-        .big {
-          display: none;
-        }
-        .min {
-          display: block;
-        }
-      }
+    	.logo {
+    		width: 180px;
+    		.big {
+    			display: none;
+    		}
+    		.min {
+    			display: block;
+    		}
+    	}
     }
-   
 </style>
 <script type="babel">
     import "./header.scss"
     export default {
-      components: {},
-      data() {
-        return {
-          collapse: false,
-          site: {
-            name: "We-Blog",
-            description: "IBlog"
-          }
-        }
-      },
-      computed: {},
-      methods: {
-        logout() {
-          window.location.replace("/login")
-        }
-      },
-      mounted: function() {}
+        components: {},
+        data() {
+            return {
+                collapse: false,
+                site: {
+                    name: "We-Blog",
+                    description: "IBlog"
+                }
+            }
+        },
+        computed: {},
+        methods: {
+            logout() {
+                window.location.replace("/login")
+            }
+        },
+        mounted: function () { }
     }
 </script>

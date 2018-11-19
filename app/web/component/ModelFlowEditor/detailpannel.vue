@@ -27,7 +27,11 @@
         <div id="edge_detailpannel" data-status="edge-selected" class="pannel">
             <div class="pannel-title">线详情</div>
             <div class="block-container">
-                阿斯达
+                <el-form label-width="60px" @submit.native.prevent>
+                    <el-form-item label="名称：">
+                        <el-input v-model="inputingLabel" />
+                    </el-form-item>
+                </el-form>
             </div>
         </div>
         <div id="node_detailpannel" data-status="group-selected" class="pannel">
@@ -79,9 +83,9 @@
     	position: absolute;
     	right: 0px;
     	z-index: 2;
-    	background: #f7f9fb;
     	width: 200px;
-    	border-left: 1px solid #e6e9ed;
+    	border: 1px solid #444;
+    	border-top: 0;
     }
     .detail-pannel .pannel {
     	display: none;

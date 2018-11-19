@@ -38,7 +38,6 @@
 			height: calc(~'100% - 120px');
 			padding-top: 20px;
 			overflow: auto;
-			background-image: linear-gradient(to bottom, #2d2d2d, #252121);
 		}
 		.main-container {
 			height: 100%;
