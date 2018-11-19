@@ -50,24 +50,24 @@
     	bottom: 0px;
     	right: 0px;
     	z-index: 3;
-    }
-    .navigator .slider {
-    	margin: 7px 10px 10px;
-    	float: left;
-    	width: 120px;
-    }
-    .navigator .minimap {
-    	width: 200px;
-    	height: 120px;
-    }
-    .g6-editor-minimap-container {
-    	background: none !important;
-    }
-    .zoom-slider {
-    	padding: 0 20px;
-    	.el-slider__runway {
-    		margin-top: 10px;
-    		margin-bottom: 10px;
+    	.slider {
+    		margin: 7px 10px 10px;
+    		float: left;
+    		width: 120px;
+    	}
+    	.minimap {
+    		width: 200px;
+    		height: 120px;
+    	}
+    	.g6-editor-minimap-container {
+    		background: none !important;
+    	}
+    	.zoom-slider {
+    		padding: 0 20px;
+    		.el-slider__runway {
+    			margin-top: 10px;
+    			margin-bottom: 10px;
+    		}
     	}
     }
 </style>

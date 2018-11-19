@@ -1,7 +1,7 @@
 <template>
     <div class="detail-pannel">
         <div id="node_detailpannel" data-status="node-selected" class="pannel">
-            <div class="pannel-title">模型详情</div>
+            <div class="pannel-title">模块详情</div>
             <div class="block-container">
                 <div v-if="selectedModel && selectedModel.type === 'node'">
                     <div v-if="selectedModel.shape === 'factory-card'">
@@ -86,27 +86,27 @@
     	width: 200px;
     	border: 1px solid #444;
     	border-top: 0;
-    }
-    .detail-pannel .pannel {
-    	display: none;
-    }
-    .detail-pannel .block-containe {
-    	padding-top: 20px;
-    }
-    .detail-pannel .input {
-    	margin-left: 16px;
-    }
-    .detail-pannel .name-input {
-    	width: 120px;
-    }
-    .detail-pannel .width-input {
-    	width: 52px;
-    }
-    .detail-pannel .height-input {
-    	width: 52px;
-    }
-    .detail-pannel .block-container {
-    	padding: 16px 8px;
-    	text-align: left;
+    	.pannel {
+    		display: none;
+    	}
+    	.block-containe {
+    		padding-top: 20px;
+    	}
+    	.input {
+    		margin-left: 16px;
+    	}
+    	.name-input {
+    		width: 120px;
+    	}
+    	.width-input {
+    		width: 52px;
+    	}
+    	.height-input {
+    		width: 52px;
+    	}
+    	.block-container {
+    		padding: 16px 8px;
+    		text-align: left;
+    	}
     }
 </style>

@@ -480,33 +480,33 @@
     		font-size: 15px;
     		padding-left: 12px;
     	}
-    }
-    .item-pannel ul {
-    	padding: 0px;
-    	padding-left: 16px;
-    }
-    .item-pannel li {
-    	width: 160px;
-    	font-size: 15px;
-    	line-height: 26px;
-    	padding: 3px 3px 3px 8px;
-    	margin: 7px 0;
-    	color: #ccc;
-    	list-style-type: none;
-    	border-radius: 4px;
-    	border: 1px solid rgba(0, 0, 0, 0);
-    }
-    .item-pannel .pannel-type-icon {
-    	width: 16px;
-    	height: 16px;
-    	display: inline-block;
-    	vertical-align: middle;
-    	margin-right: 8px;
-    	background: url(https://gw.alipayobjects.com/zos/rmsportal/czNEJAmyDpclFaSucYWB.svg);
-    }
-    .item-pannel li:hover {
-    	color: #ff8800;
-    	cursor: move;
-    	border: 1px solid #ff8800;
+    	ul {
+    		padding: 0px;
+    		padding-left: 16px;
+    		li {
+    			width: 160px;
+    			font-size: 15px;
+    			line-height: 26px;
+    			padding: 3px 3px 3px 8px;
+    			margin: 7px 0;
+    			color: #ccc;
+    			list-style-type: none;
+    			border-radius: 4px;
+    			border: 1px solid rgba(0, 0, 0, 0);
+    			&:hover {
+    				color: #ff8800;
+    				cursor: move;
+    				border: 1px solid #ff8800;
+    			}
+    		}
+    	}
+    	.pannel-type-icon {
+    		width: 16px;
+    		height: 16px;
+    		display: inline-block;
+    		vertical-align: middle;
+    		margin-right: 8px;
+    		background: url(https://gw.alipayobjects.com/zos/rmsportal/czNEJAmyDpclFaSucYWB.svg);
+    	}
     }
 </style>

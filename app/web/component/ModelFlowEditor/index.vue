@@ -89,24 +89,24 @@
 <style lang="scss">
     .editor {
     	height: 100%;
-    }
-    .bottom-container {
-    	height: calc(100% - 52px);
-    	position: relative;
-    }
-    .pannel-title {
-    	height: 32px;
-    	background: #666;
-    	color: #eee;
-    	line-height: 32px;
-    	padding-left: 12px;
-    	font-size: 15px;
-    }
-    .color-picker {
-    	vertical-align: middle;
-    	margin-left: 16px;
-    }
-    .p {
-    	margin-bottom: 12px;
+    	.bottom-container {
+    		height: calc(100% - 52px);
+    		position: relative;
+    	}
+    	.pannel-title {
+    		height: 32px;
+    		background: #666;
+    		color: #eee;
+    		line-height: 32px;
+    		padding-left: 12px;
+    		font-size: 15px;
+    	}
+    	.color-picker {
+    		vertical-align: middle;
+    		margin-left: 16px;
+    	}
+    	.p {
+    		margin-bottom: 12px;
+    	}
     }
 </style>
