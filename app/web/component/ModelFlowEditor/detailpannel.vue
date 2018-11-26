@@ -4,6 +4,7 @@
             <div class="pannel-title">模块详情</div>
             <div class="block-container">
                 <div v-if="selectedModel && selectedModel.type === 'node'">
+                    <div class="title">{{selected.item.shapeObj.title}}</div>
                     <div v-if="selectedModel.shape === 'factory-card'">
                         <el-form label-width="80px" label-position="left" @submit.native.prevent>
                             <el-form-item label="名称：" prop="label">
@@ -14,12 +15,22 @@
                             </el-form-item>
                         </el-form>
                     </div>
-                    <div v-if="selectedModel.shape === 'k-means' || selectedModel.shape === 'random-forest'">
+                    <div v-if="selectedModel.shape!== 'factory-card'">
                         <el-form label-width="60px" @submit.native.prevent>
                             <el-form-item label="名称：">
                                 <el-input v-model="inputingLabel" />
                             </el-form-item>
                         </el-form>
+                    </div>
+                    <div v-if="selectedModel.shape === 'distortion-correction'">
+                        <el-form label-width="60px" @submit.native.prevent>
+                            <el-form-item :label="item.key+':'" v-for="item in selected.item.shapeObj.optionList" :key="item.key">
+                                <el-input @keyup.native='inputChange($event,item.key)' v-model="selectedModel[item.key]" />
+                            </el-form-item>
+                        </el-form>
+                        <el-checkbox-group v-model="checkedBox" class="check-box">
+                            <el-checkbox v-for="item in selected.item.shapeObj.checkBoxList" :label="item.key" :key="item.key"></el-checkbox>
+                        </el-checkbox-group>
                     </div>
                 </div>
             </div>
@@ -54,9 +65,10 @@
     export default {
         data() {
             return {
+                checkedBox: []
             };
         },
-        props: ['selectedModel'],
+        props: ['selectedModel', 'selected'],
         computed: {
             inputingLabel: {
                 get() {
@@ -72,6 +84,21 @@
                 },
                 set(value) {
                     this.$emit('updateGraph', ['color', value]);
+                }
+            }
+        },
+        methods: {
+            inputChange(e, attr) {
+                this.$emit('updateGraph', [attr, e.target.value]);
+            }
+        },
+        watch: {
+            checkedBox(arr) {
+                this.$emit('updateGraph', ['checkedBox', arr]);
+            },
+            selected(s) {
+                if (s) {
+                    this.checkedBox = this.selectedModel.checkedBox;
                 }
             }
         }
@@ -107,6 +134,18 @@
     	.block-container {
     		padding: 16px 8px;
     		text-align: left;
+    		.title {
+    			font-size: 15px;
+    			color: #eee;
+    			padding-bottom: 30px;
+    		}
+    		input {
+    			background: none;
+    			border-color: #ccc;
+    		}
+    		.check-box {
+    			margin: 30px 0;
+    		}
     	}
     }
 </style>

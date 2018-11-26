@@ -3,6 +3,7 @@ import G6Editor from '@antv/g6-editor'
 export default {
     data() {
         return {
+            selected: {},
             selectedModel: {}, // 当前选中项数据模型
             curZoom: 1, // 当前缩放比率
             minZoom: 0.5, // 最小缩放比率
@@ -43,12 +44,23 @@ export default {
                 noEndEdge: false
             });
             flow.on('afteritemselected', ev => {
+                this.selected = ev;
                 this.selectedModel = ev.item.getModel();
+                if (!this.selectedModel.checkedBox) {
+                    this.selectedModel.checkedBox = [];
+                }
                 console.log(this.selectedModel);
             });
             flow.on('afterzoom', ev => {
                 this.curZoom = ev.updateMatrix[0];
             });
+            flow.on('beforechange', ev => {
+                console.log(ev)
+            });
+            // const graph = flow.getGraph();
+            // graph.on('click', ev => {
+            //     console.log(ev)
+            // });
             editor.add(miniMap);
             editor.add(toolBar);
             editor.add(contextMenu);

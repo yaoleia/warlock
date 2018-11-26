@@ -3,7 +3,7 @@
         <toolbar ref='toolbar' @save="saveData" @read='readData' @change-eage="changeEage" />
         <div class="bottom-container">
             <item-pannel ref="itempannel" />
-            <detail-pannel ref='detailpannel' :selectedModel='selectedModel' @updateGraph='updateGraph' @toggleGrid='toggleGrid' />
+            <detail-pannel ref='detailpannel' :selected='selected' :selectedModel='selectedModel' @updateGraph='updateGraph' @toggleGrid='toggleGrid' />
             <navigator :cur-zoom="curZoom" :min-zoom="minZoom" :max-zoom="maxZoom" @change-zoom="changeZoom">
                 <div ref="minimap" slot="minimap"></div>
             </navigator>
@@ -34,7 +34,7 @@
         extends: Editor,
         data() {
             return {
-                data: { "nodes": [{ "shape": "k-means", "type": "node", "size": "170*34", "x": 133, "y": 53.5, "id": "937996f0", "index": 0 }, { "shape": "PS-SMART", "type": "node", "size": "170*34", "x": 424, "y": 229.5, "id": "30b4457e", "index": 1 }, { "shape": "PS-SMART", "type": "node", "size": "170*34", "x": 548, "y": -40.5, "id": "ce4e0569", "index": 2 }, { "shape": "factory-card", "type": "node", "size": "100*100", "x": 140, "y": 275.5, "id": "641c17b7", "index": 3 }, { "shape": "read-data-base", "type": "node", "size": "170*34", "x": 72, "y": -83.5, "id": "d86391f0", "index": 4 }], "edges": [{ "shape": "flow-polyline-round", "source": "d86391f0", "sourceAnchor": 0, "target": "937996f0", "targetAnchor": 0, "id": "910efbc3", "index": 5 }, { "shape": "flow-polyline-round", "source": "ce4e0569", "sourceAnchor": 1, "target": "30b4457e", "targetAnchor": 0, "id": "5110776b", "index": 6 }, { "shape": "flow-polyline-round", "source": "d86391f0", "sourceAnchor": 0, "target": "ce4e0569", "targetAnchor": 0, "id": "d7cc81b7", "index": 7 }, { "shape": "flow-polyline-round", "source": "ce4e0569", "sourceAnchor": 2, "target": "641c17b7", "targetAnchor": 1, "id": "ed14edea", "index": 8 }] }
+                data: { "nodes": [{ "shape": "k-means", "type": "node", "size": "170*34", "x": 133, "y": 53.5, "id": "937996f0", "index": 0 }, { "shape": "image-registration", "type": "node", "size": "170*34", "x": 424, "y": 229.5, "id": "30b4457e", "index": 1 }, { "shape": "image-registration", "type": "node", "size": "170*34", "x": 548, "y": -40.5, "id": "ce4e0569", "index": 2 }, { "shape": "factory-card", "type": "node", "size": "100*100", "x": 140, "y": 275.5, "id": "641c17b7", "index": 3 }, { "shape": "bar-code-recognition", "type": "node", "size": "170*34", "x": 72, "y": -83.5, "id": "d86391f0", "index": 4 }], "edges": [{ "shape": "flow-polyline-round", "source": "d86391f0", "sourceAnchor": 0, "target": "937996f0", "targetAnchor": 0, "id": "910efbc3", "index": 5 }, { "shape": "flow-polyline-round", "source": "ce4e0569", "sourceAnchor": 1, "target": "30b4457e", "targetAnchor": 0, "id": "5110776b", "index": 6 }, { "shape": "flow-polyline-round", "source": "d86391f0", "sourceAnchor": 0, "target": "ce4e0569", "targetAnchor": 0, "id": "d7cc81b7", "index": 7 }, { "shape": "flow-polyline-round", "source": "ce4e0569", "sourceAnchor": 2, "target": "641c17b7", "targetAnchor": 1, "id": "ed14edea", "index": 8 }] }
             };
         },
         computed: {
@@ -104,9 +104,6 @@
     	.color-picker {
     		vertical-align: middle;
     		margin-left: 16px;
-    	}
-    	.p {
-    		margin-bottom: 12px;
     	}
     }
 </style>

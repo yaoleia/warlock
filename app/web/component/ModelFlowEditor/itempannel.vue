@@ -2,23 +2,23 @@
     <div class="item-pannel">
         <div class="title">工具箱</div>
         <ul class="item-pannel-list">
-            <li class="getItem" data-shape="k-means" data-type="node" data-size="170*34">
-                <span class="pannel-type-icon" />K 均值聚类
+            <li class="getItem" data-shape="distortion-correction" data-type="node" data-size="200*250">
+                <span class="pannel-type-icon" />畸变校正
             </li>
-            <li class="getItem" data-shape="random-forest" data-type="node" data-size="170*34">
-                <span class="pannel-type-icon" />随机森林
+            <li class="getItem" data-shape="image-compression" data-type="node" data-size="200*250">
+                <span class="pannel-type-icon" />图像压缩
             </li>
-            <li class="getItem" data-shape="PS-SMART" data-type="node" data-size="170*34">
-                <span class="pannel-type-icon" />PS-SMART 分类
+            <li class="getItem" data-shape="image-registration" data-type="node" data-size="200*250">
+                <span class="pannel-type-icon" />图像配准
             </li>
-            <li class="getItem" data-shape="read-data-base" data-type="node" data-size="170*34">
-                <span class="pannel-type-icon" />读数据表
+            <li class="getItem" data-shape="bar-code-recognition" data-type="node" data-size="200*250">
+                <span class="pannel-type-icon" />条码识别
             </li>
-            <li class="getItem" data-shape="Bayes" data-type="node" data-size="170*34">
-                <span class="pannel-type-icon" />朴素贝叶斯
+            <li class="getItem" data-shape="dm-code-recognition" data-type="node" data-size="200*250">
+                <span class="pannel-type-icon" />二维码识别
             </li>
             <li class="getItem" data-shape="factory-card" data-type="node" data-size="100*100">
-                <span class="pannel-type-icon" />工厂图标
+                <span class="pannel-type-icon" />图标
             </li>
         </ul>
     </div>
@@ -59,10 +59,10 @@
                                 attrs: {
                                     text: model.label,
                                     x: 0,
-                                    y: y - 20,
+                                    y: y - 10,
                                     textAlign: 'center',
                                     textBaseline: 'top',
-                                    fill: model.color ? model.color : 'rgba(0,0,0,0.65)'
+                                    fill: model.color ? model.color : 'rgba(255,255,255,0.65)'
                                 }
                             });
                         }
@@ -84,8 +84,8 @@
                     draw(item) {
                         const group = item.getGraphicGroup();
                         const model = item.getModel();
-                        const width = 184;
-                        const height = 40;
+                        const width = 200;
+                        const height = 250;
                         const x = -width / 2;
                         const y = -height / 2;
                         const borderRadius = 4;
@@ -96,8 +96,8 @@
                                 width,
                                 height,
                                 radius: borderRadius,
-                                fill: 'white',
-                                stroke: '#CED4D9'
+                                fill: '#ccc',
+                                stroke: '#000'
                             }
                         });
                         // 左侧色条
@@ -113,66 +113,96 @@
                                 fill: this.color_type
                             }
                         });
-                        // 类型 logo
-                        group.addShape('image', {
-                            attrs: {
-                                img: this.type_icon_url,
-                                x: x + 16,
-                                y: y + 12,
-                                width: 20,
-                                height: 16
-                            }
-                        });
-                        // 名称文本
-                        const label = model.label ? model.label : this.label;
+                        // 名称
                         group.addShape('text', {
                             attrs: {
-                                text: label,
-                                x: x + 52,
+                                text: this.title,
+                                x: x + 20,
                                 y: y + 13,
                                 textAlign: 'start',
                                 textBaseline: 'top',
-                                fill: 'rgba(0,0,0,0.65)'
+                                fill: 'rgba(255,0,0,0.65)'
                             }
                         });
-                        // 状态 logo
-                        group.addShape('image', {
-                            attrs: {
-                                img: this.state_icon_url,
-                                x: x + 158,
-                                y: y + 12,
-                                width: 16,
-                                height: 16
+                        buildOpt(this.checkBoxList, this.optionList, x, y);
+                        function buildOpt(attrs, options, x, y) {
+                            x = x + 20;
+                            y = y + 10;
+                            if (attrs) {
+                                attrs.map(attr => {
+                                    let { key } = attr;
+                                    y += 30;
+                                    group.addShape('text', {
+                                        attrs: {
+                                            text: key,
+                                            x,
+                                            y,
+                                            textAlign: 'start',
+                                            textBaseline: 'top',
+                                            fill: 'rgba(0,0,0,0.65)'
+                                        }
+                                    });
+                                    group.addShape('text', {
+                                        attrs: {
+                                            text: model.checkedBox && model.checkedBox.includes(key) ? 'on' : 'off',
+                                            x: x + 150,
+                                            y,
+                                            textAlign: 'start',
+                                            textBaseline: 'top',
+                                            fill: 'rgba(0,0,0,0.65)'
+                                        }
+                                    });
+                                })
                             }
-                        });
+                            if (options) {
+                                options.map(option => {
+                                    let { key } = option;
+                                    y += 30;
+                                    group.addShape('text', {
+                                        attrs: {
+                                            text: key,
+                                            x,
+                                            y,
+                                            textAlign: 'start',
+                                            textBaseline: 'top',
+                                            fill: 'rgba(0,0,0,0.65)'
+                                        }
+                                    });
+                                    group.addShape('text', {
+                                        attrs: {
+                                            text: model[key] === undefined ? '' : model[key],
+                                            x: x + 130,
+                                            y,
+                                            textAlign: 'start',
+                                            textBaseline: 'top',
+                                            fill: 'rgba(0,0,0,0.65)'
+                                        }
+                                    });
+                                })
+                            }
+                        }
                         return keyShape;
                     },
                     // 设置锚点
                     anchor: [
-                        [0.5, 0], // 上面边的中点
-                        [0.5, 1] // 下边边的中点
+                        [0.5, 0, { type: 'input' }], // 上面边的中点
+                        [0.5, 1, { type: 'output' }] // 下边边的中点
                     ]
                 });
 
-                // k 均值聚类
-                Flow.registerNode('k-means', {
-                    label: 'k 均值聚类',
+                // 畸变校正
+                Flow.registerNode('distortion-correction', {
+                    title: '畸变校正',
                     color_type: '#1890FF',
                     type_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/czNEJAmyDpclFaSucYWB.svg',
                     state_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/MXXetJAxlqrbisIuZxDO.svg',
-                    // 设置锚点
-                    anchor: [
-                        [0.5, 0, {
-                            type: 'input'
-                        }], // 上面边的中点
-                        [0.5, 1, {
-                            type: 'output'
-                        }] // 下边边的中点
-                    ]
+                    checkBoxList: [{ key: "wade" }, { key: "james" }],
+                    optionList: [{ key: 'frameRate' }, { key: 'gamma' }]
                 }, 'model-card');
 
-                // 随机森林
-                Flow.registerNode('random-forest', {
+                // 图像压缩
+                Flow.registerNode('image-compression', {
+                    title: '图像压缩',
                     label: '随机森林',
                     color_type: '#9254DE',
                     type_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/czNEJAmyDpclFaSucYWB.svg',
@@ -188,9 +218,10 @@
                     ]
                 }, 'model-card');
 
-                // PS-SMART 分类
-                Flow.registerNode('PS-SMART', {
-                    label: 'PS-SMART 分类',
+                // 图像配准
+                Flow.registerNode('image-registration', {
+                    title: '图像配准',
+                    label: 'image-registration 分类',
                     color_type: '#1890FF',
                     type_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/czNEJAmyDpclFaSucYWB.svg',
                     state_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/MXXetJAxlqrbisIuZxDO.svg',
@@ -208,9 +239,10 @@
                     ]
                 }, 'model-card');
 
-                // 朴素贝叶斯
-                Flow.registerNode('Bayes', {
-                    label: '朴素贝叶斯',
+                // 二维码识别
+                Flow.registerNode('dm-code-recognition', {
+                    title: '二维码识别',
+                    label: '二维码识别',
                     color_type: '#9254DE',
                     type_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/czNEJAmyDpclFaSucYWB.svg',
                     state_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/uZVdwjJGqDooqKLKtvGA.svg',
@@ -225,9 +257,10 @@
                     ]
                 }, 'model-card');
 
-                // 读数据表
-                Flow.registerNode('read-data-base', {
-                    label: '读数据表',
+                // 条码识别
+                Flow.registerNode('bar-code-recognition', {
+                    title: '条码识别',
+                    label: 'bar',
                     color_type: '#FAAD14',
                     type_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/czNEJAmyDpclFaSucYWB.svg',
                     state_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/MXXetJAxlqrbisIuZxDO.svg',
