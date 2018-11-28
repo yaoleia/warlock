@@ -38,16 +38,15 @@ module.exports = {
 	node: {
 		console: true
 	},
-	plugins: [
-		/* Use the ProvidePlugin constructor to inject jquery implicit globals */
-		new webpack.ProvidePlugin({
+	plugins: {
+		provide: {
 			$: "jquery",
 			jQuery: "jquery",
 			"window.jQuery": "jquery",
 			"window.$": "jquery",
 			_: 'lodash'
-		})
-	],
+		}
+	},
 	done() {
 		console.log('如果启动成功后, Chrome控制台浏览器脚本报错, 可以尝试执行 npm run clean 清除缓存解决');
 	}
