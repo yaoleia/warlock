@@ -11,15 +11,14 @@ const debug = process.env.NODE_ENV !== 'production';
 
 export default function createStore() {
   const state = {
-    articleTotal: 0,
-    articleList: [],
-    article: {}
+    recordTotal: 0,
+    recordList: []
   };
   return new Vuex.Store({
     state,
     actions,
     getters,
     mutations,
-    plugins: debug && EASY_ENV_IS_BROWSER ? [createLogger()] : []
+    // plugins: debug && EASY_ENV_IS_BROWSER ? [createLogger()] : []
   });
 }

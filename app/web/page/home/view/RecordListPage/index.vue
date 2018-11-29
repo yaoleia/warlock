@@ -17,7 +17,7 @@
             </el-date-picker>
             <el-button class="search-button" type="text" @click="q.pageIndex = 1;query()">查询</el-button>
         </div>
-        <el-table stripe :data="articleList" v-loading="loading" :height="innerHeight">
+        <el-table stripe :data="recordList" v-loading="loading" :height="innerHeight">
             <div slot="empty">
                 <p v-if='!loading'>No Content</p>
             </div>
@@ -73,7 +73,7 @@
 </template>
 <script type="babel">
     import DialogDetail from "./DialogDetail.vue"
-    import { SET_ARTICLE_LIST, DELETE_ARTICLE } from "../../store/app/mutation-type"
+    import { SET_ARTICLE_LIST } from "../../store/app/mutation-type"
     import utils from "framework/utils"
     let curObj = {
         cutBase64: "",
@@ -145,21 +145,21 @@
         },
         methods: {
             prevOrNext(n) {
-                let i = this.articleList.findIndex(l => {
+                let i = this.recordList.findIndex(l => {
                     return this.cur.dm_code === l.dm_code
                 })
                 if (n === 0) {
                     if (i > 0) {
-                        this.cur = { ...curObj, ...this.articleList[--i] }
+                        this.cur = { ...curObj, ...this.recordList[--i] }
                     }
                 }
                 if (n === 1) {
-                    if (i < this.articleList.length - 1) {
-                        this.cur = { ...curObj, ...this.articleList[++i] }
+                    if (i < this.recordList.length - 1) {
+                        this.cur = { ...curObj, ...this.recordList[++i] }
                     }
                 }
                 this.leftDisabled = i === 0 ? true : false;
-                this.rightDisabled = i === this.articleList.length - 1 ? true : false;
+                this.rightDisabled = i === this.recordList.length - 1 ? true : false;
             },
             next() { },
             getEndTime() {
@@ -228,14 +228,14 @@
                 ]
             },
             total() {
-                return this.$store.state.articleTotal
+                return this.$store.state.recordTotal
             },
-            articleList() {
-                return this.$store.state.articleList
+            recordList() {
+                return this.$store.state.recordList
             }
         },
         beforeMount() {
-            if (!(this.articleList && this.articleList.length > 0)) {
+            if (!(this.recordList && this.recordList.length > 0)) {
                 this.fetchApi(this.$store, this.q)
             }
         },
@@ -246,7 +246,7 @@
                     this.query()
                 }
             },
-            "articleList": function (i) {
+            "recordList": function (i) {
                 $(".el-table__body-wrapper", this.$el)[0].scrollTop = 0;
                 this.loading = false;
             },
@@ -261,50 +261,50 @@
 
 <style lang="scss">
     .history-list {
-    	width: 1900px;
-    	min-height: 500px;
-    	padding: 30px 0 0;
-    	margin: 0 auto;
-    	.el-table {
-    		height: 890px;
-    		.cell .red {
-    			color: #f44336;
-    		}
-    		.el-loading-mask {
-    			background: rgba(0, 0, 0, 0.2);
-    		}
-    		.dm-code-img-wrap {
-    			cursor: zoom-in;
-    			height: 40px;
-    			margin: 0 70px;
-    			img {
-    				height: 100%;
-    			}
-    		}
-    	}
-    	.search {
-    		height: 40px;
-    		.el-range-editor {
-    			border: none;
-    		}
-    		.el-range-editor .el-range-input {
-    			background: none;
-    			color: #dbdbdb;
-    		}
-    		.el-input__inner {
-    			background: rgba($color: #fff, $alpha: 0.1);
-    		}
-    		.el-date-editor .el-range-separator {
-    			color: #aaa;
-    		}
-    	}
+        width: 1900px;
+        min-height: 500px;
+        padding: 30px 0 0;
+        margin: 0 auto;
+        .el-table {
+            height: 890px;
+            .cell .red {
+                color: #f44336;
+            }
+            .el-loading-mask {
+                background: rgba(0, 0, 0, 0.2);
+            }
+            .dm-code-img-wrap {
+                cursor: zoom-in;
+                height: 40px;
+                margin: 0 70px;
+                img {
+                    height: 100%;
+                }
+            }
+        }
+        .search {
+            height: 40px;
+            .el-range-editor {
+                border: none;
+            }
+            .el-range-editor .el-range-input {
+                background: none;
+                color: #dbdbdb;
+            }
+            .el-input__inner {
+                background: rgba($color: #fff, $alpha: 0.1);
+            }
+            .el-date-editor .el-range-separator {
+                color: #aaa;
+            }
+        }
     }
     @media screen and (max-width: 1920px) {
-    	.history-list {
-    		width: 1420px;
-    		.el-table {
-    			height: 621px;
-    		}
-    	}
+        .history-list {
+            width: 1420px;
+            .el-table {
+                height: 621px;
+            }
+        }
     }
 </style>

@@ -8,6 +8,17 @@
 		"semi": [
 			0
 		],
+		"indent": [
+			0,
+			4
+		],
+		"eqeqeq": 0,
+		"no-bitwise": 0,
+		"no-return-assign": 0,
+		"newline-per-chained-call": 0,
+		"no-undef": 0,
+		"array-callback-return": 0,
+		"consistent-return": 0,
 		"arrow-parens": "off",
 		"valid-jsdoc": "off",
 		"eol-last": "off",
@@ -16,7 +27,6 @@
 		"no-else-return": "off",
 		"strict": "off",
 		"linebreak-style": "off",
-		"newline-per-chained-call": "off",
 		"no-irregular-whitespace": [
 			"error",
 			{
