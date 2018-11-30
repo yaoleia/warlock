@@ -1,6 +1,6 @@
 const io = require('socket.io-client');
 module.exports = app => {
-  return async function () {
+  return async function() {
     const message = this.args[0];
     const serverUrl = app.config.serverUrl;
     if (!this.socket.ioClient) {
@@ -42,9 +42,9 @@ function ioClient(addr, socket, ak, serverUrl) {
 
   client.on('server_response', message => {
     // 转发detect_push到warlock前端
-    for (let attr in message.data) {
-      if (attr.indexOf("_path") !== -1) {
-        message.data[attr] = message.data[attr].replace('http://0.0.0.0:5001', serverUrl).replace("5000", "5001");
+    for (const attr in message.data) {
+      if (attr.indexOf('_path') !== -1) {
+        message.data[attr] = message.data[attr].replace('http://0.0.0.0:5001', serverUrl).replace('5000', '5001');
       }
     }
     socket.emit('msg', message.data);
