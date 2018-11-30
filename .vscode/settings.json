@@ -22,7 +22,8 @@
   ],
   "eslint.options": {
     "plugins": [
-      "html"
+      "html",
+      "vue"
     ]
   },
   "eslint.autoFixOnSave": true

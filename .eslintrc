@@ -1,6 +1,10 @@
 {
-	"extends": "eslint-config-egg",
+	"extends": [
+		"eslint-config-egg",
+		"plugin:vue/base"
+	],
 	"parserOptions": {
+		"parser": "babel-eslint",
 		"ecmaVersion": 6,
 		"sourceType": "module"
 	},
@@ -53,6 +57,5 @@
 		"EASY_ENV_IS_NODE": true,
 		"EASY_ENV_IS_BROWSER": true,
 		"EASY_ENV_IS_DEV": true
-	},
-	"parser": "babel-eslint"
+	}
 }
