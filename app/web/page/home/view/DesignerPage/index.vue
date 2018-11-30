@@ -5,7 +5,7 @@
 </template>
 <style>
     .editor-wrap {
-    	height: 100%;
+        height: 100%;
     }
 </style>
 <script type="babel">

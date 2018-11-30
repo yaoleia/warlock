@@ -20,10 +20,6 @@ module.exports = app => {
     dir: path.join(app.baseDir, 'logs')
   };
 
-  exports.webpack = {
-    browser: 'http://localhost:7501'
-  };
-
   const localIP = ip.address();
   const domainWhiteList = [];
   [7501, 9000, 9001].forEach(port => {
