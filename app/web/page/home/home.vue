@@ -4,15 +4,16 @@
     </IndexLayout>
 </template>
 <script type="text/babel">
-    import Vue from "vue"
-    import { sync } from "vuex-router-sync"
-    import createStore from "./store/app"
-    import createRouter from "./router"
-    import IndexLayout from "component/layout/index"
-    import HeaderNav from "./view/HeaderNav.vue"
-    import io from "socket.io-client"
-    import ElementUI from 'element-ui';
-    import 'asset/css/element-variables.scss';
+    import Vue from 'vue'
+    import { sync } from 'vuex-router-sync'
+    import createStore from './store/app'
+    import createRouter from './router'
+    import IndexLayout from 'component/layout/index'
+    import HeaderNav from './view/HeaderNav.vue'
+    import io from 'socket.io-client'
+    import ElementUI from 'element-ui'
+    import 'asset/css/element-variables.scss'
+    import 'asset/css/transition.scss'
 
     Vue.use(ElementUI);
 
@@ -47,16 +48,16 @@
             },
             startWsConnection() {
                 this.stopWsConnection()
-                let ws = io(`/`)
+                const ws = io('/')
 
-                ws.on("connect", () => {
-                    console.log(`websocket successfully connected !`)
+                ws.on('connect', () => {
+                    console.log('websocket successfully connected !')
                 })
 
-                ws.on("disconnect", () => {
-                    console.log("websocket successfully closed")
+                ws.on('disconnect', () => {
+                    console.log('websocket successfully closed')
                 })
-                ws.on("connect_error", () => {
+                ws.on('connect_error', () => {
                     this.$message.error('ws连接错误');
                 })
                 // this.setWebsocket(ws)

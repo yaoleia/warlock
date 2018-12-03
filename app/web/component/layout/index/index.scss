@@ -98,6 +98,7 @@
 
 #app {
     .main-container {
+        overflow: hidden;
         >div {
             min-width: 1900px;
             width: 1900px;

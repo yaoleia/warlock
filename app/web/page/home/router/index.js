@@ -35,7 +35,7 @@ export default function createRouter() {
         path: '/param',
         component: ParamPage,
         meta: {
-          noKeepAlive: true
+          noKeepAlive: false
         }
       },
       {
