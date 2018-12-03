@@ -3,11 +3,6 @@
         <model-flow-editor />
     </div>
 </template>
-<style>
-    .editor-wrap {
-        height: 100%;
-    }
-</style>
 <script type="babel">
     export default {
         components: {
@@ -19,7 +14,7 @@
         },
         beforeMount() {
             // 只会在浏览器执行
-            this.$options.components.ModelFlowEditor = () => import("component/ModelFlowEditor")
+            this.$options.components.ModelFlowEditor = () => import('component/ModelFlowEditor')
         },
         computed: {},
         methods: {

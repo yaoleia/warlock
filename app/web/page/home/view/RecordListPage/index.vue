@@ -72,18 +72,18 @@
     </div>
 </template>
 <script type="babel">
-    import DialogDetail from "./DialogDetail.vue"
-    import { SET_ARTICLE_LIST } from "../../store/app/mutation-type"
-    import utils from "framework/utils"
-    let curObj = {
-        cutBase64: "",
-        defect_type: "",
-        dm_code: "",
-        mask_img_path: "",
-        seg_img_path: "",
-        reg_img_path: "",
-        detect_time: "",
-        dm_path: "",
+    import DialogDetail from './DialogDetail.vue'
+    import { SET_ARTICLE_LIST } from '../../store/app/mutation-type'
+    import utils from 'framework/utils'
+    const curObj = {
+        cutBase64: '',
+        defect_type: '',
+        dm_code: '',
+        mask_img_path: '',
+        seg_img_path: '',
+        reg_img_path: '',
+        detect_time: '',
+        dm_path: '',
         cut: {}
     }
     export default {
@@ -95,30 +95,30 @@
                 pickerOptions: {
                     shortcuts: [
                         {
-                            text: "最近3小时",
+                            text: '最近3小时',
                             onClick(picker) {
                                 const end = new Date()
                                 const start = new Date()
                                 start.setTime(start.getTime() - 3600 * 1000 * 3)
-                                picker.$emit("pick", [start, end])
+                                picker.$emit('pick', [start, end])
                             }
                         },
                         {
-                            text: "最近24小时",
+                            text: '最近24小时',
                             onClick(picker) {
                                 const end = new Date()
                                 const start = new Date()
                                 start.setTime(start.getTime() - 3600 * 1000 * 24)
-                                picker.$emit("pick", [start, end])
+                                picker.$emit('pick', [start, end])
                             }
                         },
                         {
-                            text: "最近72小时",
+                            text: '最近72小时',
                             onClick(picker) {
                                 const end = new Date()
                                 const start = new Date()
                                 start.setTime(start.getTime() - 3600 * 1000 * 72)
-                                picker.$emit("pick", [start, end])
+                                picker.$emit('pick', [start, end])
                             }
                         }
                     ]
@@ -129,10 +129,10 @@
                     statusId: undefined,
                     pageIndex: 1,
                     pageSize: 20,
-                    dateRange: "",
-                    endTime: ""
+                    dateRange: '',
+                    endTime: ''
                 },
-                //请求时的loading效果
+                // 请求时的loading效果
                 loading: false,
                 dialogDetailVisible: false,
                 cur: { ...curObj },
@@ -158,8 +158,8 @@
                         this.cur = { ...curObj, ...this.recordList[++i] }
                     }
                 }
-                this.leftDisabled = i === 0 ? true : false;
-                this.rightDisabled = i === this.recordList.length - 1 ? true : false;
+                this.leftDisabled = i === 0;
+                this.rightDisabled = i === this.recordList.length - 1;
             },
             next() { },
             getEndTime() {
@@ -196,8 +196,8 @@
                 return utils.ifOk(type)
             },
             defectType(type) {
-                let msg = utils.defectType(type)
-                return msg === "无缺陷" ? "-" : msg
+                const msg = utils.defectType(type)
+                return msg === '无缺陷' ? '-' : msg
             }
         },
         computed: {
@@ -214,17 +214,17 @@
             },
             status() {
                 return [
-                    { status: undefined, name: "--请选择--" },
-                    { status: 1, name: "已发布" },
-                    { status: 2, name: "草稿" }
+                    { status: undefined, name: '--请选择--' },
+                    { status: 1, name: '已发布' },
+                    { status: 2, name: '草稿' }
                 ]
             },
             categories() {
                 return [
-                    { categoryId: 0, name: "--请选择--" },
-                    { categoryId: 1, name: "Nodejs" },
-                    { categoryId: 2, name: "Webpack" },
-                    { categoryId: 3, name: "Egg" }
+                    { categoryId: 0, name: '--请选择--' },
+                    { categoryId: 1, name: 'Nodejs' },
+                    { categoryId: 2, name: 'Webpack' },
+                    { categoryId: 3, name: 'Egg' }
                 ]
             },
             total() {
@@ -240,14 +240,14 @@
             }
         },
         watch: {
-            "q.dateRange": function (r) {
+            'q.dateRange': function(r) {
                 if (r === null) {
                     this.q.pageIndex = 1
                     this.query()
                 }
             },
-            "recordList": function (i) {
-                $(".el-table__body-wrapper", this.$el)[0].scrollTop = 0;
+            recordList(i) {
+                $('.el-table__body-wrapper', this.$el)[0].scrollTop = 0;
                 this.loading = false;
             },
             dialogDetailVisible(bol) {
@@ -261,10 +261,7 @@
 
 <style lang="scss">
     .history-list {
-        width: 1900px;
         min-height: 500px;
-        padding: 30px 0 0;
-        margin: 0 auto;
         .el-table {
             height: 890px;
             .cell .red {
@@ -301,7 +298,6 @@
     }
     @media screen and (max-width: 1920px) {
         .history-list {
-            width: 1420px;
             .el-table {
                 height: 621px;
             }

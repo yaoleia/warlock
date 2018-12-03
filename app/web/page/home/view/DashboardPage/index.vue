@@ -314,11 +314,6 @@
 </template>
 <style lang="scss">
     .dashboard {
-        box-sizing: border-box;
-        height: 100%;
-        display: table;
-        margin: 0 auto;
-        min-width: 1900px;
         .col {
             float: left;
             display: flex;
