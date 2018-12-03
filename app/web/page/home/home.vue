@@ -1,13 +1,13 @@
 <template>
     <IndexLayout>
-        <header-nav />
+        <header-nav :menu='menu' />
     </IndexLayout>
 </template>
 <script type="text/babel">
     import Vue from 'vue'
     import { sync } from 'vuex-router-sync'
     import createStore from './store/app'
-    import createRouter from './router'
+    import { createRouter, menu } from './router'
     import IndexLayout from 'component/layout/index'
     import HeaderNav from './view/HeaderNav.vue'
     import io from 'socket.io-client'
@@ -26,7 +26,8 @@
         store,
         data() {
             return {
-                globalWebsocket: null
+                globalWebsocket: null,
+                menu
             }
         },
         components: {

@@ -1,11 +1,11 @@
 <template>
     <div style="font-size: 24px; text-align: center">
-        <div>help</div>
+        list
     </div>
 </template>
 <style>
 </style>
-<script type="babel">
+<script type="text/babel">
     export default {
         methods: {},
         beforeMount() { }

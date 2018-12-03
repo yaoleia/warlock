@@ -1,25 +1,26 @@
 <template>
-    <div class="editor-wrap">
-        <model-flow-editor />
-    </div>
+    <keep-alive>
+        <router-view></router-view>
+    </keep-alive>
 </template>
+<style>
+</style>
 <script type="babel">
     export default {
-        components: {
-        },
+        components: {},
         data() {
             return {
 
             };
         },
-        beforeMount() {
-            // 只会在浏览器执行
-            this.$options.components.ModelFlowEditor = () => import('component/ModelFlowEditor')
-        },
-        computed: {},
         methods: {
+
         },
-        mounted() {
+        computed: {
+
+        },
+        beforeMount() {
+
         }
     };
 </script>
