@@ -19,7 +19,8 @@
 
     const store = createStore()
     const router = createRouter()
-    sync(store, router)
+    const unsync = sync(store, router)
+    unsync()
 
     export default {
         router,

@@ -8,7 +8,7 @@ import request from 'framework/network/request';
 Vue.use(Vuex);
 
 const actions = {
-  SET_ARTICLE_LIST: async (store, json) => {
+  SET_ARTICLE_LIST: (store, json) => {
     return request.post('/api/article/list', json, store).then(response => {
       store.commit(Type.SET_ARTICLE_LIST, response.data);
     })

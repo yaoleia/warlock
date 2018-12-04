@@ -106,46 +106,46 @@
 </script>
 <style lang="scss">
     .detail-pannel {
-    	height: 100%;
-    	position: absolute;
-    	right: 0px;
-    	z-index: 2;
-    	width: 200px;
-    	border: 1px solid #444;
-    	border-top: 0;
-    	.pannel {
-    		display: none;
-    	}
-    	.block-containe {
-    		padding-top: 20px;
-    	}
-    	.input {
-    		margin-left: 16px;
-    	}
-    	.name-input {
-    		width: 120px;
-    	}
-    	.width-input {
-    		width: 52px;
-    	}
-    	.height-input {
-    		width: 52px;
-    	}
-    	.block-container {
-    		padding: 16px 8px;
-    		text-align: left;
-    		.title {
-    			font-size: 15px;
-    			color: #eee;
-    			padding-bottom: 30px;
-    		}
-    		input {
-    			background: none;
-    			border-color: #ccc;
-    		}
-    		.check-box {
-    			margin: 30px 0;
-    		}
-    	}
+        height: 100%;
+        position: absolute;
+        right: 0px;
+        z-index: 2;
+        width: 200px;
+        border: 1px solid #444;
+        border-top: 0;
+        .pannel {
+            display: none;
+        }
+        .block-containe {
+            padding-top: 20px;
+        }
+        .input {
+            margin-left: 16px;
+        }
+        .name-input {
+            width: 120px;
+        }
+        .width-input {
+            width: 52px;
+        }
+        .height-input {
+            width: 52px;
+        }
+        .block-container {
+            padding: 16px 8px;
+            text-align: left;
+            .title {
+                font-size: 15px;
+                color: #eee;
+                padding-bottom: 30px;
+            }
+            input {
+                background: none;
+                border-color: #ccc;
+            }
+            .check-box {
+                margin: 30px 0;
+            }
+        }
     }
 </style>

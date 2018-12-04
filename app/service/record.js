@@ -78,9 +78,9 @@ class RecordService extends Service {
       // };
       if (resp.data && resp.code === 1) {
         resp.data.list.forEach(l => {
-          for (let attr in l) {
-            if (attr.indexOf("_path") !== -1) {
-              l[attr] = l[attr].replace('http://0.0.0.0:5001', this.serverUrl).replace("5000", "5001");
+          for (const attr in l) {
+            if (attr.indexOf('_path') !== -1) {
+              l[attr] = l[attr].replace('http://0.0.0.0:5001', this.serverUrl).replace('5000', '5001');
             }
           }
         });

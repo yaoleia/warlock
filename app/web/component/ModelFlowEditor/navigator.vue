@@ -28,7 +28,7 @@
             };
         },
         watch: {
-            curZoomValue: _.throttle(function (value) {
+            curZoomValue: _.throttle(function(value) {
                 this.$emit('change-zoom', value);
             }, 100),
             curZoom(z) {
@@ -44,30 +44,30 @@
 </script>
 <style lang="scss">
     .navigator {
-    	width: 200px;
-    	height: 182px;
-    	position: absolute;
-    	bottom: 0px;
-    	right: 0px;
-    	z-index: 3;
-    	.slider {
-    		margin: 7px 10px 10px;
-    		float: left;
-    		width: 120px;
-    	}
-    	.minimap {
-    		width: 200px;
-    		height: 120px;
-    	}
-    	.g6-editor-minimap-container {
-    		background: none !important;
-    	}
-    	.zoom-slider {
-    		padding: 0 20px;
-    		.el-slider__runway {
-    			margin-top: 10px;
-    			margin-bottom: 10px;
-    		}
-    	}
+        width: 200px;
+        height: 182px;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        z-index: 3;
+        .slider {
+            margin: 7px 10px 10px;
+            float: left;
+            width: 120px;
+        }
+        .minimap {
+            width: 200px;
+            height: 120px;
+        }
+        .g6-editor-minimap-container {
+            background: none !important;
+        }
+        .zoom-slider {
+            padding: 0 20px;
+            .el-slider__runway {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+        }
     }
 </style>

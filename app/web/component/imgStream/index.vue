@@ -7,25 +7,25 @@
 </template>
 <style lang="scss">
     .img-stream {
-    	box-sizing: border-box;
-    	position: relative;
-    	width: 100%;
-    	height: 100%;
-    	&.el-card {
-    		border: none;
-    	}
-    	.el-card__body {
-    		padding: 0;
-    		height: 100%;
-    	}
-    	.img {
-    		width: 100%;
-    		height: 100%;
-    		vertical-align: top;
-    	}
-    	.visibility {
-    		visibility: hidden;
-    	}
+        box-sizing: border-box;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        &.el-card {
+            border: none;
+        }
+        .el-card__body {
+            padding: 0;
+            height: 100%;
+        }
+        .img {
+            width: 100%;
+            height: 100%;
+            vertical-align: top;
+        }
+        .visibility {
+            visibility: hidden;
+        }
     }
 </style>
 <script type="text/babel">
@@ -36,13 +36,13 @@
                 try: 2
             };
         },
-        props: ["url", "title", "alwaysTry"],
+        props: ['url', 'title', 'alwaysTry'],
         components: {},
         mounted() { },
         methods: {
             loaded() {
                 this.show = true
-                this.$emit("loaded");
+                this.$emit('loaded');
             },
             error(e) {
                 if (!e.target) return;
@@ -50,16 +50,16 @@
                     this.try--;
                 }
                 if (this.try <= 0) {
-                    this.$emit("error");
+                    this.$emit('error');
                     return;
-                };
+                }
                 setTimeout(() => {
                     let url = e.target.src;
 
                     if (url) {
-                        let urlSplit = url.split("?");
+                        const urlSplit = url.split('?');
                         if (urlSplit[2]) {
-                            url = url.replace("?" + urlSplit[2], "");
+                            url = url.replace('?' + urlSplit[2], '');
                         }
                         e.target.src = `${url}?t=${Math.random()}`;
                     }

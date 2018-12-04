@@ -8,6 +8,7 @@ import ParamPage from '../view/ParamPage'
 import DesignPage from '../view/DesignerPage'
 import Designer from '../view/DesignerPage/Designer'
 import DesignList from '../view/DesignerPage/DesignList'
+import NotFound from '../view/NotFound.vue'
 
 Vue.use(VueRouter);
 
@@ -48,7 +49,7 @@ export const menu = {
       }
     }
   },
-  notFound: { path: '*', component: () => import('../view/NotFound.vue') }
+  notFound: { path: '*', component: NotFound }
 }
 
 function _getRouer(router) {

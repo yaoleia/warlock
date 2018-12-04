@@ -124,7 +124,7 @@
     </div>
 </template>
 <script type="text/babel">
-    import utils from "framework/utils"
+    import utils from 'framework/utils'
     export default {
         components: {},
         data() {
@@ -140,14 +140,14 @@
                 light: {
                     light_bright: 255,
                     init_status: false,
-                    port: "/dev/ttyUSB1",
+                    port: '/dev/ttyUSB1',
                     baudrate: 9600,
                     stopbits: 1,
                     timeout: 0.5
                 },
                 trigger: {
                     model: 1,
-                    port: "/dev/ttyUSB0",
+                    port: '/dev/ttyUSB0',
                     baudrate: 9600,
                     stopbits: 1,
                     timeout: 0.5
@@ -210,11 +210,11 @@
                     if (window.localStorage[name]) {
                         obj = utils.difference(this[name], JSON.parse(window.localStorage[name]))
                         if (JSON.stringify(obj) === '{}') {
-                            this.$message.info(`没有更改配置`);
+                            this.$message.info('没有更改配置');
                             return;
                         }
                     }
-                    let resp = await this.$request.post(`/api/${name}`, obj || this[name])
+                    const resp = await this.$request.post(`/api/${name}`, obj || this[name])
                     if (resp.data && resp.data.code === 1) {
                         window.localStorage[name] = JSON.stringify(this[name])
                         this.$message.success(`提交${name}配置成功`);
@@ -226,45 +226,45 @@
                 }
             },
             async lightClick() {
-                let resp = await this.$request.post(`/api/light`, this.light)
+                const resp = await this.$request.post('/api/light', this.light)
                 this.lightDialog = false
             },
             async tOnceClick() {
-                let resp = await this.$request.post(`/api/tonce`)
+                const resp = await this.$request.post('/api/tonce')
             }
         }
     }
 </script>
 <style lang="scss">
     .param-nav {
-    	background: rgba(255, 255, 255, 0.06);
-    	border-radius: 8px;
-    	position: relative;
-    	.el-dialog__wrapper {
-    		position: absolute;
-    		right: auto;
-    		bottom: auto;
-    	}
-    	.el-dialog {
-    		margin-top: 50px !important;
-    	}
-    	.el-submenu__title {
-    		color: #fff;
-    	}
-    	.el-menu-item {
-    		color: #fff;
-    	}
-    	.el-menu-item:focus,
-    	.el-menu-item:hover {
-    		background: #222;
-    	}
-    	.el-submenu__title:hover {
-    		background: rgba(255, 255, 255, 0.06);
-    	}
-    	.el-submenu__title i {
-    		color: #fff;
-    		font-weight: bold;
-    	}
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 8px;
+        position: relative;
+        .el-dialog__wrapper {
+            position: absolute;
+            right: auto;
+            bottom: auto;
+        }
+        .el-dialog {
+            margin-top: 50px !important;
+        }
+        .el-submenu__title {
+            color: #fff;
+        }
+        .el-menu-item {
+            color: #fff;
+        }
+        .el-menu-item:focus,
+        .el-menu-item:hover {
+            background: #222;
+        }
+        .el-submenu__title:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .el-submenu__title i {
+            color: #fff;
+            font-weight: bold;
+        }
     }
 </style>
 

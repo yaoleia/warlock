@@ -43,9 +43,9 @@
 </template>
 <style lang="scss">
     .jpeg-camera-test {
-    	.webcam-test-box {
-    		width: 309px;
-    		height: 309px;
-    	}
+        .webcam-test-box {
+            width: 309px;
+            height: 309px;
+        }
     }
 </style>

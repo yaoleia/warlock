@@ -77,38 +77,38 @@
 </script>
 <style lang="scss">
     .context-menu {
-    	margin: 0px;
-    	width: 200px;
-    	background: white;
-    	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
-    	color: #000;
-    	font-size: 12px;
-    	display: none;
-    	border-radius: 4px;
-    	.disable {
-    		color: rgba(0, 0, 0, 0.25);
-    	}
-    	.command {
-    		height: 16px;
-    		padding: 8px;
-    		box-sizing: content-box;
-    		&:hover {
-    			cursor: pointer;
-    			background: #e6f7ff;
-    		}
-    		&.disable:hover {
-    			cursor: default;
-    			background: none;
-    		}
-    	}
-    	span:nth-of-type(1) {
-    		float: left;
-    	}
-    	span:nth-of-type(2) {
-    		float: right;
-    	}
-    	.menu {
-    		padding: 5px 3px;
-    	}
+        margin: 0px;
+        width: 200px;
+        background: white;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
+        color: #000;
+        font-size: 12px;
+        display: none;
+        border-radius: 4px;
+        .disable {
+            color: rgba(0, 0, 0, 0.25);
+        }
+        .command {
+            height: 16px;
+            padding: 8px;
+            box-sizing: content-box;
+            &:hover {
+                cursor: pointer;
+                background: #e6f7ff;
+            }
+            &.disable:hover {
+                cursor: default;
+                background: none;
+            }
+        }
+        span:nth-of-type(1) {
+            float: left;
+        }
+        span:nth-of-type(2) {
+            float: right;
+        }
+        .menu {
+            padding: 5px 3px;
+        }
     }
 </style>

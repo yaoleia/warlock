@@ -65,7 +65,7 @@ module.exports = app => {
       const form = new FormData();
       form.append('data', 0);
       const resp = await new Promise((resolve, reject) => {
-        form.submit(`${serverUrl}/detect/LaserTriggerTriggerOnce`, function (
+        form.submit(`${serverUrl}/detect/LaserTriggerTriggerOnce`, function(
           err,
           res
         ) {

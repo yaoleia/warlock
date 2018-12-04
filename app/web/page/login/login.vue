@@ -23,11 +23,11 @@
 </template>
 
 <style lang="scss">
-    @import 'login.scss';
+    @import "login.scss";
 </style>
 
 <script type="text/babel">
-    import Vue from "vue";
+    import Vue from 'vue';
     import {
         Input,
         Button,
@@ -38,13 +38,13 @@
     Vue.component(Checkbox.name, Checkbox);
     export default {
         data: {
-            userName: "",
-            password: "",
+            userName: '',
+            password: '',
             remenber: true
         },
         methods: {
             login() {
-                window.location.replace("/index");
+                window.location.replace('/index');
             }
         }
     };

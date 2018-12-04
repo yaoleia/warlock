@@ -161,7 +161,6 @@
                 this.leftDisabled = i === 0;
                 this.rightDisabled = i === this.recordList.length - 1;
             },
-            next() { },
             getEndTime() {
                 this.q.endTime = new Date().getTime()
             },
@@ -175,7 +174,7 @@
                 return store.dispatch(SET_ARTICLE_LIST, json).catch(error => {
                     this.$message.error(`请求失败 ${error.response.status}`);
                     this.loading = false;
-                })
+                });
             },
             query() {
                 this.fetchApi(this.$store, this.q)

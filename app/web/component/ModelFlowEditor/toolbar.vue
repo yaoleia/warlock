@@ -56,70 +56,70 @@
     };
 </script>
 <style lang="scss">
-    @import url('~asset/css/editer.css');
+    @import url("~asset/css/editer.css");
     .toolbar {
-    	border-bottom: 1px solid #444;
-    	width: 100%;
-    	height: 50px;
-    	text-align: left;
-    	color: #eee;
-    	display: flex;
-    	align-items: center;
-    	.el-select {
-    		width: 100px;
-    		.el-input__inner {
-    			height: 35px;
-    			background: none;
-    			color: #eee;
-    			border: 1px solid #444;
-    		}
-    		.el-icon-arrow-up:before {
-    			font-size: 17px;
-    		}
-    	}
-    	.copy,
-    	.zoom,
-    	.z-index,
-    	.groups {
-    		border: 1px solid #444;
-    		border-radius: 3px;
-    		margin: 0 10px;
-    	}
-    	.btns {
-    		margin-left: 40px;
-    	}
-    	.iconfont {
-    		vertical-align: middle;
-    	}
-    	*::before {
-    		font-size: 24px;
-    	}
-    	.disable {
-    		color: rgba(200, 200, 200, 0.4);
-    	}
-    	.icon-select.disable {
-    		background: #666;
-    		color: #eee;
-    	}
-    	.separator {
-    		margin: 5px;
-    	}
-    	.command {
-    		width: 33px;
-    		height: 33px;
-    		margin: 0 4px;
-    		border-radius: 2px;
-    		padding: 2px 0 0 3px;
-    		display: inline-block;
-    		transition: all 0.1s;
-    		&:hover {
-    			cursor: pointer;
-    			color: #ff8800;
-    		}
-    		&.disable:hover {
-    			cursor: default;
-    			color: rgba(200, 200, 200, 0.4);
-    		}
-    	}
+        border-bottom: 1px solid #444;
+        width: 100%;
+        height: 50px;
+        text-align: left;
+        color: #eee;
+        display: flex;
+        align-items: center;
+        .el-select {
+            width: 100px;
+            .el-input__inner {
+                height: 35px;
+                background: none;
+                color: #eee;
+                border: 1px solid #444;
+            }
+            .el-icon-arrow-up:before {
+                font-size: 17px;
+            }
+        }
+        .copy,
+        .zoom,
+        .z-index,
+        .groups {
+            border: 1px solid #444;
+            border-radius: 3px;
+            margin: 0 10px;
+        }
+        .btns {
+            margin-left: 40px;
+        }
+        .iconfont {
+            vertical-align: middle;
+        }
+        *::before {
+            font-size: 24px;
+        }
+        .disable {
+            color: rgba(200, 200, 200, 0.4);
+        }
+        .icon-select.disable {
+            background: #666;
+            color: #eee;
+        }
+        .separator {
+            margin: 5px;
+        }
+        .command {
+            width: 33px;
+            height: 33px;
+            margin: 0 4px;
+            border-radius: 2px;
+            padding: 2px 0 0 3px;
+            display: inline-block;
+            transition: all 0.1s;
+            &:hover {
+                cursor: pointer;
+                color: #ff8800;
+            }
+            &.disable:hover {
+                cursor: default;
+                color: rgba(200, 200, 200, 0.4);
+            }
+        }
     }
 </style>

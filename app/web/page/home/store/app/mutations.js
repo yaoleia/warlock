@@ -1,7 +1,7 @@
 'use strict';
 
 import {
-  SET_ARTICLE_LIST,
+  SET_ARTICLE_LIST
 } from './mutation-type';
 
 const mutations = {
