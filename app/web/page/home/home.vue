@@ -16,6 +16,7 @@
     import 'asset/css/transition.scss'
 
     Vue.use(ElementUI);
+    Vue.config.devtools = true;
 
     const store = createStore()
     const router = createRouter()

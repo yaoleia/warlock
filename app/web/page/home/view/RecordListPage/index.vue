@@ -1,18 +1,6 @@
 <template>
     <div class="history-list">
         <div class="search">
-            <!-- <label> 标题:</label>
-                <el-input class="search-input" clearable v-model="q.title" placeholder="关键字"></el-input>
-                <label> 分类:</label>
-                <el-select v-model="q.categoryId" placeholder="分类">
-                    <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.categoryId">
-                    </el-option>
-                </el-select>
-                <label> 状态:</label>
-                <el-select v-model="q.status" placeholder="状态">
-                    <el-option v-for="item in status" :key="item.id" :label="item.name" :value="item.status">
-                    </el-option>
-                </el-select> -->
             <el-date-picker v-model="q.dateRange" type="datetimerange" :picker-options="pickerOptions" start-placeholder="开始时间" end-placeholder="结束时间" align="left" value-format="timestamp">
             </el-date-picker>
             <el-button class="search-button" type="text" @click="q.pageIndex = 1;query()">查询</el-button>
