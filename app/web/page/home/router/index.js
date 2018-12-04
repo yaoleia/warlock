@@ -44,8 +44,9 @@ export const menu = {
       },
       design: {
         name: '添加流程',
-        path: '/design/designer',
-        component: Designer
+        path: '/design/designer/:id',
+        component: Designer,
+        meta: { noKeepAlive: true }
       }
     }
   },

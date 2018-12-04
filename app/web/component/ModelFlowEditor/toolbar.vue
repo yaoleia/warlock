@@ -35,6 +35,7 @@
         <div class="btns">
             <el-button type="text" @click="$emit('read')">读取</el-button>
             <el-button type="text" @click="$emit('save')">保存</el-button>
+            <el-button type="text" @click="$router.go(-1)">取消</el-button>
         </div>
     </div>
 </template>

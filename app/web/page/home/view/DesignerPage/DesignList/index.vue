@@ -4,6 +4,9 @@
             <el-date-picker v-model="q.dateRange" type="datetimerange" :picker-options="pickerOptions" start-placeholder="开始时间" end-placeholder="结束时间" align="left" value-format="timestamp">
             </el-date-picker>
             <el-button class="search-button" type="text" @click="q.pageIndex = 1;query()">查询</el-button>
+            <router-link to='/design/designer/0'>
+                <el-button class="search-button" type="text">新建</el-button>
+            </router-link>
         </div>
         <el-table stripe :data="designList" v-loading="loading" :height="innerHeight">
             <div slot="empty">
@@ -15,7 +18,7 @@
             </el-table-column>
             <el-table-column label="预览">
                 <template slot-scope="scope">
-                    <flow-displayer v-if='editorFlow' :flow='editorFlow' :flowData='scope.row.flowData' class="flow-wrap"></flow-displayer>
+                    <flow-displayer :flowData='scope.row.flowData' class="flow-wrap"></flow-displayer>
                 </template>
             </el-table-column>
             <el-table-column label="创建时间" width="300">
@@ -30,11 +33,11 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <router-link :to="{params: {id: scope.row.id}}" tag="span">
-                        <el-button type="info" size="small" icon="edit" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+                    <router-link :to="{name: '添加流程',params: {id:scope.row.id,flow: scope.row}}" tag="div">
+                        <el-button type="text">修改</el-button>
                     </router-link>
-                    <el-button type="danger" size="small" icon="delete" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                    <el-button type="text" icon="delete" @click="handleSelectionChange(scope.$index, scope.row)">查看</el-button>
+                    <el-button type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    <el-button type="text" @click="handleSelectionChange(scope.$index, scope.row)">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -47,7 +50,6 @@
     export default {
         data() {
             return {
-                editorFlow: null,
                 total: 30,
                 designList: [],
                 pickerOptions: {
@@ -96,7 +98,9 @@
         },
         methods: {
             handleEdit(a, b) { console.log(b) },
-            handleDelete() { },
+            handleDelete(index, item) {
+                this.$delete(this.designList, index);
+            },
             indexMethod(index) {
                 return (this.q.pageIndex - 1) * this.q.pageSize + index + 1
             },
@@ -104,9 +108,39 @@
                 if (EASY_ENV_IS_BROWSER) {
                     this.loading = true;
                 }
+                this.designList = [
+                    {
+                        ts: 1,
+                        cts: 2,
+                        name: 'wade',
+                        id: 1,
+                        flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 58.5, y: 49.5, id: 'b9ae7b66', index: 0, checkedBox: [] }, { shape: 'distortion-correction', type: 'node', size: '200*250', x: 264.5, y: 113.5, id: 'b2678761', index: 1, checkedBox: [] }] }
+                    }, {
+                        ts: 1,
+                        cts: 2,
+                        name: 'haha',
+                        id: 2,
+                        flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 99.5, y: 543.5, id: '4603208a', index: 0, checkedBox: [] }, { shape: 'bar-code-recognition', type: 'node', size: '200*250', x: 121.5, y: 140.5, id: 'd0c76fd4', index: 1, checkedBox: [] }] }
+                    },
+                    {
+                        ts: 1,
+                        cts: 2,
+                        name: 'jame',
+                        id: 3,
+                        flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 236, y: 201.5, id: '7762261d', index: 0, checkedBox: [] }, { shape: 'distortion-correction', type: 'node', size: '200*250', x: 470, y: 205.5, id: 'f313edca', index: 1, checkedBox: [] }, { shape: 'image-registration', type: 'node', size: '200*250', x: 332, y: 479.5, id: '37286ddf', index: 2, checkedBox: [] }] }
+                    },
+                    {
+                        ts: 1,
+                        cts: 2,
+                        name: 'james',
+                        id: 4,
+                        flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 332, y: 258.5, id: '6dd5bf6c', index: 0, checkedBox: [] }, { shape: 'image-registration', type: 'node', size: '200*250', x: 658, y: 439.5, id: '0bc9bf89', index: 2, checkedBox: [] }, { shape: 'bar-code-recognition', type: 'node', size: '200*250', x: 199, y: 539.5, id: 'e8079a5f', index: 3, checkedBox: [] }, { shape: 'distortion-correction', type: 'node', size: '200*250', x: 605.9129554655871, y: 173.40080971659918, id: '91756993', index: 5, checkedBox: [] }, { shape: 'image-compression', type: 'node', size: '200*250', x: 135.73211875843455, y: 174.13090418353576, id: 'ef8c5dd8', index: 6, checkedBox: [] }, { shape: 'bar-code-recognition', type: 'node', size: '200*250', x: 701.5553306342781, y: 653.8029689608636, id: 'd6e93488', index: 7, checkedBox: [] }, { shape: 'image-registration', type: 'node', size: '200*250', x: 498.58906882591094, y: 674.9757085020242, id: 'be1e6b6b', index: 8, checkedBox: [] }], edges: [{ shape: 'flow-polyline-round', source: '6dd5bf6c', sourceAnchor: 1, target: '0bc9bf89', targetAnchor: 0, id: '4bf43d88', index: 1 }, { shape: 'flow-polyline-round', source: 'e8079a5f', sourceAnchor: 0, target: '6dd5bf6c', targetAnchor: 0, id: 'ad940302', index: 4 }] }
+                    }
+                ]
+                this.loading = false;
             },
             query() {
-                // this.getDesignList(this.$store, this.q)
+                this.getDesignList();
             },
             handleSelectionChange(val, obj) {
                 this.dialogDetailVisible = true
@@ -122,7 +156,6 @@
             async init() {
                 const G6Editor = await import('@antv/g6-editor')
                 const Flow = G6Editor.Flow;
-                this.editorFlow = Flow;
                 Flow.registerNode('factory-card', {
                     draw(item) {
                         const group = item.getGraphicGroup();
@@ -590,37 +623,13 @@
                 }
             }
         },
+        activated() {
+            if (this.$route.params.reload) {
+                this.getDesignList()
+            }
+        },
         beforeMount() {
             this.init();
-            this.designList = [
-                {
-                    ts: 1,
-                    cts: 2,
-                    name: 'wade',
-                    id: 1,
-                    flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 58.5, y: 49.5, id: 'b9ae7b66', index: 0, checkedBox: [] }, { shape: 'distortion-correction', type: 'node', size: '200*250', x: 264.5, y: 113.5, id: 'b2678761', index: 1, checkedBox: [] }] }
-                }, {
-                    ts: 1,
-                    cts: 2,
-                    name: 'haha',
-                    id: 2,
-                    flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 99.5, y: 543.5, id: '4603208a', index: 0, checkedBox: [] }, { shape: 'bar-code-recognition', type: 'node', size: '200*250', x: 121.5, y: 140.5, id: 'd0c76fd4', index: 1, checkedBox: [] }] }
-                },
-                {
-                    ts: 1,
-                    cts: 2,
-                    name: 'jame',
-                    id: 3,
-                    flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 236, y: 201.5, id: '7762261d', index: 0, checkedBox: [] }, { shape: 'distortion-correction', type: 'node', size: '200*250', x: 470, y: 205.5, id: 'f313edca', index: 1, checkedBox: [] }, { shape: 'image-registration', type: 'node', size: '200*250', x: 332, y: 479.5, id: '37286ddf', index: 2, checkedBox: [] }] }
-                },
-                {
-                    ts: 1,
-                    cts: 2,
-                    name: 'james',
-                    id: 4,
-                    flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 332, y: 258.5, id: '6dd5bf6c', index: 0, checkedBox: [] }, { shape: 'image-registration', type: 'node', size: '200*250', x: 658, y: 439.5, id: '0bc9bf89', index: 2, checkedBox: [] }, { shape: 'bar-code-recognition', type: 'node', size: '200*250', x: 199, y: 539.5, id: 'e8079a5f', index: 3, checkedBox: [] }, { shape: 'distortion-correction', type: 'node', size: '200*250', x: 605.9129554655871, y: 173.40080971659918, id: '91756993', index: 5, checkedBox: [] }, { shape: 'image-compression', type: 'node', size: '200*250', x: 135.73211875843455, y: 174.13090418353576, id: 'ef8c5dd8', index: 6, checkedBox: [] }, { shape: 'bar-code-recognition', type: 'node', size: '200*250', x: 701.5553306342781, y: 653.8029689608636, id: 'd6e93488', index: 7, checkedBox: [] }, { shape: 'image-registration', type: 'node', size: '200*250', x: 498.58906882591094, y: 674.9757085020242, id: 'be1e6b6b', index: 8, checkedBox: [] }], edges: [{ shape: 'flow-polyline-round', source: '6dd5bf6c', sourceAnchor: 1, target: '0bc9bf89', targetAnchor: 0, id: '4bf43d88', index: 1 }, { shape: 'flow-polyline-round', source: 'e8079a5f', sourceAnchor: 0, target: '6dd5bf6c', targetAnchor: 0, id: 'ad940302', index: 4 }] }
-                }
-            ]
             if (!(this.designList && this.designList.length > 0)) {
                 this.getDesignList(this.$store, this.q)
             }

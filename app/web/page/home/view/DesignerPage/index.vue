@@ -16,11 +16,7 @@
         methods: {
 
         },
-        computed: {
-
-        },
         beforeMount() {
-
         }
     };
 </script>
