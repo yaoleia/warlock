@@ -16,7 +16,8 @@ module.exports = {
     asset: 'app/web/asset',
     component: 'app/web/component',
     framework: 'app/web/framework',
-    vue: 'vue/dist/vue.esm.js'
+    vue: 'vue/dist/vue.esm.js',
+    '@': 'app/web'
   },
   dll: ['vue', 'axios', 'vue-router', 'vuex', 'vuex-router-sync'],
   loaders: {
