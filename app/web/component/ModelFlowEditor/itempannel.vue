@@ -2,19 +2,19 @@
     <div class="item-pannel">
         <div class="title">工具箱</div>
         <ul class="item-pannel-list">
-            <li class="getItem" data-shape="distortion-correction" data-type="node" data-size="200*250">
+            <li class="getItem" data-shape="distortion-correction" data-type="node" data-size="200*50">
                 <span class="pannel-type-icon" />畸变校正
             </li>
-            <li class="getItem" data-shape="image-compression" data-type="node" data-size="200*250">
+            <li class="getItem" data-shape="image-compression" data-type="node" data-size="200*50">
                 <span class="pannel-type-icon" />图像压缩
             </li>
-            <li class="getItem" data-shape="image-registration" data-type="node" data-size="200*250">
+            <li class="getItem" data-shape="image-registration" data-type="node" data-size="200*50">
                 <span class="pannel-type-icon" />图像配准
             </li>
-            <li class="getItem" data-shape="bar-code-recognition" data-type="node" data-size="200*250">
+            <li class="getItem" data-shape="bar-code-recognition" data-type="node" data-size="200*50">
                 <span class="pannel-type-icon" />条码识别
             </li>
-            <li class="getItem" data-shape="dm-code-recognition" data-type="node" data-size="200*250">
+            <li class="getItem" data-shape="dm-code-recognition" data-type="node" data-size="200*50">
                 <span class="pannel-type-icon" />二维码识别
             </li>
             <li class="getItem" data-shape="factory-card" data-type="node" data-size="100*100">

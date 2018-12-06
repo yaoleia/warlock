@@ -8,12 +8,12 @@
             </div>
             <div class="search-right">
                 <router-link to='/design/designer/0'>
-                    <el-button class="search-button" type="text">新建流程</el-button>
+                    <el-button class="search-button" type="text"><i class="el-icon-circle-plus-outline"></i> 新建流程</el-button>
                 </router-link>
-                <el-button type="text" class="all-export" @click='handleDownload(designList)'>导出全部</el-button>
+                <el-button type="text" class="all-export" @click='handleDownload(designList)'><i class="el-icon-download"></i> 导出全部</el-button>
                 <form ref="optionForm">
                     <input type="file" ref='option' @change="onFileAdd" v-show="false">
-                    <el-button type="text" @click="$refs.option.click()">导入流程</el-button>
+                    <el-button type="text" @click="$refs.option.click()"><i class="el-icon-upload2"></i> 导入流程</el-button>
                 </form>
             </div>
         </div>
@@ -40,21 +40,33 @@
                     <span v-text="$moment().format('YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="340">
                 <template slot-scope="scope">
-                    <router-link :to="{name: '添加流程',params: {id:scope.row.id,flow: scope.row}}" tag="span">
-                        <el-button type="warning" size='mini'>修改</el-button>
-                    </router-link>
-                    <router-link :to="{name: '添加流程',params: {id:scope.row.id,flow: scope.row, read: true}}" tag="span">
-                        <el-button type="primary" size='mini'>查看</el-button>
-                    </router-link>
-                    <el-button type="danger" size='mini' @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                    <el-button type="info" size='mini' @click='handleDownload([scope.row])'>导出</el-button>
+                    <div class="opration">
+                        <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row}}">
+                            <el-button type="warning" size='mini'>修改</el-button>
+                        </router-link>
+                        <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row, read: true}}">
+                            <el-button type="primary" size='mini'>查看</el-button>
+                        </router-link>
+                        <el-button type="danger" size='mini' @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        <el-button type="info" size='mini' @click='handleDownload([scope.row])'>导出</el-button>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination background class="pager" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="q.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="q.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
+        <el-dialog title="上传流程" :visible.sync="upload.showPop" custom-class="upload-pop-dialog">
+            <el-checkbox :indeterminate="upload.isIndeterminate" v-model="upload.checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+            <el-checkbox-group v-model="upload.checkedList" @change="handleCheckedChange">
+                <el-checkbox v-for="item in upload.uploadList" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
+            </el-checkbox-group>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="uploadDesignList(upload)">上传</el-button>
+                <el-button @click="uploadCancel">取消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script type="babel">
@@ -64,6 +76,20 @@
             return {
                 total: 30,
                 designList: [],
+                upload: {
+                    showPop: false,
+                    isIndeterminate: false,
+                    checkAll: true,
+                    checkedList: [],
+                    uploadList: [],
+                    reset() {
+                        this.showPop = false;
+                        this.isIndeterminate = false;
+                        this.checkAll = true;
+                        this.checkedList = [];
+                        this.uploadList = [];
+                    }
+                },
                 pickerOptions: {
                     shortcuts: [
                         {
@@ -109,36 +135,61 @@
             FlowDisplayer
         },
         methods: {
+            uploadCancel() {
+                this.$refs.optionForm.reset();
+                this.upload.reset();
+            },
+            handleCheckAllChange(val) {
+                this.upload.checkedList = val ? this.upload.uploadList.map(li => li.id) : [];
+                this.upload.isIndeterminate = false;
+            },
+            handleCheckedChange(value) {
+                const checkedCount = value.length;
+                const uploadCount = this.upload.uploadList.length;
+                this.upload.checkAll = checkedCount === uploadCount;
+                this.upload.isIndeterminate = checkedCount > 0 && checkedCount < uploadCount;
+            },
             onFileAdd(e) {
                 const files = e.target.files || e.dataTransfer.files;
                 if (!files.length) { return; }
                 this.createDesign(files[0]);
             },
+            uploadDesignList(list) {
+                list.uploadList = list.uploadList.filter(li => list.checkedList.includes(li.id));
+                list.uploadList.forEach(r => {
+                    const li = this.designList.find(d => d.id === r.id)
+                    if (!li) {
+                        this.designList.push(r)
+                    } else {
+                        Object.assign(li, r)
+                    }
+                    this.uploadCancel();
+                    this.designList.sort((a, b) => b.ts - a.ts);
+                })
+            },
             createDesign(file) {
                 const reader = new FileReader();
                 const self = this;
                 reader.onload = (e) => {
-                    const result = JSON.parse(e.target.result);
-                    result.forEach(r => {
-                        const li = this.designList.find(d => d.id === r.id)
-                        if (!li) {
-                            this.designList.push(r)
-                        } else {
-                            Object.assign(li, r)
-                        }
-                        this.$refs.optionForm.reset();
-                        this.designList.sort((a, b) => b.ts - a.ts);
-                    })
+                    this.upload.uploadList = JSON.parse(e.target.result);
+                    this.upload.checkedList = this.upload.uploadList.map(li => li.id);
+                    this.upload.showPop = true;
                 };
                 reader.readAsText(file);
             },
             handleDownload(list) {
+                if (!list.length) {
+                    this.$message({
+                        message: '当前没有流程可导出',
+                        type: 'warning'
+                    })
+                    return;
+                }
                 import('file-saver').then(FileSaver => {
                     const blob = new Blob([JSON.stringify(list)], { type: 'text/plain;charset=utf-8' });
                     FileSaver.saveAs(blob, `design${this.$moment().format('YYYYMMDDHHmmss')}.json`);
                 })
             },
-            handleEdit(a, b) { console.log(b) },
             handleDelete(index, item) {
                 this.$delete(this.designList, index);
             },
@@ -236,13 +287,20 @@
 <style lang="scss">
     .design-list {
         min-height: 500px;
+        .upload-pop-dialog {
+            width: 500px;
+        }
         .el-table {
             height: 890px;
             .cell .red {
                 color: #f44336;
             }
-            .cell .el-button {
-                margin: 0;
+            .cell .opration {
+                text-align: center;
+                > * {
+                    display: inline-block;
+                    margin: 0 4px;
+                }
             }
             .cell .flow-wrap {
                 width: 300px;

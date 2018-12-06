@@ -9,6 +9,7 @@
                     </template>
                     <el-menu-item v-for='(menuChildren_v,menuChildren_k) in menu_v.children' :key='menuChildren_k' :index='menuChildren_v.path'>
                         <i class='is-children'></i>
+                        <div :class='menuChildren_v.icon+" icon"'></div>
                         <span slot='title'>{{ menuChildren_v.name }}</span>
                     </el-menu-item>
                 </el-submenu>
@@ -126,6 +127,10 @@
             text-align: center;
             > .el-menu-item {
                 background: none;
+                .icon {
+                    margin: 0;
+                    width: 18px;
+                }
             }
         }
         .el-menu {

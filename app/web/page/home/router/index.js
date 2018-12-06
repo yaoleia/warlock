@@ -38,12 +38,14 @@ export const menu = {
     component: DesignPage,
     children: {
       list: {
+        icon: 'el-icon-document',
         name: '流程列表',
         path: '/design/designList',
         component: DesignList
       },
       design: {
-        name: '添加流程',
+        icon: 'el-icon-circle-plus-outline',
+        name: '新建流程',
         path: '/design/designer/:id',
         component: Designer,
         meta: { noKeepAlive: true }

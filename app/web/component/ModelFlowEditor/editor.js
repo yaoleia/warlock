@@ -11,10 +11,41 @@ export default {
         };
     },
     methods: {
-        init() {
+        init(params) {
             const { minimap, toolbar, contextmenu, itempannel, detailpannel, page } = this.$refs;
             // 生成 G6 Editor 编辑器
             const editor = new G6Editor();
+            const flow = new G6Editor.Flow({
+                graph: {
+                    container: page.$el,
+                    fitView: 'autoZoom',
+                    mode: params.read ? 'read' : 'default'
+                },
+                align: {
+                    item: false,
+                    grid: true
+                },
+                noEndEdge: false
+            });
+            this.flow = flow;
+            this.editor = editor;
+            editor.add(flow);
+            if (params.read) return;
+            flow.on('afteritemselected', ev => {
+                this.selected = ev;
+                this.selectedModel = ev.item.getModel();
+                if (!this.selectedModel.checkedBox) {
+                    this.selectedModel.checkedBox = [];
+                }
+                console.log(this.selectedModel);
+            });
+            flow.on('afterzoom', ev => {
+                this.curZoom = ev.updateMatrix[0];
+            });
+            flow.on('beforechange', ev => {
+                console.log(ev)
+            });
+
             const miniMap = new G6Editor.Minimap({
                 container: minimap,
                 height: 120,
@@ -32,31 +63,7 @@ export default {
             const detailPannel = new G6Editor.Detailpannel({
                 container: detailpannel.$el
             });
-            const flow = new G6Editor.Flow({
-                graph: {
-                    container: page.$el,
-                    fitView: 'autoZoom'
-                },
-                align: {
-                    item: false,
-                    grid: true
-                },
-                noEndEdge: false
-            });
-            flow.on('afteritemselected', ev => {
-                this.selected = ev;
-                this.selectedModel = ev.item.getModel();
-                if (!this.selectedModel.checkedBox) {
-                    this.selectedModel.checkedBox = [];
-                }
-                console.log(this.selectedModel);
-            });
-            flow.on('afterzoom', ev => {
-                this.curZoom = ev.updateMatrix[0];
-            });
-            flow.on('beforechange', ev => {
-                console.log(ev)
-            });
+
             // const graph = flow.getGraph();
             // graph.on('click', ev => {
             //     console.log(ev)
@@ -66,9 +73,6 @@ export default {
             editor.add(contextMenu);
             editor.add(itemPannel);
             editor.add(detailPannel);
-            editor.add(flow);
-            this.flow = flow;
-            this.editor = editor;
         },
         changeZoom(zoom) {
             const flow = this.flow;

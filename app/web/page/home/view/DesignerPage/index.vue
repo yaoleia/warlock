@@ -65,7 +65,7 @@
                         const group = item.getGraphicGroup();
                         const model = item.getModel();
                         const width = 200;
-                        const height = 250;
+                        const height = 40;
                         const x = -width / 2;
                         const y = -height / 2;
                         const borderRadius = 4;

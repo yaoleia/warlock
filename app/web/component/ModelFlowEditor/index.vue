@@ -44,9 +44,10 @@
             this.editor.destroy();
         },
         mounted() {
-            this.init()
-            if (this.$route.params.flow) {
-                this.data = this.$route.params.flow.flowData;
+            const params = this.$route.params;
+            this.init(params)
+            if (params.flow) {
+                this.data = params.flow.flowData;
                 this.readData();
             }
             const flow = this.flow;
