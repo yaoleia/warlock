@@ -1,14 +1,17 @@
 <template>
     <div class="editor">
-        <toolbar ref='toolbar' @save="saveData" @read='readData' @change-eage="changeEage" />
+        <toolbar ref='toolbar' @save="saveData" @read='readData' @change-eage="changeEage" v-show="!readMode" />
+        <div class='go-back'>
+            <el-button type="text" icon="el-icon-back" v-show="readMode" @click="$router.go(-1)">返回</el-button>
+        </div>
         <div class="bottom-container">
-            <item-pannel ref="itempannel" />
-            <detail-pannel ref='detailpannel' :selected='selected' :selectedModel='selectedModel' @updateGraph='updateGraph' @toggleGrid='toggleGrid' />
-            <navigator :cur-zoom="curZoom" :min-zoom="minZoom" :max-zoom="maxZoom" @change-zoom="changeZoom">
-                <div ref="minimap" slot="minimap"></div>
+            <item-pannel ref="itempannel" v-show="!readMode" />
+            <detail-pannel ref='detailpannel' :selected='selected' :selectedModel='selectedModel' @updateGraph='updateGraph' @toggleGrid='toggleGrid' v-show="!readMode" />
+            <navigator :cur-zoom="curZoom" :min-zoom="minZoom" :max-zoom="maxZoom" @change-zoom="changeZoom" v-show="!readMode">
+                <div ref="minimap" slot="minimap" v-show="!readMode"></div>
             </navigator>
             <page ref="page" />
-            <context-menu ref="contextmenu" />
+            <context-menu ref="contextmenu" v-show="!readMode" />
         </div>
     </div>
 </template>
@@ -38,7 +41,9 @@
             };
         },
         computed: {
-
+            readMode() {
+                return this.$route.params.read;
+            }
         },
         beforeDestroy() {
             this.editor.destroy();
@@ -105,6 +110,10 @@
 <style lang="scss">
     .editor {
         height: 100%;
+        .go-back {
+            color: #eee;
+            text-align: right;
+        }
         .bottom-container {
             height: calc(100% - 52px);
             position: relative;
