@@ -2,6 +2,7 @@
     <div class="editor">
         <toolbar ref='toolbar' @read='readData' @change-eage="changeEage" v-show="!readMode" />
         <div class='go-back'>
+            <el-input class='name-input' v-model="name" placeholder="未命名" :disabled="readMode"></el-input>
             <el-button type="text" icon="el-icon-back" v-if="readMode" @click="$router.go(-1)">返回</el-button>
             <div v-else class="btns">
                 <el-button type="primary" size="mini" @click="saveData">保存</el-button>
@@ -41,7 +42,14 @@
         extends: Editor,
         data() {
             return {
-                data: { nodes: [{ shape: 'k-means', type: 'node', size: '170*34', x: 133, y: 53.5, id: '937996f0', index: 0 }, { shape: 'image-registration', type: 'node', size: '170*34', x: 424, y: 229.5, id: '30b4457e', index: 1 }, { shape: 'image-registration', type: 'node', size: '170*34', x: 548, y: -40.5, id: 'ce4e0569', index: 2 }, { shape: 'factory-card', type: 'node', size: '100*100', x: 140, y: 275.5, id: '641c17b7', index: 3 }, { shape: 'bar-code-recognition', type: 'node', size: '170*34', x: 72, y: -83.5, id: 'd86391f0', index: 4 }], edges: [{ shape: 'flow-polyline-round', source: 'd86391f0', sourceAnchor: 0, target: '937996f0', targetAnchor: 0, id: '910efbc3', index: 5 }, { shape: 'flow-polyline-round', source: 'ce4e0569', sourceAnchor: 1, target: '30b4457e', targetAnchor: 0, id: '5110776b', index: 6 }, { shape: 'flow-polyline-round', source: 'd86391f0', sourceAnchor: 0, target: 'ce4e0569', targetAnchor: 0, id: 'd7cc81b7', index: 7 }, { shape: 'flow-polyline-round', source: 'ce4e0569', sourceAnchor: 2, target: '641c17b7', targetAnchor: 1, id: 'ed14edea', index: 8 }] }
+                name: '',
+                designItem: {
+                    name: '',
+                    id: '',
+                    flowData: {},
+                    cts: '',
+                    ts: ''
+                }
             };
         },
         computed: {
@@ -56,7 +64,8 @@
             const params = this.$route.params;
             this.init(params)
             if (params.flow) {
-                this.data = params.flow.flowData;
+                this.designItem = params.flow;
+                this.name = params.flow.name;
                 this.readData();
             }
             const flow = this.flow;
@@ -88,6 +97,10 @@
         },
         methods: {
             goBack() {
+                if (!this.isEdited() && !this.isNamed()) {
+                    this.$router.go(-1)
+                    return;
+                }
                 this.$confirm('确认放弃修改当前流程?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -97,12 +110,62 @@
                 })
             },
             readData() {
-                this.flow.read(this.data)
+                this.flow.read(this.designItem.flowData)
+            },
+            isEdited() {
+                const flowData = JSON.stringify(this.flow.save())
+                if (flowData === JSON.stringify(this.designItem.flowData)) {
+                    return false;
+                }
+                return true;
+            },
+            isNamed() {
+                if (this.name === this.designItem.name) {
+                    return false;
+                }
+                return true;
             },
             saveData() {
-                this.data = this.flow.save()
-                console.log(JSON.stringify(this.data));
-                this.$router.push({ name: '流程列表', params: { reload: true } })
+                if (!this.isEdited() && !this.isNamed()) {
+                    this.$message({
+                        message: '流程并没有更改！',
+                        type: 'warning'
+                    })
+                    return;
+                }
+                this.$confirm('确认保存当前流程?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.saveDesign();
+                })
+            },
+            saveDesign() {
+                let designList = window.localStorage.designList;
+                if (designList) {
+                    designList = JSON.parse(designList)
+                } else {
+                    designList = [];
+                }
+                if (!this.designItem.id) {
+                    Object.assign(this.designItem, {
+                        id: Math.floor(Math.random() * 1000).toString() + this.$moment().valueOf(),
+                        ts: this.$moment().format(),
+                        cts: this.$moment().format(),
+                        name: this.name,
+                        flowData: this.flow.save()
+                    })
+                    designList.unshift(this.designItem)
+                    window.localStorage.designList = JSON.stringify(designList);
+                } else {
+                    const li = designList.find(d => d.id === this.designItem.id);
+                    Object.assign(li, { name: this.name, flowData: this.flow.save(), ts: this.$moment().format() })
+                    designList.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf())
+                    window.localStorage.designList = JSON.stringify(designList);
+                }
+                console.log(JSON.stringify(this.designItem));
+                this.$router.push({ path: '/design/designList', query: { reload: true } })
             },
             changeEage(type) {
                 this.flow.changeAddEdgeModel({
@@ -129,8 +192,23 @@
             right: 0;
             top: 0;
             z-index: 1;
+            display: flex;
             color: #eee;
             text-align: right;
+            .name-input {
+                margin-right: 30px;
+            }
+            .el-input {
+                height: 40px;
+                .el-input__inner {
+                    background: #444;
+                    border: none;
+                    color: #eee;
+                }
+            }
+            .btns {
+                width: 230px;
+            }
         }
         .bottom-container {
             height: calc(100% - 52px);

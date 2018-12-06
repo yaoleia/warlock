@@ -7,9 +7,6 @@
                 <el-button class="search-button" type="text" @click="q.pageIndex = 1;query()">查询</el-button>
             </div>
             <div class="search-right">
-                <router-link to='/design/designer/0'>
-                    <el-button class="search-button" type="text"><i class="el-icon-circle-plus-outline"></i> 新建流程</el-button>
-                </router-link>
                 <div class="export-wrap">
                     <el-button type="text" @click='handleDownload(exportOption.checkedMode?exportOption.multipleSelection:designList)'><i class="el-icon-download"></i> 导出</el-button>
                     <el-select v-model="exportOption.checkedMode" class="export-mode">
@@ -17,10 +14,13 @@
                         </el-option>
                     </el-select>
                 </div>
-                <form ref="optionForm">
+                <form ref="optionForm" class="option-form">
                     <input type="file" ref='option' @change="onFileAdd" v-show="false">
                     <el-button type="text" @click="$refs.option.click()"><i class="el-icon-upload2"></i> 导入流程</el-button>
                 </form>
+                <router-link to='/design/designer/0'>
+                    <el-button class="search-button" type="text"><i class="el-icon-circle-plus-outline"></i> 新建流程</el-button>
+                </router-link>
             </div>
         </div>
         <el-table ref="multipleTable" stripe :data="designList" v-loading="loading" :height="innerHeight" @selection-change="handleSelectionChange">
@@ -40,12 +40,12 @@
             </el-table-column>
             <el-table-column label="创建时间" width="200">
                 <template slot-scope="scope">
-                    <span v-text="$moment().format('YYYY-MM-DD HH:mm:ss')"></span>
+                    <span v-text="$moment(scope.row.cts).format('YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
             </el-table-column>
             <el-table-column label="最后修改时间" width="200">
                 <template slot-scope="scope">
-                    <span v-text="$moment().format('YYYY-MM-DD HH:mm:ss')"></span>
+                    <span v-text="$moment(scope.row.ts).format('YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="340">
@@ -190,7 +190,7 @@
                     this.designList.push(r)
                 })
                 this.uploadCancel();
-                this.designList.sort((a, b) => b.ts - a.ts);
+                this.designList.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf());
             },
             createDesign(file) {
                 const reader = new FileReader();
@@ -225,35 +225,15 @@
                 if (EASY_ENV_IS_BROWSER) {
                     this.loading = true;
                 }
-                this.designList = [
-                    {
-                        ts: 1,
-                        cts: 2,
-                        name: 'wade',
-                        id: 1,
-                        flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 58.5, y: 49.5, id: 'b9ae7b66', index: 0, checkedBox: [] }, { shape: 'distortion-correction', type: 'node', size: '200*250', x: 264.5, y: 113.5, id: 'b2678761', index: 1, checkedBox: [] }] }
-                    }, {
-                        ts: 1,
-                        cts: 2,
-                        name: 'haha',
-                        id: 2,
-                        flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 99.5, y: 543.5, id: '4603208a', index: 0, checkedBox: [] }, { shape: 'bar-code-recognition', type: 'node', size: '200*250', x: 121.5, y: 140.5, id: 'd0c76fd4', index: 1, checkedBox: [] }] }
-                    },
-                    {
-                        ts: 1,
-                        cts: 2,
-                        name: 'jame',
-                        id: 3,
-                        flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 236, y: 201.5, id: '7762261d', index: 0, checkedBox: [] }, { shape: 'distortion-correction', type: 'node', size: '200*250', x: 470, y: 205.5, id: 'f313edca', index: 1, checkedBox: [] }, { shape: 'image-registration', type: 'node', size: '200*250', x: 332, y: 479.5, id: '37286ddf', index: 2, checkedBox: [] }] }
-                    },
-                    {
-                        ts: 1,
-                        cts: 2,
-                        name: 'james',
-                        id: 4,
-                        flowData: { nodes: [{ shape: 'distortion-correction', type: 'node', size: '200*250', x: 332, y: 258.5, id: '6dd5bf6c', index: 0, checkedBox: [] }, { shape: 'image-registration', type: 'node', size: '200*250', x: 658, y: 439.5, id: '0bc9bf89', index: 2, checkedBox: [] }, { shape: 'bar-code-recognition', type: 'node', size: '200*250', x: 199, y: 539.5, id: 'e8079a5f', index: 3, checkedBox: [] }, { shape: 'distortion-correction', type: 'node', size: '200*250', x: 605.9129554655871, y: 173.40080971659918, id: '91756993', index: 5, checkedBox: [] }, { shape: 'image-compression', type: 'node', size: '200*250', x: 135.73211875843455, y: 174.13090418353576, id: 'ef8c5dd8', index: 6, checkedBox: [] }, { shape: 'bar-code-recognition', type: 'node', size: '200*250', x: 701.5553306342781, y: 653.8029689608636, id: 'd6e93488', index: 7, checkedBox: [] }, { shape: 'image-registration', type: 'node', size: '200*250', x: 498.58906882591094, y: 674.9757085020242, id: 'be1e6b6b', index: 8, checkedBox: [] }], edges: [{ shape: 'flow-polyline-round', source: '6dd5bf6c', sourceAnchor: 1, target: '0bc9bf89', targetAnchor: 0, id: '4bf43d88', index: 1 }, { shape: 'flow-polyline-round', source: 'e8079a5f', sourceAnchor: 0, target: '6dd5bf6c', targetAnchor: 0, id: 'ad940302', index: 4 }] }
-                    }
-                ]
+                let designList = window.localStorage.designList;
+                if (designList) {
+                    designList = JSON.parse(designList);
+                } else {
+                    window.localStorage.designList = JSON.stringify([])
+                    designList = [];
+                }
+
+                this.designList = designList;
                 this.loading = false;
             },
             query() {
@@ -281,11 +261,6 @@
                 }
             }
         },
-        activated() {
-            if (this.$route.params.reload) {
-                this.getDesignList()
-            }
-        },
         beforeMount() {
             if (!(this.designList && this.designList.length > 0)) {
                 this.getDesignList(this.$store, this.q)
@@ -299,8 +274,14 @@
                 }
             },
             designList(i) {
+                window.localStorage.designList = JSON.stringify(i);
                 $('.el-table__body-wrapper', this.$el)[0].scrollTop = 0;
                 this.loading = false;
+            },
+            '$route.query': function(q) {
+                if (q.reload) {
+                    this.getDesignList()
+                }
             }
         }
     }
@@ -373,9 +354,11 @@
                 color: #aaa;
             }
             .export-wrap {
-                margin: 0 40px;
                 display: flex;
                 align-items: center;
+            }
+            .option-form {
+                margin: 0 30px;
             }
         }
     }
