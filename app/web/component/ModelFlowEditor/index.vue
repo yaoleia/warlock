@@ -1,8 +1,12 @@
 <template>
     <div class="editor">
-        <toolbar ref='toolbar' @save="saveData" @read='readData' @change-eage="changeEage" v-show="!readMode" />
+        <toolbar ref='toolbar' @read='readData' @change-eage="changeEage" v-show="!readMode" />
         <div class='go-back'>
-            <el-button type="text" icon="el-icon-back" v-show="readMode" @click="$router.go(-1)">返回</el-button>
+            <el-button type="text" icon="el-icon-back" v-if="readMode" @click="$router.go(-1)">返回</el-button>
+            <div v-else class="btns">
+                <el-button type="primary" size="mini" @click="saveData">保存</el-button>
+                <el-button type="text" icon="el-icon-back" @click="goBack">返回</el-button>
+            </div>
         </div>
         <div class="bottom-container">
             <item-pannel ref="itempannel" v-show="!readMode" />
@@ -83,6 +87,15 @@
             });
         },
         methods: {
+            goBack() {
+                this.$confirm('确认放弃修改当前流程?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$router.go(-1)
+                })
+            },
             readData() {
                 this.flow.read(this.data)
             },
@@ -109,8 +122,13 @@
 </script>
 <style lang="scss">
     .editor {
+        position: relative;
         height: 100%;
         .go-back {
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 1;
             color: #eee;
             text-align: right;
         }

@@ -1,5 +1,6 @@
 <template>
     <div class="toolbar">
+        <el-button type="text" class="reset" icon='el-icon-refresh' @click="$emit('read')" title="恢复初始"></el-button>
         <i data-command="undo" class="command iconfont icon-undo" title="撤销" />
         <i data-command="redo" class="command iconfont icon-redo" title="重做" />
         <div class="copy">
@@ -32,11 +33,6 @@
                 <el-option label="虚线" value="line"></el-option>
             </el-option-group>
         </el-select>
-        <div class="btns">
-            <el-button type="text" @click="$emit('read')">读取</el-button>
-            <el-button type="text" @click="$emit('save')">保存</el-button>
-            <el-button type="text" @click="$router.go(-1)">取消</el-button>
-        </div>
     </div>
 </template>
 
@@ -66,6 +62,9 @@
         color: #eee;
         display: flex;
         align-items: center;
+        .reset {
+            width: 45px;
+        }
         .el-select {
             width: 100px;
             .el-input__inner {
