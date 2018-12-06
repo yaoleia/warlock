@@ -10,17 +10,25 @@
                 <router-link to='/design/designer/0'>
                     <el-button class="search-button" type="text"><i class="el-icon-circle-plus-outline"></i> 新建流程</el-button>
                 </router-link>
-                <el-button type="text" class="all-export" @click='handleDownload(designList)'><i class="el-icon-download"></i> 导出全部</el-button>
+                <div class="export-wrap">
+                    <el-button type="text" @click='handleDownload(exportOption.checkedMode?exportOption.multipleSelection:designList)'><i class="el-icon-download"></i> 导出</el-button>
+                    <el-select v-model="exportOption.checkedMode" class="export-mode">
+                        <el-option v-for="item in exportOption.options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
+                        </el-option>
+                    </el-select>
+                </div>
                 <form ref="optionForm">
                     <input type="file" ref='option' @change="onFileAdd" v-show="false">
                     <el-button type="text" @click="$refs.option.click()"><i class="el-icon-upload2"></i> 导入流程</el-button>
                 </form>
             </div>
         </div>
-        <el-table stripe :data="designList" v-loading="loading" :height="innerHeight">
+        <el-table ref="multipleTable" stripe :data="designList" v-loading="loading" :height="innerHeight" @selection-change="handleSelectionChange">
             <div slot="empty">
                 <p v-if='!loading'>No Content</p>
             </div>
+            <el-table-column type="selection" width="55">
+            </el-table-column>
             <el-table-column type="index" width="55" :index="indexMethod">
             </el-table-column>
             <el-table-column prop="name" label="流程名称" width="300">
@@ -57,13 +65,13 @@
         </el-table>
         <el-pagination background class="pager" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="q.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="q.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
-        <el-dialog title="上传流程" :visible.sync="upload.showPop" custom-class="upload-pop-dialog">
-            <el-checkbox :indeterminate="upload.isIndeterminate" v-model="upload.checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-            <el-checkbox-group v-model="upload.checkedList" @change="handleCheckedChange">
-                <el-checkbox v-for="item in upload.uploadList" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
+        <el-dialog title="上传流程" :visible.sync="uploadOption.showPop" custom-class="upload-pop-dialog">
+            <el-checkbox :indeterminate="uploadOption.isIndeterminate" v-model="uploadOption.checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+            <el-checkbox-group v-model="uploadOption.checkedList" @change="handleCheckedChange">
+                <el-checkbox v-for="item in uploadOption.uploadList" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
             </el-checkbox-group>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="uploadDesignList(upload)">上传</el-button>
+                <el-button type="primary" @click="uploadDesignList(uploadOption)">上传</el-button>
                 <el-button @click="uploadCancel">取消</el-button>
             </div>
         </el-dialog>
@@ -76,7 +84,20 @@
             return {
                 total: 30,
                 designList: [],
-                upload: {
+                exportOption: {
+                    multipleSelection: [],
+                    checkedMode: 0,
+                    options: [{
+                        value: 0,
+                        label: '全部',
+                        disabled: false
+                    }, {
+                        value: 1,
+                        label: '选中',
+                        disabled: false
+                    }]
+                },
+                uploadOption: {
                     showPop: false,
                     isIndeterminate: false,
                     checkAll: true,
@@ -135,19 +156,22 @@
             FlowDisplayer
         },
         methods: {
+            handleSelectionChange(val) {
+                this.exportOption.multipleSelection = val;
+            },
             uploadCancel() {
                 this.$refs.optionForm.reset();
-                this.upload.reset();
+                this.uploadOption.reset();
             },
             handleCheckAllChange(val) {
-                this.upload.checkedList = val ? this.upload.uploadList.map(li => li.id) : [];
-                this.upload.isIndeterminate = false;
+                this.uploadOption.checkedList = val ? this.uploadOption.uploadList.map(li => li.id) : [];
+                this.uploadOption.isIndeterminate = false;
             },
             handleCheckedChange(value) {
                 const checkedCount = value.length;
-                const uploadCount = this.upload.uploadList.length;
-                this.upload.checkAll = checkedCount === uploadCount;
-                this.upload.isIndeterminate = checkedCount > 0 && checkedCount < uploadCount;
+                const uploadCount = this.uploadOption.uploadList.length;
+                this.uploadOption.checkAll = checkedCount === uploadCount;
+                this.uploadOption.isIndeterminate = checkedCount > 0 && checkedCount < uploadCount;
             },
             onFileAdd(e) {
                 const files = e.target.files || e.dataTransfer.files;
@@ -171,9 +195,9 @@
                 const reader = new FileReader();
                 const self = this;
                 reader.onload = (e) => {
-                    this.upload.uploadList = JSON.parse(e.target.result);
-                    this.upload.checkedList = this.upload.uploadList.map(li => li.id);
-                    this.upload.showPop = true;
+                    this.uploadOption.uploadList = JSON.parse(e.target.result);
+                    this.uploadOption.checkedList = this.uploadOption.uploadList.map(li => li.id);
+                    this.uploadOption.showPop = true;
                 };
                 reader.readAsText(file);
             },
@@ -233,9 +257,6 @@
             },
             query() {
                 this.getDesignList();
-            },
-            handleSelectionChange(val, obj) {
-                this.dialogDetailVisible = true
             },
             handleSizeChange(val) {
                 this.q.pageSize = val
@@ -323,6 +344,15 @@
             height: 40px;
             display: flex;
             justify-content: space-between;
+            .export-mode {
+                .el-input__inner {
+                    padding: 0 8px;
+                    width: 50px;
+                }
+                .el-select__caret {
+                    display: none;
+                }
+            }
             .search-right {
                 display: flex;
             }
@@ -334,13 +364,17 @@
                 color: #dbdbdb;
             }
             .el-input__inner {
+                color: #dbdbdb;
+                border: none;
                 background: rgba($color: #fff, $alpha: 0.1);
             }
             .el-date-editor .el-range-separator {
                 color: #aaa;
             }
-            .all-export {
-                margin: 0 20px;
+            .export-wrap {
+                margin: 0 40px;
+                display: flex;
+                align-items: center;
             }
         }
     }
