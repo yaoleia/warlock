@@ -67,6 +67,7 @@
         </el-pagination>
         <el-dialog title="上传流程" :visible.sync="uploadOption.showPop" custom-class="upload-pop-dialog">
             <el-checkbox :indeterminate="uploadOption.isIndeterminate" v-model="uploadOption.checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+            <div style="margin-bottom:20px"></div>
             <el-checkbox-group v-model="uploadOption.checkedList" @change="handleCheckedChange">
                 <el-checkbox v-for="item in uploadOption.uploadList" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
             </el-checkbox-group>
@@ -182,14 +183,14 @@
                 list.uploadList = list.uploadList.filter(li => list.checkedList.includes(li.id));
                 list.uploadList.forEach(r => {
                     const li = this.designList.find(d => d.id === r.id)
-                    if (!li) {
-                        this.designList.push(r)
-                    } else {
+                    if (li) {
                         Object.assign(li, r)
+                        return;
                     }
-                    this.uploadCancel();
-                    this.designList.sort((a, b) => b.ts - a.ts);
+                    this.designList.push(r)
                 })
+                this.uploadCancel();
+                this.designList.sort((a, b) => b.ts - a.ts);
             },
             createDesign(file) {
                 const reader = new FileReader();
