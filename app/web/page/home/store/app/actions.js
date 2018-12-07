@@ -12,6 +12,11 @@ const actions = {
     return request.post('/api/article/list', json, store).then(response => {
       store.commit(Type.SET_ARTICLE_LIST, response.data);
     })
+  },
+  SET_ALGORITHM_MAP: async (store) => {
+    const response = await import('../../algorithm_conf.json');
+    store.commit(Type.SET_ALGORITHM_MAP, response.default);
+    return response;
   }
 };
 

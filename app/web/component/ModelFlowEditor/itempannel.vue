@@ -2,23 +2,8 @@
     <div class="item-pannel">
         <div class="title">工具箱</div>
         <ul class="item-pannel-list">
-            <li class="getItem" data-shape="distortion-correction" data-type="node" data-size="200*50">
-                <span class="pannel-type-icon" />畸变校正
-            </li>
-            <li class="getItem" data-shape="image-compression" data-type="node" data-size="200*50">
-                <span class="pannel-type-icon" />图像压缩
-            </li>
-            <li class="getItem" data-shape="image-registration" data-type="node" data-size="200*50">
-                <span class="pannel-type-icon" />图像配准
-            </li>
-            <li class="getItem" data-shape="bar-code-recognition" data-type="node" data-size="200*50">
-                <span class="pannel-type-icon" />条码识别
-            </li>
-            <li class="getItem" data-shape="dm-code-recognition" data-type="node" data-size="200*50">
-                <span class="pannel-type-icon" />二维码识别
-            </li>
-            <li class="getItem" data-shape="factory-card" data-type="node" data-size="100*100">
-                <span class="pannel-type-icon" />图标
+            <li class="getItem" v-for="(item,key) in algorithmMap" :key="key" :data-shape="item.module" data-type="node" data-size="200*50">
+                <span class="pannel-type-icon" /><span>{{item.class}}</span>
             </li>
         </ul>
     </div>
@@ -34,6 +19,11 @@
             return {
                 name: 'itempannel'
             }
+        },
+        computed: {
+            algorithmMap() {
+                return this.$store.state.algorithmMap;
+            }
         }
     }
 </script>
@@ -47,6 +37,11 @@
         border: 1px solid #444;
         border-top: 0;
         text-align: left;
+        .getItem {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         .title {
             line-height: 32px;
             background: #666;

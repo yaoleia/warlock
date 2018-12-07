@@ -12,7 +12,8 @@ const debug = process.env.NODE_ENV !== 'production';
 export default function createStore() {
   const state = {
     recordTotal: 0,
-    recordList: []
+    recordList: [],
+    algorithmMap: null
   };
   return new Vuex.Store({
     state,

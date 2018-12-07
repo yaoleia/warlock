@@ -1,3 +1,5 @@
 'use strict';
 
-export default {};
+export default {
+    algorithmModuleList: state => Object.values(state.algorithmMap).map(item => item.module)
+};

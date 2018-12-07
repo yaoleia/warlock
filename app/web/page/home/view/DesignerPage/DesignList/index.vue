@@ -4,7 +4,7 @@
             <div class="search-left">
                 <el-date-picker v-model="q.dateRange" type="datetimerange" :picker-options="pickerOptions" start-placeholder="开始时间" end-placeholder="结束时间" align="left" value-format="timestamp">
                 </el-date-picker>
-                <el-button class="search-button" type="text" @click="q.pageIndex = 1;query()">查询</el-button>
+                <el-button class="search-button" type="text" @click="q.pageIndex = 1;getDesignList()">查询</el-button>
             </div>
             <div class="search-right">
                 <div class="export-wrap">
@@ -31,6 +31,8 @@
             </el-table-column>
             <el-table-column type="index" width="55" :index="indexMethod">
             </el-table-column>
+            <el-table-column prop="id" label="ID" width="150">
+            </el-table-column>
             <el-table-column prop="name" label="流程名称" width="300">
             </el-table-column>
             <el-table-column label="预览">
@@ -46,6 +48,11 @@
             <el-table-column label="最后修改时间" width="200">
                 <template slot-scope="scope">
                     <span v-text="$moment(scope.row.ts).format('YYYY-MM-DD HH:mm:ss')"></span>
+                </template>
+            </el-table-column>
+            <el-table-column label="运行状态" width="100">
+                <template slot-scope="scope">
+                    <el-switch @change="changeActive(scope.row,$event)" v-model="scope.row.active"></el-switch>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="340">
@@ -66,10 +73,10 @@
         <el-pagination background class="pager" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="q.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="q.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination>
         <el-dialog title="上传流程" :visible.sync="uploadOption.showPop" custom-class="upload-pop-dialog">
-            <el-checkbox :indeterminate="uploadOption.isIndeterminate" v-model="uploadOption.checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+            <el-checkbox :indeterminate="uploadOption.isIndeterminate" v-model="uploadOption.checkAll" :disabled="uploadOption.checkAllDisabled" @change="handleCheckAllChange">全选</el-checkbox>
             <div style="margin-bottom:20px"></div>
             <el-checkbox-group v-model="uploadOption.checkedList" @change="handleCheckedChange">
-                <el-checkbox v-for="item in uploadOption.uploadList" :label="item.id" :key="item.id">{{item.name}}</el-checkbox>
+                <el-checkbox v-for="item in uploadOption.uploadList" :label="item.id" :key="item.id" :disabled="item.disabled">{{item.name}}{{item.disabled?'(不可用)':''}}</el-checkbox>
             </el-checkbox-group>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="uploadDesignList(uploadOption)">上传</el-button>
@@ -83,6 +90,7 @@
     export default {
         data() {
             return {
+                active: null,
                 total: 30,
                 designList: [],
                 exportOption: {
@@ -99,6 +107,7 @@
                     }]
                 },
                 uploadOption: {
+                    checkAllDisabled: false,
                     showPop: false,
                     isIndeterminate: false,
                     checkAll: true,
@@ -110,6 +119,7 @@
                         this.checkAll = true;
                         this.checkedList = [];
                         this.uploadList = [];
+                        this.checkAllDisabled = false;
                     }
                 },
                 pickerOptions: {
@@ -153,10 +163,23 @@
                 loading: false
             }
         },
+        props: ['editorLoaded'],
         components: {
             FlowDisplayer
         },
         methods: {
+            changeActive(row, value) {
+                if (value) {
+                    this.active = row;
+                    this.designList.forEach(li => {
+                        if (li.id !== row.id) {
+                            li.active = false;
+                        }
+                    })
+                } else {
+                    this.active = null;
+                }
+            },
             handleSelectionChange(val) {
                 this.exportOption.multipleSelection = val;
             },
@@ -180,8 +203,15 @@
                 this.createDesign(files[0]);
             },
             uploadDesignList(list) {
-                list.uploadList = list.uploadList.filter(li => list.checkedList.includes(li.id));
-                list.uploadList.forEach(r => {
+                const addList = list.uploadList.filter(li => list.checkedList.includes(li.id));
+                if (!addList.length) {
+                    this.$message({
+                        message: '没有可上传的流程',
+                        type: 'warning'
+                    })
+                    return;
+                }
+                addList.forEach(r => {
                     const li = this.designList.find(d => d.id === r.id)
                     if (li) {
                         Object.assign(li, r)
@@ -196,8 +226,17 @@
                 const reader = new FileReader();
                 const self = this;
                 reader.onload = (e) => {
-                    this.uploadOption.uploadList = JSON.parse(e.target.result);
-                    this.uploadOption.checkedList = this.uploadOption.uploadList.map(li => li.id);
+                    const result = JSON.parse(e.target.result)
+                    result.forEach(r => {
+                        const notPass = r.flowData.nodes.some(node => !this.algorithmModuleList.includes(node.shape));
+                        r.disabled = notPass;
+                        if (notPass && this.uploadOption.checkAll) {
+                            this.uploadOption.checkAllDisabled = true;
+                            this.uploadOption.checkAll = false;
+                        }
+                    })
+                    this.uploadOption.uploadList = result;
+                    this.uploadOption.checkedList = this.uploadOption.uploadList.filter(li => !li.disabled).map(li => li.id);
                     this.uploadOption.showPop = true;
                 };
                 reader.readAsText(file);
@@ -216,18 +255,29 @@
                 })
             },
             handleDelete(index, item) {
-                this.$delete(this.designList, index);
+                this.$confirm('此操作将删除该流程, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$delete(this.designList, index);
+                })
             },
             indexMethod(index) {
                 return (this.q.pageIndex - 1) * this.q.pageSize + index + 1
             },
-            getDesignList(store, json) {
+            async getDesignList(store, json) {
+                await this.editorLoaded;
                 if (EASY_ENV_IS_BROWSER) {
                     this.loading = true;
                 }
                 let designList = window.localStorage.designList;
                 if (designList) {
                     designList = JSON.parse(designList);
+                    designList.map(li => {
+                        li.active = false;
+                        return li;
+                    })
                 } else {
                     window.localStorage.designList = JSON.stringify([])
                     designList = [];
@@ -235,9 +285,6 @@
 
                 this.designList = designList;
                 this.loading = false;
-            },
-            query() {
-                this.getDesignList();
             },
             handleSizeChange(val) {
                 this.q.pageSize = val
@@ -259,6 +306,9 @@
                 } else {
                     return 400
                 }
+            },
+            algorithmModuleList() {
+                return this.$store.getters.algorithmModuleList;
             }
         },
         beforeMount() {
@@ -270,7 +320,7 @@
             'q.dateRange': function(r) {
                 if (r === null) {
                     this.q.pageIndex = 1
-                    this.query()
+                    this.getDesignList()
                 }
             },
             designList(i) {

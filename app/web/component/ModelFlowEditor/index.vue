@@ -52,6 +52,7 @@
                 }
             };
         },
+        props: ['editorLoaded'],
         computed: {
             readMode() {
                 return this.$route.params.read;
@@ -60,7 +61,8 @@
         beforeDestroy() {
             this.editor.destroy();
         },
-        mounted() {
+        async mounted() {
+            await this.editorLoaded;
             const params = this.$route.params;
             this.init(params)
             if (params.flow) {

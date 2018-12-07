@@ -1,6 +1,6 @@
 <template>
     <div class="editor-wrap">
-        <model-flow-editor />
+        <model-flow-editor v-bind='$attrs' />
     </div>
 </template>
 <script type="babel">

@@ -3,7 +3,7 @@ import G6Editor from '@antv/g6-editor'
 export default {
     data() {
         return {
-            selected: {},
+            selected: {}, // 选中模型对象
             selectedModel: {}, // 当前选中项数据模型
             curZoom: 1, // 当前缩放比率
             minZoom: 0.5, // 最小缩放比率
