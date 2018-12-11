@@ -6,21 +6,21 @@
                 <div v-if="selectedModel && selectedModel.module">
                     <div class="title">{{selectedModel.shape}}</div>
                     <el-form @submit.native.prevent v-if='selectedModel.init_params'>
-                        <div>init_params:</div>
+                        <div class="params-title"><i class="el-icon-info"></i> init_params</div>
                         <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.init_params' :key='key'>
-                            <el-input v-model="item.value" />
+                            <el-input v-model="item.value" :disabled="readMode" />
                         </el-form-item>
                     </el-form>
                     <el-form @submit.native.prevent v-if='selectedModel.exec_params'>
-                        <div>exec_params:</div>
+                        <div class="params-title"><i class="el-icon-info"></i> exec_params</div>
                         <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.exec_params' :key='key'>
-                            <el-input v-model="item.value" />
+                            <el-input v-model="item.value" :disabled="readMode" />
                         </el-form-item>
                     </el-form>
                     <el-form @submit.native.prevent v-if='selectedModel.exec_outputs'>
-                        <div>exec_outputs:</div>
+                        <div class="params-title"><i class="el-icon-info"></i> exec_outputs</div>
                         <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.exec_outputs' :key='key'>
-                            <el-input v-model="item.value" />
+                            <el-input v-model="item.value" :disabled="readMode" />
                         </el-form-item>
                     </el-form>
                     <!-- <div v-if="selectedModel.shape === 'factory-card'">
@@ -86,7 +86,7 @@
                 checkedBox: []
             };
         },
-        props: ['selectedModel'],
+        props: ['selectedModel', 'readMode'],
         computed: {
             inputingLabel: {
                 get() {
@@ -126,13 +126,14 @@
         width: 200px;
         #node_detailpannel {
             height: 100%;
-            overflow: auto;
+        }
+        .params-title {
+            color: #eee;
+            background: #555;
+            padding: 4px;
         }
         .pannel {
             display: none;
-        }
-        .block-containe {
-            padding-top: 20px;
         }
         .input {
             margin-left: 16px;
@@ -147,8 +148,19 @@
             width: 52px;
         }
         .block-container {
+            height: calc(100% - 32px);
+            overflow: auto;
             padding: 16px 8px;
             text-align: left;
+            .el-input__inner {
+                color: #eee;
+            }
+            .el-form {
+                margin-bottom: 30px;
+            }
+            .el-form-item {
+                margin-bottom: 0;
+            }
             .title {
                 font-size: 15px;
                 color: #eee;
@@ -160,6 +172,11 @@
             }
             .check-box {
                 margin: 30px 0;
+            }
+            .el-input.is-disabled .el-input__inner {
+                background: #333;
+                color: #ddd;
+                border: none;
             }
         }
     }

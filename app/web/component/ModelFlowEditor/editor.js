@@ -16,9 +16,7 @@ export default {
             const editor = new G6Editor();
             const flow = new G6Editor.Flow({
                 graph: {
-                    container: page.$el,
-                    fitView: 'autoZoom',
-                    mode: params.read ? 'read' : 'default'
+                    container: page.$el
                 },
                 align: {
                     item: false,
@@ -26,29 +24,45 @@ export default {
                 },
                 noEndEdge: false
             });
-            this.flow = flow;
-            this.editor = editor;
-            editor.add(flow);
-            if (params.read) return;
-            flow.on('afteritemselected', ev => {
-                this.selectedModel = ev.item.getModel();
-                if (!this.selectedModel.checkedBox) {
-                    this.selectedModel.checkedBox = [];
-                }
-                console.log(this.selectedModel);
+            const detailPannel = new G6Editor.Detailpannel({
+                container: detailpannel.$el
             });
-            flow.on('afterzoom', ev => {
-                this.curZoom = ev.updateMatrix[0];
-            });
-            flow.on('beforechange', ev => {
-                // console.log(ev)
-            });
-
             const miniMap = new G6Editor.Minimap({
                 container: minimap,
                 height: 120,
                 width: 200
             });
+
+            this.flow = flow;
+            this.editor = editor;
+
+            editor.add(miniMap);
+            editor.add(detailPannel);
+            editor.add(flow);
+
+            if (params.read) {
+                const graph = flow.getGraph();
+                graph.on('click', ev => {
+                    if (!ev.item) return;
+                    this.selectedModel = ev.item.getModel();
+                    console.log(this.selectedModel);
+                });
+                return;
+            }
+
+            flow.on('afteritemselected', ev => {
+                this.selectedModel = ev.item.getModel();
+                console.log(this.selectedModel);
+            });
+
+            flow.on('afterzoom', ev => {
+                this.curZoom = ev.updateMatrix[0];
+            });
+
+            flow.on('beforechange', ev => {
+                // console.log(ev)
+            });
+
             const toolBar = new G6Editor.Toolbar({
                 container: toolbar.$el
             });
@@ -58,19 +72,9 @@ export default {
             const itemPannel = new G6Editor.Itempannel({
                 container: itempannel.$el
             });
-            const detailPannel = new G6Editor.Detailpannel({
-                container: detailpannel.$el
-            });
-
-            // const graph = flow.getGraph();
-            // graph.on('click', ev => {
-            //     console.log(ev)
-            // });
-            editor.add(miniMap);
             editor.add(toolBar);
             editor.add(contextMenu);
             editor.add(itemPannel);
-            editor.add(detailPannel);
         },
         changeZoom(zoom) {
             const flow = this.flow;

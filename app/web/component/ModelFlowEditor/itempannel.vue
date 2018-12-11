@@ -37,7 +37,6 @@
         left: 0px;
         z-index: 2;
         width: 200px;
-        border: 1px solid #444;
         border-top: 0;
         text-align: left;
         .getItem {

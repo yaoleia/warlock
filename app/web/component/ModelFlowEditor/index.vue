@@ -1,6 +1,6 @@
 <template>
     <div class="editor">
-        <toolbar ref='toolbar' @read='readData' @change-eage="changeEage" v-show="!readMode" />
+        <toolbar ref='toolbar' @read='readData' @change-eage="changeEage" :style="{visibility: readMode?'hidden':''}" />
         <div class='go-back'>
             <el-input class='name-input' v-model="name" placeholder="未命名" :disabled="readMode"></el-input>
             <el-button type="text" icon="el-icon-back" v-if="readMode" @click="$router.go(-1)">返回</el-button>
@@ -11,9 +11,9 @@
         </div>
         <div class="bottom-container">
             <item-pannel ref="itempannel" v-show="!readMode" />
-            <detail-pannel ref='detailpannel' :selectedModel='selectedModel' @updateGraph='updateGraph' @toggleGrid='toggleGrid' v-show="!readMode" />
-            <navigator :cur-zoom="curZoom" :min-zoom="minZoom" :max-zoom="maxZoom" @change-zoom="changeZoom" v-show="!readMode">
-                <div ref="minimap" slot="minimap" v-show="!readMode"></div>
+            <detail-pannel ref='detailpannel' :readMode='readMode' :selectedModel='selectedModel' @updateGraph='updateGraph' @toggleGrid='toggleGrid' />
+            <navigator :cur-zoom="curZoom" :min-zoom="minZoom" :max-zoom="maxZoom" @change-zoom="changeZoom">
+                <div ref="minimap" slot="minimap"></div>
             </navigator>
             <page ref="page" />
             <context-menu ref="contextmenu" v-show="!readMode" />

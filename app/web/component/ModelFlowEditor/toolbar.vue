@@ -55,7 +55,6 @@
 <style lang="scss">
     @import url("~asset/css/editer.css");
     .toolbar {
-        border-bottom: 1px solid #444;
         width: 100%;
         height: 50px;
         text-align: left;

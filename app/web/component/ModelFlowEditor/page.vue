@@ -14,7 +14,7 @@
 </script>
 <style lang="scss">
     .editor-page {
-        border-bottom: 1px solid #444;
+        border: 1px solid #444;
         height: 100%;
         margin-left: 200px;
         margin-right: 200px;
