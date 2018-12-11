@@ -2,6 +2,7 @@
     <div class="editor">
         <toolbar ref='toolbar' @read='readData' @change-eage="changeEage" :style="{visibility: readMode?'hidden':''}" />
         <div class='go-back'>
+            <div class="design-name">名称：</div>
             <el-input class='name-input' v-model="name" placeholder="未命名" :disabled="readMode"></el-input>
             <el-button type="text" icon="el-icon-back" v-if="readMode" @click="goBack(true)">返回</el-button>
             <div v-else class="btns">
@@ -209,22 +210,31 @@
     .editor {
         position: relative;
         height: 100%;
+        .design-name {
+            width: 60px;
+        }
         .go-back {
             position: absolute;
             right: 0;
-            top: 0;
+            top: 5px;
             z-index: 1;
             display: flex;
-            color: #eee;
+            color: #ccc;
             text-align: right;
+            align-items: center;
             .name-input {
                 margin-right: 30px;
             }
             .el-input {
-                height: 40px;
+                height: 36px;
+                width: 160px;
                 .el-input__inner {
-                    background: #444;
+                    height: 36px;
+                    line-height: 36px;
+                    background: none;
                     border: none;
+                    border-radius: 0;
+                    border-bottom: 1px solid #aaa;
                     color: #eee;
                 }
             }

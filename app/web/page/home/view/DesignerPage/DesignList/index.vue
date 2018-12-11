@@ -27,30 +27,30 @@
             <div slot="empty">
                 <p v-if='!loading'>No Content</p>
             </div>
-            <el-table-column type="selection" width="55">
+            <el-table-column type="selection">
             </el-table-column>
-            <el-table-column type="index" width="55" :index="indexMethod">
+            <el-table-column type="index" :index="indexMethod">
             </el-table-column>
-            <el-table-column prop="id" label="ID" width="150">
+            <el-table-column prop="id" label="ID">
             </el-table-column>
-            <el-table-column prop="name" label="流程名称" width="300">
+            <el-table-column prop="name" label="流程名称">
             </el-table-column>
-            <el-table-column label="预览">
+            <el-table-column label="预览" width="300">
                 <template slot-scope="scope">
                     <flow-displayer :flowData='scope.row.flowData' class="flow-wrap"></flow-displayer>
                 </template>
             </el-table-column>
-            <el-table-column label="创建时间" width="200">
+            <el-table-column label="创建时间" width="170">
                 <template slot-scope="scope">
                     <span v-text="$moment(scope.row.cts).format('YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
             </el-table-column>
-            <el-table-column label="最后修改时间" width="200">
+            <el-table-column label="最后修改时间" width="170">
                 <template slot-scope="scope">
                     <span v-text="$moment(scope.row.ts).format('YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
             </el-table-column>
-            <el-table-column label="运行状态" width="100">
+            <el-table-column label="运行状态">
                 <template slot-scope="scope">
                     <el-switch @change="changeActive(scope.row,$event)" v-model="scope.row.active"></el-switch>
                 </template>
