@@ -4,10 +4,10 @@
         <div class='go-back'>
             <div class="design-name">名称：</div>
             <el-input class='name-input' v-model="name" placeholder="未命名" :disabled="readMode"></el-input>
-            <el-button type="text" icon="el-icon-back" v-if="readMode" @click="goBack(true)">返回</el-button>
+            <el-button v-if="readMode" type="text" icon="el-icon-back" @click="goBack(true)">返回</el-button>
             <div v-else class="btns">
                 <el-button type="primary" size="mini" @click="saveData">保存</el-button>
-                <el-button type="text" icon="el-icon-back" @click="goBack">返回</el-button>
+                <el-button type="text" icon="el-icon-back" @click="goBack(false)">返回</el-button>
             </div>
         </div>
         <div class="bottom-container">
