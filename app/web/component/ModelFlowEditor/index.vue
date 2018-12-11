@@ -16,13 +16,15 @@
             <navigator :cur-zoom="curZoom" :min-zoom="minZoom" :max-zoom="maxZoom" @change-zoom="changeZoom">
                 <div ref="minimap" slot="minimap"></div>
             </navigator>
-            <page ref="page" />
+            <page ref="page" @keydown.native.ctrl.192='ctrl192' />
+            <terminal-box :msgList='msgList' :showTerminal.sync='showTerminal'></terminal-box>
             <context-menu ref="contextmenu" v-show="!readMode" />
         </div>
     </div>
 </template>
 
 <script>
+    import TerminalBox from './TerminalBox'
     import DetailPannel from './detailpannel'
     import Navigator from './navigator';
     import ItemPannel from './itempannel'
@@ -38,11 +40,14 @@
             ContextMenu,
             Page,
             ItemPannel,
-            DetailPannel
+            DetailPannel,
+            TerminalBox
         },
         extends: Editor,
         data() {
             return {
+                msgList: [],
+                showTerminal: false,
                 name: '',
                 designItem: {
                     name: '',
@@ -107,6 +112,9 @@
             });
         },
         methods: {
+            ctrl192() {
+                this.showTerminal = !this.showTerminal;
+            },
             goBack(bol) {
                 if (bol) {
                     this.$nextTick(() => {
