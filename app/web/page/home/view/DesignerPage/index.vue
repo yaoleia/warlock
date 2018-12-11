@@ -28,6 +28,27 @@
                         const x = -width / 2;
                         const y = -height / 2;
                         const borderRadius = 4;
+
+                        // 生成锚点
+                        const outputs = this.exec_outputs;
+                        const inputs = this.exec_params;
+                        const inLength = Object.keys(inputs).length;
+                        const outLength = Object.keys(outputs).length;
+                        const inAnchors = Object.keys(inputs).map((ii, index) => {
+                            return [(index + 1) / (inLength + 1), 0, { name: ii, type: inputs[ii].type, anchorType: 'input' }]
+                        })
+                        const outAnchors = Object.keys(outputs).map((oo, index) => {
+                            return [(index + 1) / (outLength + 1), 1, { name: oo, type: outputs[oo].type, anchorType: 'output' }]
+                        })
+                        this.anchor = [...inAnchors, ...outAnchors];
+
+                        // 如果是新模块,则把注册数据安到model上
+                        if (!model.module) {
+                            const { type, author, create_time, dependencies, exec_outputs, exec_params, init_params, module, version } = this;
+                            Object.assign(model, { type, author, create_time, dependencies, exec_outputs, exec_params, init_params, module, version, anchor: this.anchor.map(a => a[2]) })
+                        }
+
+                        // 生成元素
                         const keyShape = group.addShape('rect', {
                             attrs: {
                                 x,
@@ -55,7 +76,7 @@
                         // 名称
                         group.addShape('text', {
                             attrs: {
-                                text: this.title,
+                                text: this.module,
                                 x: x + 20,
                                 y: y + 13,
                                 textAlign: 'start',
@@ -120,52 +141,18 @@
                                 })
                             }
                         }
+
                         return keyShape;
-                    },
-                    // 设置锚点
-                    anchor: [
-                        [0.5, 0, { type: 'input' }], // 上面边的中点
-                        [0.5, 1, { type: 'output' }] // 下边边的中点
-                    ]
+                    }
                 });
 
                 for (const key in this.algorithmConf) {
                     const value = this.algorithmConf[key]
                     Flow.registerNode(value.module, {
-                        key,
-                        title: value.class,
-                        color_type: '#1890FF',
-                        checkBoxList: [{ key: 'wade' }, { key: 'james' }],
-                        optionList: [{ key: 'frameRate' }, { key: 'gamma' }]
+                        ...value,
+                        color_type: '#1890FF'
                     }, 'model-card');
                 }
-                // 畸变校正
-                // Flow.registerNode('distortion-correction', {
-                //     title: '畸变校正',
-                //     color_type: '#1890FF',
-                //     type_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/czNEJAmyDpclFaSucYWB.svg',
-                //     state_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/MXXetJAxlqrbisIuZxDO.svg',
-                //     checkBoxList: [{ key: 'wade' }, { key: 'james' }],
-                //     optionList: [{ key: 'frameRate' }, { key: 'gamma' }]
-                // }, 'model-card');
-
-                // 图像压缩
-                // Flow.registerNode('image-compression', {
-                //     title: '图像压缩',
-                //     label: '随机森林',
-                //     color_type: '#9254DE',
-                //     type_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/czNEJAmyDpclFaSucYWB.svg',
-                //     state_icon_url: 'https://gw.alipayobjects.com/zos/rmsportal/MXXetJAxlqrbisIuZxDO.svg',
-                //     // 设置锚点
-                //     anchor: [
-                //         [0.5, 0, {
-                //             type: 'input'
-                //         }],
-                //         [0.5, 1, {
-                //             type: 'output'
-                //         }]
-                //     ]
-                // }, 'model-card');
 
                 Flow.registerEdge('line', {
                     draw(item) {
@@ -221,7 +208,7 @@
                 return this.$store.state.algorithmMap;
             }
         },
-        async created() {
+        async beforeMount() {
             this.editorLoaded = $.Deferred();
             const resp = await this.$store.dispatch(SET_ALGORITHM_MAP)
             await this.init()

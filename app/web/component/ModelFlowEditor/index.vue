@@ -11,7 +11,7 @@
         </div>
         <div class="bottom-container">
             <item-pannel ref="itempannel" v-show="!readMode" />
-            <detail-pannel ref='detailpannel' :selected='selected' :selectedModel='selectedModel' @updateGraph='updateGraph' @toggleGrid='toggleGrid' v-show="!readMode" />
+            <detail-pannel ref='detailpannel' :selectedModel='selectedModel' @updateGraph='updateGraph' @toggleGrid='toggleGrid' v-show="!readMode" />
             <navigator :cur-zoom="curZoom" :min-zoom="minZoom" :max-zoom="maxZoom" @change-zoom="changeZoom" v-show="!readMode">
                 <div ref="minimap" slot="minimap" v-show="!readMode"></div>
             </navigator>
@@ -78,13 +78,21 @@
 
             // 输入锚点不可以连出边
             flow.on('hoveranchor:beforeaddedge', ev => {
-                if (ev.anchor.type === 'input') {
+                if (ev.anchor.anchorType === 'input') {
                     ev.cancel = true;
                 }
             });
             flow.on('dragedge:beforeshowanchor', ev => {
                 // 只允许目标锚点是输入，源锚点是输出，才能连接
-                if (!(ev.targetAnchor.type === 'input' && ev.sourceAnchor.type === 'output')) {
+                if (!(ev.targetAnchor.anchorType === 'input' && ev.sourceAnchor.anchorType === 'output')) {
+                    ev.cancel = true;
+                }
+                // 不允许自己连自己
+                if (ev.target.id === ev.source.id) {
+                    ev.cancel = true;
+                }
+                // 判断数据类型
+                if (ev.targetAnchor.type !== ev.sourceAnchor.type) {
                     ev.cancel = true;
                 }
                 // 如果拖动的是目标方向，则取消显示目标节点中已被连过的锚点

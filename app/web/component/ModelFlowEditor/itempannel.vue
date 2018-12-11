@@ -2,8 +2,11 @@
     <div class="item-pannel">
         <div class="title">工具箱</div>
         <ul class="item-pannel-list">
-            <li class="getItem" v-for="(item,key) in algorithmMap" :key="key" :data-shape="item.module" data-type="node" data-size="200*50">
-                <span class="pannel-type-icon" /><span>{{item.class}}</span>
+            <li v-for="(modules,type) in algorithmTree" :key="type">
+                <div>{{type}}</div>
+                <div class="getItem" v-for='item in modules' :key="item.module" :data-shape="item.module" data-type="node" data-size="200*50">
+                    <span class="pannel-type-icon" /><span>{{item.module}}</span>
+                </div>
             </li>
         </ul>
     </div>
@@ -21,8 +24,8 @@
             }
         },
         computed: {
-            algorithmMap() {
-                return this.$store.state.algorithmMap;
+            algorithmTree() {
+                return this.$store.getters.algorithmTree;
             }
         }
     }
@@ -50,19 +53,19 @@
             padding-left: 12px;
         }
         ul {
-            padding: 0px;
-            padding-left: 16px;
+            padding: 0 15px;
             li {
-                width: 160px;
                 font-size: 15px;
                 line-height: 26px;
-                padding: 3px 3px 3px 8px;
                 margin: 7px 0;
                 color: #ccc;
                 list-style-type: none;
-                border-radius: 4px;
-                border: 1px solid rgba(0, 0, 0, 0);
-                &:hover {
+                .getItem {
+                    padding: 5px;
+                    border-radius: 4px;
+                    border: 1px solid rgba(0, 0, 0, 0);
+                }
+                .getItem:hover {
                     color: #ff8800;
                     cursor: move;
                     border: 1px solid #ff8800;

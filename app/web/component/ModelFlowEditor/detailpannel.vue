@@ -3,9 +3,27 @@
         <div id="node_detailpannel" data-status="node-selected" class="pannel">
             <div class="pannel-title">模块详情</div>
             <div class="block-container">
-                <div v-if="selectedModel && selectedModel.type === 'node'">
-                    <div class="title">{{selected.item.shapeObj.title}}</div>
-                    <div v-if="selectedModel.shape === 'factory-card'">
+                <div v-if="selectedModel && selectedModel.module">
+                    <div class="title">{{selectedModel.shape}}</div>
+                    <el-form @submit.native.prevent v-if='selectedModel.init_params'>
+                        <div>init_params:</div>
+                        <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.init_params' :key='key'>
+                            <el-input v-model="item.value" />
+                        </el-form-item>
+                    </el-form>
+                    <el-form @submit.native.prevent v-if='selectedModel.exec_params'>
+                        <div>exec_params:</div>
+                        <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.exec_params' :key='key'>
+                            <el-input v-model="item.value" />
+                        </el-form-item>
+                    </el-form>
+                    <el-form @submit.native.prevent v-if='selectedModel.exec_outputs'>
+                        <div>exec_outputs:</div>
+                        <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.exec_outputs' :key='key'>
+                            <el-input v-model="item.value" />
+                        </el-form-item>
+                    </el-form>
+                    <!-- <div v-if="selectedModel.shape === 'factory-card'">
                         <el-form label-width="80px" label-position="left" @submit.native.prevent>
                             <el-form-item label="名称：" prop="label">
                                 <el-input v-model="inputingLabel" />
@@ -31,7 +49,7 @@
                         <el-checkbox-group v-model="checkedBox" class="check-box">
                             <el-checkbox v-for="item in selected.item.shapeObj.checkBoxList" :label="item.key" :key="item.key"></el-checkbox>
                         </el-checkbox-group>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -68,7 +86,7 @@
                 checkedBox: []
             };
         },
-        props: ['selectedModel', 'selected'],
+        props: ['selectedModel'],
         computed: {
             inputingLabel: {
                 get() {
@@ -95,24 +113,21 @@
         watch: {
             checkedBox(arr) {
                 this.$emit('updateGraph', ['checkedBox', arr]);
-            },
-            selected(s) {
-                if (s) {
-                    this.checkedBox = this.selectedModel.checkedBox;
-                }
             }
         }
     };
 </script>
 <style lang="scss">
     .detail-pannel {
-        height: 100%;
+        height: calc(100% - 182px);
         position: absolute;
         right: 0px;
         z-index: 2;
         width: 200px;
-        border: 1px solid #444;
-        border-top: 0;
+        #node_detailpannel {
+            height: 100%;
+            overflow: auto;
+        }
         .pannel {
             display: none;
         }
