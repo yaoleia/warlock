@@ -349,6 +349,8 @@
                 color: #f44336;
             }
             .cell .opration {
+                width: 330px;
+                margin: 0 auto;
                 text-align: center;
                 > * {
                     display: inline-block;
