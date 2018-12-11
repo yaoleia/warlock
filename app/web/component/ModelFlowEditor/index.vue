@@ -3,7 +3,7 @@
         <toolbar ref='toolbar' @read='readData' @change-eage="changeEage" :style="{visibility: readMode?'hidden':''}" />
         <div class='go-back'>
             <el-input class='name-input' v-model="name" placeholder="未命名" :disabled="readMode"></el-input>
-            <el-button type="text" icon="el-icon-back" v-if="readMode" @click="$router.go(-1)">返回</el-button>
+            <el-button type="text" icon="el-icon-back" v-if="readMode" @click="goBack(true)">返回</el-button>
             <div v-else class="btns">
                 <el-button type="primary" size="mini" @click="saveData">保存</el-button>
                 <el-button type="text" icon="el-icon-back" @click="goBack">返回</el-button>
@@ -106,9 +106,17 @@
             });
         },
         methods: {
-            goBack() {
+            goBack(bol) {
+                if (bol) {
+                    this.$nextTick(() => {
+                        this.$router.go(-1)
+                    })
+                    return;
+                }
                 if (!this.isEdited() && !this.isNamed()) {
-                    this.$router.go(-1)
+                    this.$nextTick(() => {
+                        this.$router.go(-1)
+                    })
                     return;
                 }
                 this.$confirm('确认放弃修改当前流程?', '提示', {
@@ -116,7 +124,9 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$router.go(-1)
+                    this.$nextTick(() => {
+                        this.$router.go(-1)
+                    })
                 })
             },
             readData() {
@@ -175,7 +185,9 @@
                     window.localStorage.designList = JSON.stringify(designList);
                 }
                 console.log(JSON.stringify(this.designItem));
-                this.$router.push({ path: '/design/designList', query: { reload: true } })
+                this.$nextTick(() => {
+                    this.$router.push({ path: '/design/designList', query: { reload: true } })
+                })
             },
             changeEage(type) {
                 this.flow.changeAddEdgeModel({

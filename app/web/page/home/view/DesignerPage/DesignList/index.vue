@@ -228,7 +228,7 @@
                 reader.onload = (e) => {
                     const result = JSON.parse(e.target.result)
                     result.forEach(r => {
-                        const notPass = r.flowData.nodes.some(node => !this.algorithmModuleList.includes(node.shape));
+                        const notPass = r.flowData.nodes.some(node => !this.algorithmModuleList.includes(node.module));
                         r.disabled = notPass;
                         if (notPass && this.uploadOption.checkAll) {
                             this.uploadOption.checkAllDisabled = true;
