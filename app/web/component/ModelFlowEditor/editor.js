@@ -1,5 +1,6 @@
 
 import G6Editor from '@antv/g6-editor'
+import CircularJSON from 'circular-json'
 export default {
     data() {
         return {
@@ -45,22 +46,23 @@ export default {
                 graph.on('click', ev => {
                     if (!ev.item) return;
                     this.selectedModel = ev.item.getModel();
-                    console.log(this.selectedModel);
+                    this.pushMsg(this.selectedModel)
                 });
                 return;
             }
 
             flow.on('afteritemselected', ev => {
                 this.selectedModel = ev.item.getModel();
-                console.log(this.selectedModel);
+                this.pushMsg(this.selectedModel)
             });
 
             flow.on('afterzoom', ev => {
                 this.curZoom = ev.updateMatrix[0];
+                this.pushMsg(this.curZoom)
             });
 
-            flow.on('beforechange', ev => {
-                // console.log(ev)
+            flow.on('afterchange', ev => {
+                this.pushMsg(ev.action)
             });
 
             const toolBar = new G6Editor.Toolbar({
@@ -75,6 +77,14 @@ export default {
             editor.add(toolBar);
             editor.add(contextMenu);
             editor.add(itemPannel);
+        },
+        pushMsg(msg) {
+            if (typeof msg === 'object') {
+                const { anchor, exec_outputs, exec_params, init_params, shape, size, x, y, index, ...msgFilt } = msg;
+                this.msgList.push(CircularJSON.stringify(msgFilt))
+                return;
+            }
+            this.msgList.push(msg)
         },
         changeZoom(zoom) {
             const flow = this.flow;

@@ -62,11 +62,14 @@
                 <span>delete</span>
             </div>
         </div>
+        <div class="all-selected">
+            <el-button type="text" @click="$emit('terminalFor','run')"><i class="el-icon-caret-right"></i> 运行流程</el-button>
+            <el-button type="text" @click="$emit('terminalFor','output')"><img src="~asset/images/check.svg" class="icon-check"> 查看输出</el-button>
+        </div>
     </div>
 </template>
 
 <script>
-
     export default {
         data() {
             return {
@@ -85,6 +88,27 @@
         font-size: 12px;
         display: none;
         border-radius: 4px;
+        .all-selected {
+            padding-right: 5px;
+            border-top: 1px solid #444;
+            display: flex;
+            justify-content: space-around;
+            .el-button--text {
+                color: #000;
+            }
+            .el-button:hover {
+                color: #ff8800;
+                .el-icon-caret-right {
+                    color: #000;
+                }
+            }
+            .icon-check {
+                vertical-align: top;
+                display: inline-block;
+                width: 15px;
+                height: 15px;
+            }
+        }
         .disable {
             color: rgba(0, 0, 0, 0.25);
         }

@@ -17,8 +17,8 @@
                 <div ref="minimap" slot="minimap"></div>
             </navigator>
             <page ref="page" @keydown.native.ctrl.192='ctrl192' />
-            <terminal-box :msgList='msgList' :showTerminal.sync='showTerminal'></terminal-box>
-            <context-menu ref="contextmenu" v-show="!readMode" />
+            <terminal-box :msgList.sync='msgList' :showTerminal.sync='showTerminal'></terminal-box>
+            <context-menu ref="contextmenu" v-show="!readMode" @terminalFor='terminalFor' />
         </div>
     </div>
 </template>
@@ -84,6 +84,7 @@
 
             // 输入锚点不可以连出边
             flow.on('hoveranchor:beforeaddedge', ev => {
+                this.pushMsg(ev.anchor)
                 if (ev.anchor.anchorType === 'input') {
                     ev.cancel = true;
                 }
@@ -112,6 +113,10 @@
             });
         },
         methods: {
+            terminalFor(component) {
+                this.showTerminal = true;
+                $('.context-menu', this.$el).hide();
+            },
             ctrl192() {
                 this.showTerminal = !this.showTerminal;
             },
@@ -139,6 +144,7 @@
                 })
             },
             readData() {
+                this.pushMsg(this.designItem.flowData)
                 this.flow.read(this.designItem.flowData)
             },
             isEdited() {
@@ -193,7 +199,6 @@
                     designList.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf())
                     window.localStorage.designList = JSON.stringify(designList);
                 }
-                console.log(JSON.stringify(this.designItem));
                 this.$nextTick(() => {
                     this.$router.push({ path: '/design/designList', query: { reload: true } })
                 })
@@ -220,6 +225,10 @@
         height: 100%;
         .design-name {
             width: 60px;
+        }
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
         }
         .go-back {
             position: absolute;
