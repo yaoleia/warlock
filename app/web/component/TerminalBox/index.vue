@@ -133,7 +133,8 @@
         height: 182px;
         background: rgba($color: #333, $alpha: 0.9);
         line-height: 34px;
-        padding: 5px 10px 5px 70px;
+        padding: 5px 10px 5px 60px;
+        box-shadow: 0 4px 8px 0 rgb(0, 0, 0);
         .radio-wrap {
             position: absolute;
             left: 0;
@@ -143,6 +144,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            box-shadow: 2px 2px 6px 0 rgb(0, 0, 0);
             .el-button {
                 padding: 20px 10px;
                 border-radius: 0;
@@ -195,6 +197,7 @@
             height: 6px;
             background: #000;
             cursor: ns-resize;
+            box-shadow: 0 3px 8px 0 rgb(0, 0, 0);
         }
         .msg-list {
             overflow: auto;
