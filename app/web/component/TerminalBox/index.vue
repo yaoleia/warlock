@@ -6,24 +6,84 @@
             <div class="context-menu-terminal" v-show="showContextMenu">
                 <el-button type="text" size="small" @click.stop="clearMsgList"><i class="el-icon-delete"></i> 清空</el-button>
             </div>
-            <transition-group name="list-complete" tag="ul" class="msg-list" ref="msgList">
-                <li class="list-complete-item" v-for="(item,index) in msgList" :key="index">> {{item}}</li>
-            </transition-group>
+            <div class="radio-wrap" @contextmenu.stop.prevent>
+                <el-button type="text" :class="componentIs=='output'?'active':''" @click="componentIs='output'"><img src="~asset/images/icon-console.svg" class="icon-console"></el-button>
+                <el-button type="text" :class="componentIs=='run'?'active':''" @click="runClick">
+                    <i v-if='runOrStop' class='el-icon-caret-right'></i>
+                    <img v-else src="~asset/images/icon-stop.svg">
+                </el-button>
+            </div>
+            <keep-alive>
+                <component :is='componentIs+"-msg"' :msgList='msgList' :showTerminal='showTerminal'></component>
+            </keep-alive>
         </div>
     </transition>
 </template>
 
 <script>
+    import runMsg from './RunMsg'
+    const outputMsg = {
+        data() {
+            return {
+            }
+        },
+        props: ['msgList', 'showTerminal'],
+        template: `<transition-group name="list-complete" tag="ul" class="msg-list" ref="msgList">
+                <li class="list-complete-item" v-for="(item,index) in msgList" :key="index">> {{item}}</li>
+            </transition-group>`,
+        methods: {
+            scrollTobottom() {
+                this.$nextTick(() => {
+                    const item = this.$refs.msgList.$el;
+                    item.scrollTop = item.scrollHeight;
+                })
+            },
+        },
+        watch: {
+            msgList(list) {
+                if (!list.length) return;
+                while (list.length > 100) {
+                    list.shift();
+                }
+                this.scrollTobottom();
+            },
+            showTerminal(bol) {
+                if (bol) {
+                    this.scrollTobottom();
+                }
+            }
+        }
+    }
+
     export default {
         data() {
             return {
                 showContextMenu: false,
                 canMove: false,
-                mouse: {}
+                mouse: {},
+                componentIs: 'output',
+                runOrStop: false
             };
         },
-        props: ['showTerminal', 'msgList'],
+        components: {
+            outputMsg,
+            runMsg
+        },
+        props: ['showTerminal', 'msgList', 'terminalIs'],
+        watch: {
+            terminalIs(s) {
+                if (s) {
+                    this.componentIs = s;
+                }
+            }
+        },
         methods: {
+            runClick() {
+                if (this.componentIs === 'run') {
+                    this.runOrStop = !this.runOrStop;
+                }
+                this.componentIs = 'run';
+            },
             contextMenu(e) {
                 this.showContextMenu = true;
                 const $elOffset = $(this.$el).offset();
@@ -32,12 +92,6 @@
             clearMsgList() {
                 this.showContextMenu = false;
                 this.$emit('update:msgList', [])
-            },
-            scrollTobottom() {
-                this.$nextTick(() => {
-                    const item = this.$refs.msgList.$el;
-                    item.scrollTop = item.scrollHeight;
-                })
             },
             mousemove(e) {
                 const { diffH } = this.mouse;
@@ -67,20 +121,6 @@
                     document.onmouseup = null
                 }
             }
-        },
-        watch: {
-            msgList(list) {
-                if (!list.length) return;
-                while (list.length > 100) {
-                    list.shift();
-                }
-                this.scrollTobottom();
-            },
-            showTerminal(bol) {
-                if (bol) {
-                    this.scrollTobottom();
-                }
-            }
         }
     };
 </script>
@@ -93,7 +133,37 @@
         height: 182px;
         background: rgba($color: #333, $alpha: 0.9);
         line-height: 34px;
-        padding: 5px 10px;
+        padding: 5px 10px 5px 70px;
+        .radio-wrap {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: #444;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            .el-button {
+                padding: 20px 10px;
+                border-radius: 0;
+                border: none;
+                border-right: 2px solid transparent;
+                margin: 0;
+                &.active {
+                    border-color: #ff8800;
+                }
+                img,
+                i {
+                    width: 20px;
+                    height: 20px;
+                }
+                .el-icon-caret-right {
+                    font-size: 23px;
+                    font-weight: bolder;
+                    color: #ff8800;
+                }
+            }
+        }
         .context-menu-terminal {
             position: absolute;
             left: 0;

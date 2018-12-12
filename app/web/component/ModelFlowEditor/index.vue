@@ -17,14 +17,14 @@
                 <div ref="minimap" slot="minimap"></div>
             </navigator>
             <page ref="page" @keydown.native.ctrl.192='ctrl192' />
-            <terminal-box :msgList.sync='msgList' :showTerminal.sync='showTerminal'></terminal-box>
+            <terminal-box :msgList.sync='msgList' :showTerminal.sync='showTerminal' :terminalIs='terminalIs'></terminal-box>
             <context-menu ref="contextmenu" v-show="!readMode" @terminalFor='terminalFor' />
         </div>
     </div>
 </template>
 
 <script>
-    import TerminalBox from './TerminalBox'
+    import TerminalBox from '../TerminalBox'
     import DetailPannel from './detailpannel'
     import Navigator from './navigator';
     import ItemPannel from './itempannel'
@@ -55,7 +55,8 @@
                     flowData: {},
                     cts: '',
                     ts: ''
-                }
+                },
+                terminalIs: ''
             };
         },
         props: ['editorLoaded'],
@@ -115,7 +116,11 @@
         methods: {
             terminalFor(component) {
                 this.showTerminal = true;
+                this.terminalIs = component;
                 $('.context-menu', this.$el).hide();
+                this.$nextTick(() => {
+                    this.terminalIs = ''
+                })
             },
             ctrl192() {
                 this.showTerminal = !this.showTerminal;

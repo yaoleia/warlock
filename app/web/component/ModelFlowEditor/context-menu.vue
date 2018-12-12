@@ -63,7 +63,7 @@
             </div>
         </div>
         <div class="all-selected">
-            <el-button type="text" @click="$emit('terminalFor','run')"><i class="el-icon-caret-right"></i> 运行流程</el-button>
+            <el-button type="text" @click="$emit('terminalFor','run')"><i class="el-icon-caret-right"></i> 查看运行</el-button>
             <el-button type="text" @click="$emit('terminalFor','output')"><img src="~asset/images/check.svg" class="icon-check"> 查看输出</el-button>
         </div>
     </div>
