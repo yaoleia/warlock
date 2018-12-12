@@ -49,6 +49,7 @@
                 msgList: [],
                 showTerminal: false,
                 name: '',
+                flowData: {},
                 designItem: {
                     name: '',
                     id: '',
@@ -74,6 +75,7 @@
             this.init(params)
             if (params.flow) {
                 this.designItem = params.flow;
+                this.flowData = JSON.parse(JSON.stringify(params.flow.flowData));
                 this.name = params.flow.name;
                 this.readData();
             }
@@ -132,7 +134,7 @@
                     })
                     return;
                 }
-                if (!this.isEdited() && !this.isNamed()) {
+                if (!this.isEdited()) {
                     this.$nextTick(() => {
                         this.$router.go(-1)
                     })
@@ -149,24 +151,19 @@
                 })
             },
             readData() {
-                this.pushMsg(this.designItem.flowData)
-                this.flow.read(this.designItem.flowData)
+                this.pushMsg(this.flowData)
+                this.flow.read(this.flowData)
             },
             isEdited() {
-                const flowData = JSON.stringify(this.flow.save())
-                if (flowData === JSON.stringify(this.designItem.flowData)) {
-                    return false;
-                }
-                return true;
-            },
-            isNamed() {
-                if (this.name === this.designItem.name) {
+                const editData = JSON.stringify({ flowData: this.flow.save(), name: this.name });
+                const cacheData = JSON.stringify({ flowData: this.designItem.flowData, name: this.designItem.name });
+                if (editData === cacheData) {
                     return false;
                 }
                 return true;
             },
             saveData() {
-                if (!this.isEdited() && !this.isNamed()) {
+                if (!this.isEdited()) {
                     this.$message({
                         message: '流程并没有更改！',
                         type: 'warning'
