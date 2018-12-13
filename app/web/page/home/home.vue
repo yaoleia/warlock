@@ -48,17 +48,34 @@
         data() {
             return {
                 globalWebsocket: null,
-                menu
+                menu,
+                designId: null
             }
         },
         components: {
             IndexLayout,
             HeaderNav
         },
+        beforeMount() {
+            this.checkMode();
+        },
         mounted() {
-            this.startWsConnection()
+            this.startWsConnection();
+        },
+        watch: {
+            designId(id) {
+                if (id) {
+                    console.log(id)
+                }
+            }
         },
         methods: {
+            checkMode() {
+                const query = this.$route.query;
+                if (query.id) {
+                    this.designId = query.id;
+                }
+            },
             setWebsocket(w) {
                 this.globalWebsocket = w
             },

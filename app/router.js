@@ -4,6 +4,8 @@ module.exports = app => {
   router.get('/', controller.home.home);
   router.get('/index(/.+)?', controller.home.home);
   router.get('/login', controller.home.login);
+  router.get('/logout', controller.home.logout);
+  router.post('/api/login', controller.home.postLogin);
   router.post('/api/article/list', controller.home.list);
   router.post('/api/article/add', controller.home.add);
   router.get('/api/article/del/:id', controller.home.del);

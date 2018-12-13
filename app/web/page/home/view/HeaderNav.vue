@@ -19,6 +19,10 @@
                 </el-menu-item>
             </template>
         </el-menu>
+        <div class="logout" v-if="!$root.designId">
+            <v-icon name='user'></v-icon>
+            <el-button type="text" @click='logout'>退出</el-button>
+        </div>
     </div>
 </template>
 
@@ -38,6 +42,9 @@
             }
         },
         methods: {
+            logout() {
+                location.href = '/logout';
+            },
             slider() { }
         },
         components: {}
@@ -46,12 +53,30 @@
 
 <style lang="scss">
     .header-nav {
-        padding-top: 37px;
+        height: 100px;
         position: absolute;
         right: 0;
         top: 0;
         margin: auto;
         display: flex;
+        align-items: center;
+        .el-menu {
+            height: 34px;
+        }
+        .logout {
+            margin-left: 50px;
+            color: #aaa;
+            .el-button {
+                font-size: 18px;
+                color: #aaa;
+                &:hover {
+                    color: #ff8800;
+                }
+            }
+            .v-icon-user {
+                font-size: 30px;
+            }
+        }
     }
     #app {
         .el-menu--horizontal {

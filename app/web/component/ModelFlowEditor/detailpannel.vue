@@ -58,7 +58,7 @@
             <div class="block-container">
                 <el-form label-width="60px" @submit.native.prevent>
                     <el-form-item label="名称：">
-                        <el-input v-model="inputingLabel" />
+                        <el-input v-model="inputingLabel" :disabled="readMode" />
                     </el-form-item>
                 </el-form>
             </div>
@@ -66,7 +66,7 @@
         <div id="node_detailpannel" data-status="group-selected" class="pannel">
             <div class="pannel-title">群组详情</div>
             <div class="block-container">
-                <el-input v-model="inputingLabel" />
+                <el-input v-model="inputingLabel" :disabled="readMode" />
             </div>
         </div>
         <div id="canvas_detailpannel" data-status="canvas-selected" class="pannel">

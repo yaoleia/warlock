@@ -5,9 +5,20 @@ module.exports = app => {
     async login(ctx) {
       await ctx.renderClient('login/login.js', {});
     }
+
+    async logout(ctx) {
+      ctx.logger.info('[account controller] user logout', ctx.session.username);
+      ctx.session.username = null;
+      ctx.body = 'logout success';
+      ctx.redirect('/login');
+    }
+
     async home(ctx) {
       // console.log(ctx.get('user-agent'));
       const serverUrl = app.config.serverUrl;
+      if (!ctx.query.id && !ctx.session.username) {
+        ctx.redirect('/login')
+      }
       const url = ctx.url.replace(/\/index/, '');
       await ctx.render('home/home.js', {
         ctx,
@@ -15,6 +26,17 @@ module.exports = app => {
         serverUrl
       });
     }
+
+    async postLogin(ctx) {
+      const body = ctx.request.body;
+      if (body.username === 'admin' && body.password === 'admin') {
+        ctx.session.username = body.username;
+        ctx.body = 'success'
+      } else {
+        ctx.body = 'fail'
+      }
+    }
+
     async list(ctx) {
       const body = ctx.request.body;
       this.ctx.body = await ctx.service.record.getRecordList(body);
