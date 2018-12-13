@@ -24,7 +24,8 @@ module.exports = {
     scss: true
   },
   node: {
-    console: true
+    console: true,
+    fs: 'empty'
   },
   plugins: {
     provide: {

@@ -63,8 +63,10 @@
             </div>
         </div>
         <div class="all-selected">
-            <el-button type="text" @click="$emit('terminalFor','run')"><i class="el-icon-caret-right"></i> 查看运行</el-button>
-            <el-button type="text" @click="$emit('terminalFor','output')"><img src="~asset/images/check.svg" class="icon-check"> 查看输出</el-button>
+            <el-button type="text" @click="$emit('terminalFor','output')">
+                <v-icon name="console" /> 查看输出</el-button>
+            <el-button type="text" @click="$emit('terminalFor','run')">
+                <v-icon name="play" /> 查看运行</el-button>
         </div>
     </div>
 </template>
@@ -98,15 +100,6 @@
             }
             .el-button:hover {
                 color: #ff8800;
-                .el-icon-caret-right {
-                    color: #000;
-                }
-            }
-            .icon-check {
-                vertical-align: top;
-                display: inline-block;
-                width: 15px;
-                height: 15px;
             }
         }
         .disable {

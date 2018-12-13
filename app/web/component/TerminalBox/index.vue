@@ -7,10 +7,12 @@
                 <el-button type="text" size="small" @click.stop="clearMsgList"><i class="el-icon-delete"></i> 清空</el-button>
             </div>
             <div class="radio-wrap" @contextmenu.stop.prevent>
-                <el-button type="text" :class="componentIs=='output'?'active':''" @click="componentIs='output'"><img src="~asset/images/icon-console.svg" class="icon-console"></el-button>
+                <el-button type="text" :class="componentIs=='output'?'active':''" @click="componentIs='output'">
+                    <v-icon name="console" />
+                </el-button>
                 <el-button type="text" :class="componentIs=='run'?'active':''" @click="runClick">
-                    <i v-if='runOrStop' class='el-icon-caret-right'></i>
-                    <img v-else src="~asset/images/icon-stop.svg">
+                    <v-icon v-if='!runOrStop' name="play" />
+                    <v-icon v-else name="stop" />
                 </el-button>
             </div>
             <keep-alive>
@@ -154,15 +156,12 @@
                 &.active {
                     border-color: #ff8800;
                 }
-                img,
-                i {
-                    width: 20px;
-                    height: 20px;
-                }
-                .el-icon-caret-right {
-                    font-size: 23px;
-                    font-weight: bolder;
-                    color: #ff8800;
+                .v-icon {
+                    font-size: 20px;
+                    &.v-icon-stop {
+                        color: #ff8800;
+                        transition: 0.3s all;
+                    }
                 }
             }
         }
