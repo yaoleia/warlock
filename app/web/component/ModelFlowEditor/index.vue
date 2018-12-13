@@ -225,6 +225,21 @@
     .editor {
         position: relative;
         height: 100%;
+        .tool-tip {
+            list-style: none;
+            font-size: 13px;
+            background: #fff;
+            color: #333;
+            border-radius: 4px;
+            padding: 5px 10px;
+            box-shadow: 0 0 10px 0 rgb(0, 0, 0);
+            .tip-title {
+                color: #777;
+                font-size: 15px;
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+        }
         .design-name {
             width: 60px;
         }

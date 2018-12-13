@@ -1,6 +1,8 @@
 
 import G6Editor from '@antv/g6-editor'
 import CircularJSON from 'circular-json'
+import G6Plugins from '@antv/g6/build/plugins'
+
 export default {
     data() {
         return {
@@ -15,9 +17,51 @@ export default {
             const { minimap, toolbar, contextmenu, itempannel, detailpannel, page } = this.$refs;
             // 生成 G6 Editor 编辑器
             const editor = new G6Editor();
+            const tooltip = new G6Plugins['tool.tooltip']({
+                getTooltip(ev) {
+                    const { shape, item } = ev;
+                    if (shape.isOutter) return;
+                    if (shape.isAnchor) {
+                        const anchor = shape.getPoint()
+                        return `<ul class='tool-tip'>
+                                        <li class='tip-title'>Anchor</li>
+                                        <li>name: ${anchor.name}</li>
+                                        <li>type: ${anchor.type}</li>
+                                        <li>anchorType: ${anchor.anchorType}</li>
+                                    </ul>`;
+                    }
+                    if (item) {
+                        const model = item.getModel();
+                        if (item.type === 'node') {
+                            return `<ul class='tool-tip'>
+                                            <li class='tip-title'>Node</li>
+                                            <li>id: ${model.id}</li>
+                                            <li>module: ${model.module}</li>
+                                        </ul>`;
+                        }
+                        if (item.isEdge) {
+                            return `<ul class='tool-tip'>
+                                            <li class='tip-title'>Edge</li>
+                                            <li>id: ${model.id}</li>
+                                            <li>sourceID: ${model.source}</li>
+                                            <li>targetID: ${model.target}</li>
+                                            <li>shape: ${model.shape}</li>
+                                        </ul>`;
+                        }
+                        if (item.isGroup) {
+                            return `<ul class='tool-tip'>
+                                            <li class='tip-title'>Group</li>
+                                        <li>id: ${model.id}</li>
+                            </ul>`;
+                        }
+                    }
+                }
+            });
+
             const flow = new G6Editor.Flow({
                 graph: {
-                    container: page.$el
+                    container: page.$el,
+                    plugins: [tooltip]
                 },
                 align: {
                     item: false,
@@ -50,6 +94,7 @@ export default {
                 });
                 return;
             }
+            // 查看模式,不用加载的一些组件
 
             flow.on('afteritemselected', ev => {
                 this.selectedModel = ev.item.getModel();
@@ -81,7 +126,9 @@ export default {
         pushMsg(msg) {
             if (typeof msg === 'object') {
                 const { anchor, exec_outputs, exec_params, init_params, shape, size, x, y, index, ...msgFilt } = msg;
-                this.msgList.push(CircularJSON.stringify(msgFilt))
+                const newMsg = CircularJSON.stringify(msgFilt);
+                if (newMsg === this.msgList[this.msgList.length - 1]) return;
+                this.msgList.push(newMsg)
                 return;
             }
             this.msgList.push(msg)
