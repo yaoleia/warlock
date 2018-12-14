@@ -39,6 +39,7 @@
         width: 200px;
         border-top: 0;
         text-align: left;
+        user-select: none;
         .getItem {
             white-space: nowrap;
             overflow: hidden;

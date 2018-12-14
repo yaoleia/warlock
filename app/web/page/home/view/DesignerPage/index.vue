@@ -56,34 +56,40 @@
                                 width,
                                 height,
                                 radius: borderRadius,
-                                fill: '#ccc',
-                                stroke: '#000'
+                                fillOpacity: 0.2,
+                                strokeOpacity: 0.7,
+                                fill: '#fff',
+                                stroke: '#fff'
                             }
                         });
+
                         // 左侧色条
-                        group.addShape('path', {
-                            attrs: {
-                                path: [
-                                    ['M', x, y + borderRadius],
-                                    ['L', x, y + height - borderRadius],
-                                    ['A', borderRadius, borderRadius, 0, 0, 0, x + borderRadius, y + height],
-                                    ['L', x + borderRadius, y],
-                                    ['A', borderRadius, borderRadius, 0, 0, 0, x, y + borderRadius]
-                                ],
-                                fill: this.color_type
-                            }
-                        });
+                        // const aaa = group.addShape('path', {
+                        //     attrs: {
+                        //         path: [
+                        //             ['M', x, y + borderRadius],
+                        //             ['L', x, y + height - borderRadius],
+                        //             ['A', borderRadius, borderRadius, 0, 0, 0, x + borderRadius, y + height],
+                        //             ['L', x + borderRadius, y],
+                        //             ['A', borderRadius, borderRadius, 0, 0, 0, x, y + borderRadius]
+                        //         ],
+                        //         fill: this.color_type
+                        //     }
+                        // });
+
                         // 名称
-                        group.addShape('text', {
+                        const a = group.addShape('text', {
                             attrs: {
+                                fontSize: 17,
                                 text: this.module,
                                 x: x + 20,
-                                y: y + 13,
+                                y: y + 10,
                                 textAlign: 'start',
                                 textBaseline: 'top',
-                                fill: 'rgba(255,0,0,0.65)'
+                                fill: '#ff8800'
                             }
                         });
+
                         // buildOpt(this.checkBoxList, this.optionList, x, y);
                         function buildOpt(attrs, options, x, y) {
                             x = x + 20;
@@ -167,8 +173,8 @@
                         const aaa = group.addShape('path', {
                             attrs: {
                                 path,
-                                stroke: 'black',
-                                // lineWidth: width,
+                                lineWidth: 2,
+                                stroke: '#ccc',
                                 endArrow: true,
                                 lineDash: [10, 10]
                             }
@@ -198,7 +204,7 @@
                         keyShape.animate({
                             lineDashOffset: -20,
                             repeat: true
-                        }, 300);
+                        }, 500);
                     }
                 });
             }
