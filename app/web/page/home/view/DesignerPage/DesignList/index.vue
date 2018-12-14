@@ -69,6 +69,7 @@
                             <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row, read: true}}">
                                 <el-button type="primary" size='mini'>查看</el-button>
                             </router-link>
+                            <el-button type="success" size='mini' @click="handleCopy(scope.$index, scope.row)">克隆</el-button>
                             <el-button type="danger" size='mini' @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                         </div>
                     </div>
@@ -92,6 +93,7 @@
 </template>
 <script type="babel">
     import FlowDisplayer from 'component/ModelFlowEditor/displayer'
+    import uuidv1 from 'uuid/v1';
     export default {
         data() {
             return {
@@ -255,6 +257,13 @@
                 }).then(() => {
                     this.$delete(this.designList, index);
                 })
+            },
+            handleCopy(index, item) {
+                const newItem = _.cloneDeep(item);
+                newItem.id = uuidv1();
+                newItem.ts = this.$moment().format();
+                newItem.cts = this.$moment().format();
+                this.designList.unshift(newItem);
             },
             indexMethod(index) {
                 return (this.q.pageIndex - 1) * this.q.pageSize + index + 1
