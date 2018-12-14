@@ -9,10 +9,45 @@ import DesignPage from '../view/DesignerPage'
 import Designer from '../view/DesignerPage/Designer'
 import DesignList from '../view/DesignerPage/DesignList'
 import NotFound from '../view/NotFound.vue'
+import Login from '../view/LoginPage'
 
 Vue.use(VueRouter);
 
-export const menu = {
+// 通用路由
+export const constantRouterMap = {
+  notFound: { path: '*', component: NotFound, meta: { hide: true } },
+  login: { path: '/login', component: Login, meta: { hide: true } }
+}
+
+// 需要权限路由
+export const userRouterMap = {
+  design: {
+    name: '流程设计',
+    path: '/design',
+    redirect: '/design/designList',
+    component: DesignPage,
+    meta: { role: ['admin'] },
+    children: {
+      list: {
+        icon: 'el-icon-document',
+        name: '流程列表',
+        path: '/design/designList',
+        component: DesignList,
+        meta: { role: ['admin'] }
+      },
+      design: {
+        icon: 'el-icon-circle-plus-outline',
+        name: '新建流程',
+        path: '/design/designer/:id',
+        component: Designer,
+        meta: { role: ['admin'], noKeepAlive: true }
+      }
+    }
+  }
+}
+
+// 只查看路由
+export const visitorRouterMap = {
   home: {
     name: '首页',
     path: '/',
@@ -30,36 +65,15 @@ export const menu = {
     meta: {
       noKeepAlive: false
     }
-  },
-  design: {
-    name: '流程设计',
-    path: '/design',
-    redirect: '/design/designList',
-    component: DesignPage,
-    children: {
-      list: {
-        icon: 'el-icon-document',
-        name: '流程列表',
-        path: '/design/designList',
-        component: DesignList
-      },
-      design: {
-        icon: 'el-icon-circle-plus-outline',
-        name: '新建流程',
-        path: '/design/designer/:id',
-        component: Designer,
-        meta: { noKeepAlive: true }
-      }
-    }
-  },
-  notFound: { path: '*', component: NotFound }
+  }
 }
 
-function _getRouer(router) {
+export function getRouer(router) {
+  router = _.cloneDeep(router);
   return Object.values(router).map(l => {
     const { children, icon, ...r } = l;
     if (children) {
-      r.children = _getRouer(children);
+      r.children = getRouer(children);
     }
     return r;
   })
@@ -69,6 +83,6 @@ export function createRouter() {
   return new VueRouter({
     mode: 'history',
     base: '/index/',
-    routes: _getRouer(menu)
+    routes: getRouer(constantRouterMap)
   });
 }

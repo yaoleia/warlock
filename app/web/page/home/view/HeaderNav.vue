@@ -1,7 +1,7 @@
 <template>
     <div class="header-nav">
-        <el-menu router :default-active="tabactive" class='el-menu-demo' mode="horizontal">
-            <template v-for='(menu_v,menu_k) in menu' v-if="menu_v.path!=='*'">
+        <el-menu router :default-active="tabactive" class='el-menu-demo' mode="horizontal" v-if='menu'>
+            <template v-for='(menu_v,menu_k) in menu' v-if="!menu_v.meta||menu_v.meta&&!menu_v.meta.hide">
                 <el-submenu v-if='menu_v.children' :index='menu_k' :key='menu_k'>
                     <template slot='title'>
                         <!-- <div :class='menu_v.icon+" icon"'></div> -->
@@ -19,7 +19,7 @@
                 </el-menu-item>
             </template>
         </el-menu>
-        <div class="logout" v-if="!$root.designId">
+        <div class="logout" v-if="username&&!$root.designId">
             <v-icon name='user'></v-icon>
             <el-button type="text" @click='logout'>退出</el-button>
         </div>
@@ -35,15 +35,20 @@
             }
         },
         props: ['menu'],
-        mounted() { },
         watch: {
             '$route.path': function(p) {
                 this.tabactive = p
             }
         },
+        computed: {
+            username() {
+                return this.$store.state.username;
+            }
+        },
         methods: {
-            logout() {
-                location.href = '/logout';
+            async logout() {
+                await this.$request.get('/logout');
+                window.location.href = '/index/login';
             },
             slider() { }
         },

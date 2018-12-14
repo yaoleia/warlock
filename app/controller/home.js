@@ -16,15 +16,17 @@ module.exports = app => {
     async home(ctx) {
       // console.log(ctx.get('user-agent'));
       const serverUrl = app.config.serverUrl;
-      if (!ctx.query.id && !ctx.session.username) {
-        ctx.redirect('/login')
-      }
       const url = ctx.url.replace(/\/index/, '');
-      await ctx.render('home/home.js', {
+      const username = ctx.session.username;
+      const resp = {
         ctx,
         url,
         serverUrl
-      });
+      };
+      if (username) {
+        resp.username = username;
+      }
+      await ctx.render('home/home.js', resp);
     }
 
     async postLogin(ctx) {

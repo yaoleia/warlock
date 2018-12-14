@@ -58,14 +58,19 @@
             <el-table-column label="操作" width="340">
                 <template slot-scope="scope">
                     <div class="opration">
-                        <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row}}">
-                            <el-button type="warning" size='mini'>修改</el-button>
-                        </router-link>
-                        <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row, read: true}}">
-                            <el-button type="primary" size='mini'>查看</el-button>
-                        </router-link>
-                        <el-button type="danger" size='mini' @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                        <el-button type="info" size='mini' @click='handleDownload([scope.row])'>导出</el-button>
+                        <div class="top-btn">
+                            <el-button size='mini'><a :href="`/?id=${scope.row.id}`" target="_blank" class="github-corner" aria-label="View">外链</a></el-button>
+                            <el-button type="info" size='mini' @click='handleDownload([scope.row])'>导出</el-button>
+                        </div>
+                        <div class="bottom-btn">
+                            <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row}}">
+                                <el-button type="warning" size='mini'>修改</el-button>
+                            </router-link>
+                            <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row, read: true}}">
+                                <el-button type="primary" size='mini'>查看</el-button>
+                            </router-link>
+                            <el-button type="danger" size='mini' @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        </div>
                     </div>
                 </template>
             </el-table-column>
@@ -351,10 +356,18 @@
             .cell .opration {
                 width: 330px;
                 margin: 0 auto;
-                text-align: center;
-                > * {
-                    display: inline-block;
-                    margin: 0 4px;
+                > div {
+                    display: flex;
+                    align-items: center;
+                    display: table;
+                    margin: 0 auto;
+                    > * {
+                        margin: 0;
+                        margin-right: 15px;
+                    }
+                    &.top-btn {
+                        margin-bottom: 15px;
+                    }
                 }
             }
             .cell .flow-wrap {

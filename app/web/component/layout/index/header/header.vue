@@ -1,6 +1,6 @@
 <template>
     <header class="header">
-        <img src="~asset/images/logo_@2x.png" class="logo" title="双击全屏,单击返回首页" @dblclick.stop="dblclick" @click="click">
+        <img v-show="$root.menu" src="~asset/images/logo_@2x.png" class="logo" title="双击全屏,单击返回首页" @dblclick.stop="dblclick" @click="click">
         <screen-full ref='screenFull' v-show="false"></screen-full>
         <slot></slot>
         <!-- <div class="right">

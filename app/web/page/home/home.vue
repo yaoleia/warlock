@@ -7,7 +7,7 @@
     import Vue from 'vue'
     import { sync } from 'vuex-router-sync'
     import createStore from './store/app'
-    import { createRouter, menu } from './router'
+    import { constantRouterMap, userRouterMap, visitorRouterMap, createRouter, getRouer } from './router'
     import IndexLayout from 'component/layout/index'
     import HeaderNav from './view/HeaderNav.vue'
     import io from 'socket.io-client'
@@ -42,13 +42,57 @@
     const unsync = sync(store, router)
     unsync()
 
+    // 加载路由完成
+    let routered = false;
+
+    router.beforeEach((to, from, next) => {
+        const designId = window.sessionStorage.designId;
+        if (designId && !to.query.id) {
+            to.query.id = designId;
+        }
+        const id = to.query.id;
+        if (to.path === '/login') {
+            window.sessionStorage.designId = '';
+            store.state.username = '';
+            to.query.id = ''
+            next();
+            return;
+        }
+        if (id) {
+            // 有id查看模式
+            if (!routered) {
+                routered = true;
+                window.sessionStorage.designId = id;
+                router.addRoutes(getRouer(visitorRouterMap)) // 动态添加可访问路由表
+                next({ path: '/', query: to.query })
+                return;
+            }
+            next();
+        } else {
+            // 设计模式
+            if (!routered && store.state.username) {
+                routered = true;
+                router.addRoutes(getRouer({ ...userRouterMap, ...constantRouterMap })) // 动态添加可访问路由表
+                next({ path: '/design/designList' })
+                return;
+            }
+            if (!store.state.username) {
+                if (to.path !== '/login') {
+                    next({ path: '/login' })
+                    return;
+                }
+            }
+            next()
+        }
+    });
+
     export default {
         router,
         store,
         data() {
             return {
                 globalWebsocket: null,
-                menu,
+                menu: null,
                 designId: null
             }
         },
@@ -62,10 +106,15 @@
         mounted() {
             this.startWsConnection();
         },
+        computed: {
+            username() {
+                return this.$store.state.username;
+            }
+        },
         watch: {
             designId(id) {
                 if (id) {
-                    console.log(id)
+                    this.menu = { ...visitorRouterMap, ...constantRouterMap }
                 }
             }
         },
@@ -74,6 +123,10 @@
                 const query = this.$route.query;
                 if (query.id) {
                     this.designId = query.id;
+                } else {
+                    if (this.username) {
+                        this.menu = { ...userRouterMap, ...constantRouterMap }
+                    }
                 }
             },
             setWebsocket(w) {
