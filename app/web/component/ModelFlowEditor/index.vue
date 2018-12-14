@@ -32,6 +32,7 @@
     import ContextMenu from './context-menu';
     import Page from './page';
     import Editor from './editor.js';
+    import uuidv1 from 'uuid/v1';
 
     export default {
         components: {
@@ -187,7 +188,7 @@
                 }
                 if (!this.designItem.id) {
                     Object.assign(this.designItem, {
-                        id: Math.floor(Math.random() * 1000).toString() + this.$moment().valueOf(),
+                        id: uuidv1(),
                         ts: this.$moment().format(),
                         cts: this.$moment().format(),
                         name: this.name,

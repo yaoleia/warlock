@@ -52,14 +52,14 @@
             </el-table-column>
             <el-table-column label="运行状态">
                 <template slot-scope="scope">
-                    <el-switch @change="changeActive(scope.row,$event)" v-model="scope.row.active"></el-switch>
+                    <el-switch v-model="scope.row.active"></el-switch>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="340">
                 <template slot-scope="scope">
                     <div class="opration">
                         <div class="top-btn">
-                            <el-button size='mini'><a :href="`/?id=${scope.row.id}`" target="_blank" class="github-corner" aria-label="View">外链</a></el-button>
+                            <el-button v-if='scope.row.active' size='mini'><a :href="`/?id=${scope.row.id}`" target="_blank" class="github-corner" aria-label="View">外链</a></el-button>
                             <el-button type="info" size='mini' @click='handleDownload([scope.row])'>导出</el-button>
                         </div>
                         <div class="bottom-btn">
@@ -173,18 +173,6 @@
             FlowDisplayer
         },
         methods: {
-            changeActive(row, value) {
-                if (value) {
-                    this.active = row;
-                    this.designList.forEach(li => {
-                        if (li.id !== row.id) {
-                            li.active = false;
-                        }
-                    })
-                } else {
-                    this.active = null;
-                }
-            },
             handleSelectionChange(val) {
                 this.exportOption.multipleSelection = val;
             },
