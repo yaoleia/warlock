@@ -1,8 +1,12 @@
 <template>
     <div class="toolbar">
-        <el-button type="text" class="reset" icon='el-icon-refresh' @click="$emit('read')" title="恢复初始"></el-button>
-        <i data-command="undo" class="command iconfont icon-undo" title="撤销" />
-        <i data-command="redo" class="command iconfont icon-redo" title="重做" />
+        <div class="redo">
+            <i data-command="undo" class="command iconfont icon-undo" title="撤销" />
+            <i data-command="redo" class="command iconfont icon-redo" title="重做" />
+            <el-button type="text" class="reset" @click="$emit('read')" title="恢复初始">
+                <v-icon name='huifu'></v-icon>
+            </el-button>
+        </div>
         <div class="copy">
             <i data-command="copy" class="command iconfont icon-copy-o" title="复制" />
             <i data-command="paste" class="command iconfont icon-paster-o" title="粘贴" />
@@ -12,7 +16,7 @@
             <i data-command="zoomIn" class="command iconfont icon-zoom-in-o" title="放大" />
             <i data-command="zoomOut" class="command iconfont icon-zoom-out-o" title="缩小" />
             <i data-command="autoZoom" class="command iconfont icon-fit" title="适应画布" />
-            <i data-command="resetZoom" class="command iconfont icon-actual-size-o" title="实际尺寸" />
+            <v-icon data-command="resetZoom" class="command" title="实际尺寸" name='bi'></v-icon>
         </div>
         <div class="z-index">
             <i data-command="toBack" class="command iconfont icon-to-back" title="层级后置" />
@@ -23,7 +27,7 @@
             <i data-command="addGroup" class="command iconfont icon-group" title="成组" />
             <i data-command="unGroup" class="command iconfont icon-ungroup" title="解组" />
         </div>
-        <el-select v-model="lineType" placeholder="请选择">
+        <el-select v-model="lineType" placeholder="请选择" class="select-line">
             <el-option-group label="折线">
                 <el-option label="圆角" value="flow-polyline-round"></el-option>
                 <el-option label="直角" value="flow-polyline"></el-option>
@@ -63,19 +67,28 @@
         align-items: center;
         .reset {
             width: 45px;
+            height: 33px;
+            padding: 0;
+            vertical-align: middle;
         }
         .el-select {
             width: 100px;
             .el-input__inner {
-                height: 35px;
+                height: 33px;
+                line-height: 33px;
                 background: none;
                 color: #eee;
-                border: 1px solid #444;
+                border: none;
+            }
+            .el-input__icon {
+                line-height: 33px;
             }
             .el-icon-arrow-up:before {
                 font-size: 17px;
             }
         }
+        .select-line,
+        .redo,
         .copy,
         .zoom,
         .z-index,
@@ -110,6 +123,7 @@
             border-radius: 2px;
             padding: 2px 0 0 3px;
             display: inline-block;
+            vertical-align: middle;
             transition: all 0.1s;
             &:hover {
                 cursor: pointer;

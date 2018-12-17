@@ -2,7 +2,7 @@
     <div class="editor">
         <toolbar ref='toolbar' @read='readData' @change-eage="changeEage" :style="{visibility: readMode?'hidden':''}" />
         <div class='go-back'>
-            <div class="design-name">名称：</div>
+            <div class="design-name">流程名称：</div>
             <el-input class='name-input' v-model="name" placeholder="未命名" :disabled="readMode"></el-input>
             <el-button v-if="readMode" type="text" icon="el-icon-back" @click="goBack(true)">返回</el-button>
             <div v-else class="btns">
@@ -242,7 +242,7 @@
             }
         }
         .design-name {
-            width: 60px;
+            width: 100px;
         }
         ::-webkit-scrollbar {
             width: 7px;

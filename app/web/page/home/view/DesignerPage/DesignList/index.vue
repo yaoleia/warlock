@@ -260,10 +260,23 @@
             },
             handleCopy(index, item) {
                 const newItem = _.cloneDeep(item);
+                newItem.active = false;
                 newItem.id = uuidv1();
                 newItem.ts = this.$moment().format();
                 newItem.cts = this.$moment().format();
-                this.designList.unshift(newItem);
+
+                this.$prompt('请输入新克隆的流程名称', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputValue: `${newItem.name}_copy_${this.$moment().valueOf()}`
+                }).then(({ value }) => {
+                    newItem.name = value;
+                    this.designList.unshift(newItem);
+                    this.$message({
+                        type: 'success',
+                        message: `克隆流程 ${value} 成功！`
+                    });
+                })
             },
             indexMethod(index) {
                 return (this.q.pageIndex - 1) * this.q.pageSize + index + 1
