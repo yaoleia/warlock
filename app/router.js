@@ -6,6 +6,7 @@ module.exports = app => {
   router.get('/login', controller.home.login);
   router.get('/logout', controller.home.logout);
   router.post('/api/login', controller.home.postLogin);
+  router.post('/api/upload', controller.home.upload);
   router.post('/api/article/list', controller.home.list);
   router.post('/api/article/add', controller.home.add);
   router.get('/api/article/del/:id', controller.home.del);

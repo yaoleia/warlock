@@ -10,6 +10,7 @@ import Designer from '../view/DesignerPage/Designer'
 import DesignList from '../view/DesignerPage/DesignList'
 import NotFound from '../view/NotFound.vue'
 import Login from '../view/LoginPage'
+import UploadPage from '../view/UploadPage'
 
 Vue.use(VueRouter);
 
@@ -43,6 +44,12 @@ export const userRouterMap = {
         meta: { role: ['admin'], noKeepAlive: true }
       }
     }
+  },
+  upload: {
+    name: '模块上传',
+    path: '/upload',
+    component: UploadPage,
+    meta: { role: ['admin'] }
   }
 }
 

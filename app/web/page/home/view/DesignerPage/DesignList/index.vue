@@ -289,10 +289,6 @@
                 let designList = window.localStorage.designList;
                 if (designList) {
                     designList = JSON.parse(designList);
-                    designList.map(li => {
-                        li.active = false;
-                        return li;
-                    })
                 } else {
                     window.localStorage.designList = JSON.stringify([])
                     designList = [];
@@ -338,10 +334,12 @@
                     this.getDesignList()
                 }
             },
-            designList(i) {
-                window.localStorage.designList = JSON.stringify(i);
-                $('.el-table__body-wrapper', this.$el)[0].scrollTop = 0;
-                this.loading = false;
+            designList: {
+                handler(i) {
+                    window.localStorage.designList = JSON.stringify(i);
+                    this.loading = false;
+                },
+                deep: true
             },
             '$route.query': function(q) {
                 if (q.reload) {

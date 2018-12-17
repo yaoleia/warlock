@@ -192,7 +192,8 @@
                         ts: this.$moment().format(),
                         cts: this.$moment().format(),
                         name: this.name,
-                        flowData: this.flow.save()
+                        flowData: this.flow.save(),
+                        active: false
                     })
                     designList.unshift(this.designItem)
                     window.localStorage.designList = JSON.stringify(designList);

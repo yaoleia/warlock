@@ -46,6 +46,7 @@
     let routered = false;
 
     router.beforeEach((to, from, next) => {
+        if (!EASY_ENV_IS_BROWSER) return;
         const designId = window.sessionStorage.designId;
         if (designId && !to.query.id) {
             to.query.id = designId;
