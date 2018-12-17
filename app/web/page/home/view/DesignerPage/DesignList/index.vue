@@ -23,7 +23,7 @@
                 </router-link>
             </div>
         </div>
-        <el-table ref="multipleTable" stripe :data="designList" v-loading="loading" :height="innerHeight" @selection-change="handleSelectionChange">
+        <el-table ref="multipleTable" stripe :data="designList" @row-contextmenu="contextmenuHandle" v-loading="loading" :height="innerHeight" @selection-change="handleSelectionChange">
             <div slot="empty">
                 <p v-if='!loading'>No Content</p>
             </div>
@@ -59,18 +59,20 @@
                 <template slot-scope="scope">
                     <div class="opration">
                         <div class="top-btn">
-                            <el-button v-if='scope.row.active' size='mini'><a :href="`/?id=${scope.row.id}`" target="_blank" class="github-corner" aria-label="View">外链</a></el-button>
-                            <el-button type="info" size='mini' @click='handleDownload([scope.row])'>导出</el-button>
-                        </div>
-                        <div class="bottom-btn">
+                            <el-button v-if='scope.row.active' title="外链" type="primary" @click="jumperHandle(scope.row.id)">
+                                <v-icon name='wailian'></v-icon>
+                            </el-button>
                             <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row}}">
-                                <el-button type="warning" size='mini'>修改</el-button>
+                                <el-button title='修改' type="warning">
+                                    <v-icon name='xiugaitupian'></v-icon>
+                                </el-button>
                             </router-link>
-                            <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row, read: true}}">
-                                <el-button type="primary" size='mini'>查看</el-button>
-                            </router-link>
-                            <el-button type="success" size='mini' @click="handleCopy(scope.$index, scope.row)">克隆</el-button>
-                            <el-button type="danger" size='mini' @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                            <el-button title="查看" type="info" @click="gotoWatch(scope.row)">
+                                <v-icon name='065chakandingdan'></v-icon>
+                            </el-button>
+                            <el-button title="更多按钮" type="text" @click="contextmenuHandle(scope.row,$event)">
+                                <v-icon name='gengduoanniu'></v-icon>
+                            </el-button>
                         </div>
                     </div>
                 </template>
@@ -89,6 +91,17 @@
                 <el-button @click="uploadCancel">取消</el-button>
             </div>
         </el-dialog>
+        <div class="context-menu" v-if='active' ref="contextMenu" @contextmenu.stop.prevent>
+            <el-button type="text" @click="handleCopy(active)">
+                <v-icon name='s-clonekelong'></v-icon> 克隆
+            </el-button>
+            <el-button type="text" @click="handleDelete(active)">
+                <v-icon name='shanchu'></v-icon> 删除
+            </el-button>
+            <el-button type="text" @click='handleDownload([active])'>
+                <v-icon name='xiazai'></v-icon> 导出
+            </el-button>
+        </div>
     </div>
 </template>
 <script type="babel">
@@ -175,6 +188,21 @@
             FlowDisplayer
         },
         methods: {
+            gotoWatch(item) {
+                this.$router.push({ name: '新建流程', params: { id: item.id, flow: item, read: true } });
+            },
+            jumperHandle(id) {
+                window.open(`/?id=${id}}`);
+            },
+            contextmenuHandle(row, e) {
+                this.active = row;
+                this.$nextTick(() => {
+                    const contextMenu = this.$refs.contextMenu;
+                    $(contextMenu).css({ top: e.clientY, left: e.clientX })
+                })
+                e.stopPropagation();
+                e.preventDefault();
+            },
             handleSelectionChange(val) {
                 this.exportOption.multipleSelection = val;
             },
@@ -249,16 +277,16 @@
                     FileSaver.saveAs(blob, `design${this.$moment().format('YYYYMMDDHHmmss')}.json`);
                 })
             },
-            handleDelete(index, item) {
+            handleDelete(item) {
                 this.$confirm('此操作将删除该流程, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$delete(this.designList, index);
+                    this.$delete(this.designList, this.designList.indexOf(item));
                 })
             },
-            handleCopy(index, item) {
+            handleCopy(item) {
                 const newItem = _.cloneDeep(item);
                 newItem.active = false;
                 newItem.id = uuidv1();
@@ -326,6 +354,12 @@
             if (!(this.designList && this.designList.length > 0)) {
                 this.getDesignList(this.$store, this.q)
             }
+            $(window).on('click.designList contextmenu.designList', () => {
+                this.active = null;
+            });
+        },
+        beforeDestroy() {
+            $(window).off('click.designList contextmenu.designList');
         },
         watch: {
             'q.dateRange': function(r) {
@@ -356,6 +390,29 @@
         .upload-pop-dialog {
             width: 500px;
         }
+        .top-btn {
+            .el-button {
+                padding: 6px 12px;
+            }
+        }
+        .context-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: auto;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            background: #444;
+            border-radius: 5px;
+            padding: 5px 0;
+            box-shadow: 1px 0 5px 0 rgba($color: #000, $alpha: 0.8);
+            .el-button--text {
+                cursor: pointer;
+                margin: 0;
+                padding: 10px 15px;
+            }
+        }
         .el-table {
             height: 890px;
             .cell .red {
@@ -372,9 +429,6 @@
                     > * {
                         margin: 0;
                         margin-right: 15px;
-                    }
-                    &.top-btn {
-                        margin-bottom: 15px;
                     }
                 }
             }

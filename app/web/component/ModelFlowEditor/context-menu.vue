@@ -1,5 +1,5 @@
 <template>
-    <div class="context-menu">
+    <div class="context-menu" @contextmenu.stop.prevent>
         <div data-status="node-selected" class="menu">
             <div data-command="copy" class="command">
                 <span>复制</span>
