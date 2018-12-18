@@ -13,12 +13,6 @@
         position: relative;
         .uploader {
             width: 360px;
-            position: absolute;
-            left: 0;
-            top: 180px;
-            right: 0;
-            bottom: 0;
-            margin: auto;
         }
     }
 </style>
