@@ -17,10 +17,11 @@
         methods: {
             async importG6Editor() {
                 const G6Editor = await import('@antv/g6-editor');
-                return G6Editor.Flow;
+                return G6Editor;
             },
             async registerBase() {
-                const Flow = await this.importG6Editor();
+                const G6Editor = await this.importG6Editor();
+                const Flow = G6Editor.Flow;
                 // 注册模型卡片基类
                 Flow.registerNode('model-card', {
                     draw(item) {
@@ -205,7 +206,8 @@
                 await this.registerModuleNode();
             },
             async registerModuleNode() {
-                const Flow = await this.importG6Editor();
+                const G6Editor = await this.importG6Editor();
+                const Flow = G6Editor.Flow;
                 for (const key in this.algorithmConf) {
                     const value = this.algorithmConf[key]
                     Flow.registerNode(value.module, {
