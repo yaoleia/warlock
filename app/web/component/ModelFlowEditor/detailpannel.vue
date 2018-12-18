@@ -8,19 +8,19 @@
                     <el-form @submit.native.prevent v-if='selectedModel.init_params'>
                         <div class="params-title"><i class="el-icon-info"></i> init_params</div>
                         <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.init_params' :key='key'>
-                            <el-input v-model="item.value" :disabled="readMode" />
+                            <component :is='typeOfComponent(item.value)' v-model="item.value" :disabled="readMode"></component>
                         </el-form-item>
                     </el-form>
                     <el-form @submit.native.prevent v-if='selectedModel.exec_params'>
                         <div class="params-title"><i class="el-icon-info"></i> exec_params</div>
                         <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.exec_params' :key='key'>
-                            <el-input v-model="item.value" :disabled="readMode" />
+                            <component :is='typeOfComponent(item.value)' v-model="item.value" :disabled="readMode"></component>
                         </el-form-item>
                     </el-form>
                     <el-form @submit.native.prevent v-if='selectedModel.exec_outputs'>
                         <div class="params-title"><i class="el-icon-info"></i> exec_outputs</div>
                         <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.exec_outputs' :key='key'>
-                            <el-input v-model="item.value" :disabled="readMode" />
+                            <component :is='typeOfComponent(item.value)' v-model="item.value" :disabled="readMode"></component>
                         </el-form-item>
                     </el-form>
                     <!-- <div v-if="selectedModel.shape === 'factory-card'">
@@ -106,6 +106,12 @@
             }
         },
         methods: {
+            typeOfComponent(type) {
+                if (typeof (type) === 'boolean') {
+                    return 'el-switch'
+                }
+                return 'el-input'
+            },
             inputChange(e, attr) {
                 this.$emit('updateGraph', [attr, e.target.value]);
             }

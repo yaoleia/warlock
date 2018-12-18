@@ -15,7 +15,7 @@
                     </el-select>
                 </div>
                 <form ref="optionForm" class="option-form">
-                    <input type="file" ref='option' @change="onFileAdd" v-show="false">
+                    <input type="file" accept="application/json" ref='option' @change="onFileAdd" v-show="false">
                     <el-button type="text" @click="$refs.option.click()"><i class="el-icon-upload2"></i> 导入流程</el-button>
                 </form>
                 <router-link to='/design/designer/0'>

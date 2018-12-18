@@ -103,7 +103,7 @@
                     ev.cancel = true;
                 }
                 // 判断数据类型
-                if (ev.targetAnchor.type !== ev.sourceAnchor.type) {
+                if (ev.targetAnchor.type.toString() !== ev.sourceAnchor.type.toString()) {
                     ev.cancel = true;
                 }
                 // 如果拖动的是目标方向，则取消显示目标节点中已被连过的锚点

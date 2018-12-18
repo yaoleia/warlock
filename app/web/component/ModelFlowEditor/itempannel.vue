@@ -2,10 +2,17 @@
     <div class="item-pannel">
         <div class="title">工具箱</div>
         <ul class="item-pannel-list">
-            <li v-for="(modules,type) in algorithmTree" :key="type">
-                <div>{{type}}</div>
-                <div class="getItem" v-for='item in modules' :key="item.module" :data-shape="item.module" data-type="node" data-size="200*50">
-                    <span class="pannel-type-icon" /><span>{{item.module}}</span>
+            <li v-for="(super_modules,super_type) in algorithmTree" :key="super_type">
+                <div class="super-type">
+                    <v-icon name='zhongleiquan'></v-icon> {{super_type}}
+                </div>
+                <div v-for="(modules,type) in super_modules" :key="type">
+                    <div class="type">
+                        <v-icon name='module-B'></v-icon> {{type}}
+                    </div>
+                    <div class="getItem" v-for='item in modules' :key="item.module" :data-shape="item.module" data-type="node" data-size="200*50">
+                        <v-icon name='module'></v-icon><span> {{item.module}}</span>
+                    </div>
                 </div>
             </li>
         </ul>
@@ -40,7 +47,11 @@
         border-top: 0;
         text-align: left;
         user-select: none;
+        .v-icon {
+            vertical-align: middle;
+        }
         .getItem {
+            margin-left: 10px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -71,6 +82,14 @@
                     border: 1px solid #ff8800;
                 }
             }
+        }
+        .type {
+            margin-left: 10px;
+        }
+        .type,
+        .super-type {
+            color: #888;
+            border-bottom: 1px solid #444;
         }
         .pannel-type-icon {
             width: 16px;

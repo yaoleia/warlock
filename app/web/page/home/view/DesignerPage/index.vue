@@ -15,9 +15,12 @@
             };
         },
         methods: {
-            async init() {
-                const G6Editor = await import('@antv/g6-editor')
-                const Flow = G6Editor.Flow;
+            async importG6Editor() {
+                const G6Editor = await import('@antv/g6-editor');
+                return G6Editor.Flow;
+            },
+            async registerBase() {
+                const Flow = await this.importG6Editor();
                 // 注册模型卡片基类
                 Flow.registerNode('model-card', {
                     draw(item) {
@@ -152,14 +155,6 @@
                     }
                 });
 
-                for (const key in this.algorithmConf) {
-                    const value = this.algorithmConf[key]
-                    Flow.registerNode(value.module, {
-                        ...value,
-                        color_type: '#1890FF'
-                    }, 'model-card');
-                }
-
                 Flow.registerEdge('line', {
                     draw(item) {
                         const model = item.getModel();
@@ -207,6 +202,23 @@
                         }, 500);
                     }
                 });
+                await this.registerModuleNode();
+            },
+            async registerModuleNode() {
+                const Flow = await this.importG6Editor();
+                for (const key in this.algorithmConf) {
+                    const value = this.algorithmConf[key]
+                    Flow.registerNode(value.module, {
+                        ...value,
+                        color_type: '#1890FF'
+                    }, 'model-card');
+                }
+            },
+            async init() {
+                this.editorLoaded = $.Deferred();
+                await this.$store.dispatch(SET_ALGORITHM_MAP);
+                await this.registerBase();
+                this.editorLoaded.resolve();
             }
         },
         computed: {
@@ -214,11 +226,16 @@
                 return this.$store.state.algorithmMap;
             }
         },
+        watch: {
+            algorithmConf: {
+                async handler(map, oldMap) {
+                    await this.registerModuleNode();
+                },
+                deep: true
+            }
+        },
         async beforeMount() {
-            this.editorLoaded = $.Deferred();
-            const resp = await this.$store.dispatch(SET_ALGORITHM_MAP)
-            await this.init()
-            this.editorLoaded.resolve();
+            await this.init();
         }
     };
 </script>

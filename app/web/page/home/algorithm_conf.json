@@ -1,310 +1,228 @@
 {
-  "0c267be5ae693f042bb67c048fcb88dd": {
-    "author": "Yuan Zhichao",
-    "class": "UnDistortCam",
-    "create_time": "2018/10/19 11:03 AM",
-    "dependencies": [
-      "None"
-    ],
+  "062381ad5a6f10f1b06ba85a36befbb8": {
+    "author": "liwen",
+    "class": "PutText",
+    "create_time": 1543987372,
     "exec_outputs": {
-      "dst": {
+      "put_text_dst": {
         "type": "python/name:numpy.ndarray"
-      }
-    },
-    "exec_params": {
-      "img": {
-        "require": true,
-        "type": "python/name:numpy.ndarray"
-      }
-    },
-    "init_params": {
-      "cam_param_path": {
-        "default": "./camParams.yaml",
-        "require": true,
-        "type": "str"
-      },
-      "img_height": {
-        "default": null,
-        "require": true,
-        "type": "int"
-      },
-      "img_width": {
-        "default": null,
-        "require": true,
-        "type": "int"
-      }
-    },
-    "module": "camera_undistort",
-    "type": "Undistort",
-    "version": "0_0_1"
-  },
-  "355b335b199ed2a6018a8f20e73fb468": {
-    "author": "lw",
-    "class": "RoiCropper",
-    "create_time": 152234683346,
-    "dependencies": [
-      "None"
-    ],
-    "exec_outputs": {
-      "code_area": {
-        "type": "python/name:numpy.ndarray"
-      }
-    },
-    "exec_params": {
-      "img_crop": {
-        "require": true,
-        "type": "python/name:numpy.ndarray"
-      }
-    },
-    "init_params": {
-      "point_a": {
-        "default": null,
-        "require": true,
-        "type": "python/dict"
-      }
-    },
-    "module": "roi_cropper",
-    "type": "Cropper",
-    "version": "0_0_1"
-  },
-  "403955abb5de4d8de69df14258502c73": {
-    "author": "yuanzhichao",
-    "class": "SemanticDiffApi",
-    "create_time": 153234683346,
-    "dependencies": [
-      "None"
-    ],
-    "exec_outputs": {
-      "img_reg": {
-        "type": "python/name:numpy.ndarray"
-      },
-      "status": {
-        "type": "python/name:bool"
       }
     },
     "exec_params": {
       "raw_img": {
         "require": true,
-        "type": "python/name:numpy.ndarray"
-      }
-    },
-    "init_params": {
-      "axis": {
-        "default": 0,
-        "option": [
-          0,
-          1
+        "type": [
+          "python/name:numpy.ndarray"
         ],
-        "require": true,
-        "type": "int"
-      },
-      "model_path": {
-        "default": "./semantic_diff_model.pt",
-        "require": true,
-        "type": "float"
-      },
-      "save_result": {
-        "default": false,
-        "require": false,
-        "type": "bool"
-      },
-      "slide_num": {
-        "default": 4,
-        "require": true,
-        "type": "int"
-      },
-      "template_path": {
-        "default": "./template_img.jpg",
-        "require": true,
-        "type": "float"
-      },
-      "threshold": {
-        "default": 0.1,
-        "require": true,
-        "type": "float"
-      }
-    },
-    "module": "semantic_diff",
-    "type": "SemanticDiff",
-    "version": "0_0_1"
-  },
-  "4f88c4a58e9b7e55539b136aff5bcfae": {
-    "author": "tangyongliang",
-    "class": "Segmentor",
-    "create_time": 154234683346,
-    "dependencies": [
-      "None"
-    ],
-    "exec_outputs": {
-      "img_crop": {
-        "type": "python/name:numpy.ndarray"
-      },
-      "scr_point": {
-        "type": "list"
-      }
-    },
-    "exec_params": {
-      "image": {
-        "require": true,
-        "type": "python/name:numpy.ndarray"
+        "value": "None"
       }
     },
     "init_params": {
-      "down_scaling": {
-        "default": 8,
-        "require": true,
-        "type": "int"
-      },
-      "expand_height": {
-        "default": 200,
-        "require": true,
-        "type": "int"
-      },
-      "expand_width": {
-        "default": 200,
-        "require": true,
-        "type": "int"
-      },
-      "pb_path": {
-        "default": "./phone_segment_graph.pb",
-        "require": true,
-        "type": "str"
-      },
-      "phone_area": {
-        "default": 120000,
-        "require": true,
-        "type": "int"
-      },
-      "seg_input_name": {
-        "default": "prefix/images:0",
-        "require": true,
-        "type": "str"
-      },
-      "seg_output_name": {
-        "default": "prefix/decoder/upsampling_logits/upsample_2:0",
-        "require": true,
-        "type": "str"
-      }
-    },
-    "module": "phone_segment",
-    "type": "Segmentation",
-    "version": "0_0_1"
-  },
-  "a8b759c89626b4ae1a13c205f864069d": {
-    "author": "yuanzhichao",
-    "class": "ImageRegistration",
-    "create_time": 152234683346,
-    "dependencies": [
-      "None"
-    ],
-    "exec_outputs": [
-      {
-        "img_reg": {
-          "type": "python/name:numpy.ndarray"
-        }
-      }
-    ],
-    "exec_params": {
-      "img": {
-        "require": true,
-        "type": "python/name:numpy.ndarray"
-      }
-    },
-    "init_params": {
-      "MIN_MATCH_COUNT": {
-        "default": 100,
-        "require": true,
-        "type": "name:int"
-      },
-      "algorithm": {
-        "default": "ORB",
-        "option": [
-          "ORB",
-          "SURF",
-          "SIFT"
-        ],
-        "require": true,
-        "type": "str"
-      },
       "param1": {
-        "default": 5000,
         "require": true,
-        "type": "int"
+        "type": "str",
+        "value": "test1"
       },
       "param2": {
-        "default": 200,
         "require": true,
-        "type": "name:int"
+        "type": "int",
+        "value": 10
       },
-      "roi": {
-        "default": null,
-        "require": true,
-        "type": "list"
-      },
-      "template_img": {
-        "default": "./template_img.jpg",
-        "require": true,
-        "type": "float"
+      "word": {
+        "require": false,
+        "type": "str",
+        "value": "he he da"
       }
     },
-    "module": "image_registration",
-    "type": "Registration",
-    "version": "0_0_1"
+    "module": "put_text",
+    "super_type": "Algorithm",
+    "type": "test_algorithm",
+    "version": "1_0_0"
   },
-  "b85fe91fc6743f23a2924650df5f8787": {
-    "author": "yuanzhichao",
-    "class": "BarcodeLocalizer",
-    "create_time": 152234683346,
+  "57f678706abaf4dfd7788fa6fa52ba68": {
+    "author": "liwen",
+    "class": "GetRotationMatrix2D",
+    "create_time": 1543987372,
     "exec_outputs": {
-      "dm_code_area": {
+      "BGRGray_gray": {
         "type": "python/name:numpy.ndarray"
       }
     },
     "exec_params": {
-      "img": {
+      "raw_img": {
         "require": true,
-        "type": "python/name:numpy.ndarray"
+        "type": [
+          "python/name:numpy.ndarray"
+        ],
+        "value": "None"
       }
     },
     "init_params": {
-      "blur_kernel": {
-        "default": 3,
+      "param1": {
         "require": true,
-        "type": "int"
+        "type": "str",
+        "value": "test1"
       },
-      "close_iteration": {
-        "default": 1,
+      "param2": {
         "require": true,
-        "type": "int"
-      },
-      "debug": {
-        "default": false,
-        "require": true,
-        "type": "bool"
-      },
-      "expand_width": {
-        "default": 5,
-        "require": true,
-        "type": "int"
-      },
-      "h_w_ratio": {
-        "default": 0.8,
-        "require": true,
-        "type": "float"
-      },
-      "max_size": {
-        "default": 65,
-        "require": true,
-        "type": "int"
-      },
-      "min_size": {
-        "default": 35,
-        "require": true,
-        "type": "int"
+        "type": "int",
+        "value": 10
       }
     },
-    "module": "barcode_localizer",
-    "type": "Barcode",
+    "module": "get_rotation_matrix2d",
+    "super_type": "Algorithm",
+    "type": "test_algorithm",
+    "version": "1_0_0"
+  },
+  "5b90bfe6ecfb09bbe81affcf3be22b10": {
+    "author": "liwen",
+    "class": "ImgBinary",
+    "create_time": 1543987372,
+    "exec_outputs": {
+      "ImgBinary_im_fixed": {
+        "type": "python/name:numpy.ndarray"
+      }
+    },
+    "exec_params": {
+      "raw_img": {
+        "require": true,
+        "type": [
+          "python/name:numpy.ndarray"
+        ],
+        "value": "None"
+      }
+    },
+    "init_params": {
+      "param1": {
+        "require": true,
+        "type": "str",
+        "value": "test1"
+      },
+      "param2": {
+        "require": true,
+        "type": "int",
+        "value": 10
+      }
+    },
+    "module": "img_binary",
+    "super_type": "Algorithm",
+    "type": "test_algorithm",
+    "version": "1_0_0"
+  },
+  "75f937d5af573fb11796a52938185f3d": {
+    "author": "liwen",
+    "class": "WarpAffine",
+    "create_time": 1543987372,
+    "exec_outputs": {
+      "warpAffine_dst": {
+        "type": "python/name:numpy.ndarray"
+      }
+    },
+    "exec_params": {
+      "raw_img": {
+        "require": true,
+        "type": [
+          "python/name:numpy.ndarray"
+        ],
+        "value": "None"
+      }
+    },
+    "init_params": {
+      "param1": {
+        "require": true,
+        "type": "str",
+        "value": "test1"
+      },
+      "param2": {
+        "require": true,
+        "type": "int",
+        "value": 10
+      }
+    },
+    "module": "warpaffine",
+    "super_type": "Algorithm",
+    "type": "test_algorithm",
+    "version": "1_0_0"
+  },
+  "acb0b6544d5ba772d907246fd12ddd40": {
+    "author": "liwen",
+    "class": "BGRGray",
+    "create_time": 1543987372,
+    "exec_outputs": {
+      "BGRGray_gray": {
+        "type": "python/name:numpy.ndarray"
+      }
+    },
+    "exec_params": {
+      "raw_img": {
+        "require": true,
+        "type": [
+          "python/name:numpy.ndarray"
+        ],
+        "value": "None"
+      }
+    },
+    "init_params": {
+      "param1": {
+        "require": true,
+        "type": "str",
+        "value": "test1"
+      },
+      "param2": {
+        "require": true,
+        "type": "int",
+        "value": 10
+      }
+    },
+    "module": "bgr_gray",
+    "super_type": "Algorithm",
+    "type": "test_algorithm",
+    "version": "1_0_0"
+  },
+  "b7acc31b7535b5265e296ee2fcef76d5": {
+    "author": "liwen",
+    "class": "LogitechCamera",
+    "create_time": 154234683346,
+    "exec_outputs": {
+      "image_data": {
+        "type": "python/name:numpy.ndarray"
+      },
+      "image_path": {
+        "type": "file_path"
+      }
+    },
+    "exec_params": {
+      "trigger_status": {
+        "require": true,
+        "type": "bool",
+        "value": false
+      }
+    },
+    "init_params": {
+      "cache_path": {
+        "require": true,
+        "type": "str",
+        "value": "/Users/admin/dev/shm/tmp/camera_cache/{request_time}.bmp"
+      },
+      "cam_num": {
+        "require": true,
+        "type": "int",
+        "value": 0
+      },
+      "height_preview": {
+        "require": true,
+        "type": "int",
+        "value": 406
+      },
+      "width_preview": {
+        "require": true,
+        "type": "int",
+        "value": 608
+      }
+    },
+    "module": "logitech_camera",
+    "super_type": "HardWare",
+    "type": "Camera",
     "version": "0_0_1"
   }
 }
