@@ -201,11 +201,12 @@
         .msg-list {
             overflow: auto;
             height: 100%;
-            font-size: 15px;
-            line-height: 25px;
-            color: #eee;
+            font-size: 14px;
+            line-height: 27px;
+            color: #bbb;
+            font-weight: normal;
             li {
-                margin-bottom: 5px;
+                margin-bottom: 10px;
                 word-break: break-word;
             }
         }

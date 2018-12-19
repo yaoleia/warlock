@@ -78,7 +78,7 @@
                                 text: this.module,
                                 fontSize: 17,
                                 x: x + 10,
-                                y: y + 9,
+                                y: y + 11,
                                 textAlign: 'start',
                                 textBaseline: 'top',
                                 fill: '#ff8800'

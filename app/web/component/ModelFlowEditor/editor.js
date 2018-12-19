@@ -2,7 +2,7 @@
 import G6Editor from '@antv/g6-editor'
 import CircularJSON from 'circular-json'
 import G6Plugins from '@antv/g6/build/plugins'
-
+G6Editor.track(false)
 export default {
     data() {
         return {
@@ -85,30 +85,62 @@ export default {
             editor.add(detailPannel);
             editor.add(flow);
 
-            if (params.read) {
-                const graph = flow.getGraph();
-                graph.on('click', ev => {
-                    if (!ev.item) return;
-                    this.selectedModel = ev.item.getModel();
-                    this.pushMsg(this.selectedModel)
+            // 拖拽node移动，连续的
+            const graph = this.flow.getGraph();
+            graph.on('node:dragstart', ev => {
+                const { item } = ev;
+                const model = item.getModel();
+
+                const dx = model.x - ev.x;
+                const dy = model.y - ev.y;
+                let node = item;
+                let moveE = null;
+
+                graph.on('node:drag', ev => {
+                    moveE = ev;
+                    node && graph.update(node, {
+                        x: ev.x + dx,
+                        y: ev.y + dy
+                    });
                 });
-                return;
-            }
-            // 查看模式,不用加载的一些组件
+                graph.on('node:dragend', ev => {
+                    node && graph.update(node, {
+                        x: moveE.x + dx,
+                        y: moveE.y + dy
+                    });
+
+                    node = null;
+                    graph.removeEvent('node:dragend');
+                    graph.removeEvent('node:drag')
+                });
+
+            });
+
+            graph.on('click', ev => {
+                if (!ev.item) return;
+                this.pushMsg(ev.item.getModel(), 'click')
+            });
 
             flow.on('afteritemselected', ev => {
                 this.selectedModel = ev.item.getModel();
-                this.pushMsg(this.selectedModel)
             });
 
             flow.on('afterzoom', ev => {
                 this.curZoom = ev.updateMatrix[0];
-                this.pushMsg(this.curZoom)
+                this.pushMsg(this.curZoom, 'zoom')
             });
 
             flow.on('afterchange', ev => {
-                this.pushMsg(ev.action)
+                const { action, item } = ev;
+                if (item && item.model) {
+                    this.pushMsg(item.model, action)
+                    return;
+                }
+                this.pushMsg(action)
             });
+
+            // ==========================查看模式,不用加载的一些组件==========================
+            if (params.read) return;
 
             const toolBar = new G6Editor.Toolbar({
                 container: toolbar.$el
@@ -123,15 +155,23 @@ export default {
             editor.add(contextMenu);
             editor.add(itemPannel);
         },
-        pushMsg(msg) {
+        modelFilter(model) {
+            const { anchor, exec_outputs, exec_params, init_params, shape, size, x, y, index, ...msgFilt } = model;
+            return CircularJSON.stringify(msgFilt);
+        },
+        pushMsg(msg, action) {
             if (typeof msg === 'object') {
-                const { anchor, exec_outputs, exec_params, init_params, shape, size, x, y, index, ...msgFilt } = msg;
-                const newMsg = CircularJSON.stringify(msgFilt);
-                if (newMsg === this.msgList[this.msgList.length - 1]) return;
-                this.msgList.push(newMsg)
+                this._pushMsg(this.modelFilter(msg), action);
                 return;
             }
-            this.msgList.push(msg)
+            this._pushMsg(msg, action);
+        },
+        _pushMsg(newMsg, action) {
+            if (action) {
+                newMsg = action + ' ' + newMsg;
+            }
+            if (newMsg === this.msgList[this.msgList.length - 1]) return;
+            this.msgList.push(newMsg)
         },
         changeZoom(zoom) {
             const flow = this.flow;
