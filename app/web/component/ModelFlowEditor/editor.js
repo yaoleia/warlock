@@ -140,7 +140,9 @@ export default {
             });
 
             // ==========================查看模式,不用加载的一些组件==========================
-            if (params.read) return;
+            if (params.read) {
+                return
+            }
 
             const toolBar = new G6Editor.Toolbar({
                 container: toolbar.$el

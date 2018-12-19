@@ -1,5 +1,5 @@
 <template>
-    <div ref="display" />
+    <div class="g6-displayer" ref="display" />
 </template>
 
 <script>
@@ -46,4 +46,7 @@
     };
 </script>
 <style lang="scss">
+    .g6-displayer {
+        pointer-events: none;
+    }
 </style>

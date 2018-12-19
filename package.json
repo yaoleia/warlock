@@ -55,7 +55,7 @@
     "xlsx": "^0.14.1"
   },
   "devDependencies": {
-    "@antv/g6-editor": "^1.1.2-beta",
+    "@antv/g6-editor": "^1.2.0",
     "autod-egg": "^1.0.0",
     "autoprefixer": "^7.1.4",
     "babel-eslint": "7.2.3",

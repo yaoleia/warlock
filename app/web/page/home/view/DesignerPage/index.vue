@@ -17,6 +17,7 @@
         methods: {
             async importG6Editor() {
                 const G6Editor = await import('@antv/g6-editor');
+                G6Editor.track(false)
                 return G6Editor;
             },
             async registerBase() {
