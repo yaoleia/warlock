@@ -115,6 +115,37 @@
                     ev.cancel = true;
                 }
             });
+
+            // 拖拽node移动，连续的
+            const graph = this.flow.getGraph();
+            graph.on('node:dragstart', ev => {
+                const { item } = ev;
+                const model = item.getModel();
+
+                const dx = model.x - ev.x;
+                const dy = model.y - ev.y;
+                let node = item;
+                let moveE = null;
+
+                graph.on('node:drag', ev => {
+                    moveE = ev;
+                    node && graph.update(node, {
+                        x: ev.x + dx,
+                        y: ev.y + dy
+                    });
+                });
+                graph.on('node:dragend', ev => {
+                    node && graph.update(node, {
+                        x: moveE.x + dx,
+                        y: moveE.y + dy
+                    });
+
+                    node = null;
+                    graph.removeEvent('node:dragend');
+                    graph.removeEvent('node:drag')
+                });
+
+            });
         },
         methods: {
             terminalFor(component) {

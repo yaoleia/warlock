@@ -25,6 +25,9 @@
                 // 注册模型卡片基类
                 Flow.registerNode('model-card', {
                     draw(item) {
+                        // 生成锚点
+                        this.setAnchors(item);
+
                         const group = item.getGraphicGroup();
                         const model = item.getModel();
                         const width = 200;
@@ -33,19 +36,6 @@
                         const y = -height / 2;
                         const borderRadius = 4;
 
-                        // 生成锚点
-                        const outputs = this.exec_outputs;
-                        const inputs = this.exec_params;
-                        const inLength = Object.keys(inputs).length;
-                        const outLength = Object.keys(outputs).length;
-                        const inAnchors = Object.keys(inputs).map((ii, index) => {
-                            return [(index + 1) / (inLength + 1), 0, { name: ii, type: inputs[ii].type, anchorType: 'input' }]
-                        })
-                        const outAnchors = Object.keys(outputs).map((oo, index) => {
-                            return [(index + 1) / (outLength + 1), 1, { name: oo, type: outputs[oo].type, anchorType: 'output' }]
-                        })
-                        this.anchor = [...inAnchors, ...outAnchors];
-
                         // 如果是新模块,则把注册数据安到model上
                         if (!model.module) {
                             const { type, author, create_time, dependencies, exec_outputs, exec_params, init_params, module, version } = this;
@@ -53,6 +43,7 @@
                         }
 
                         // 生成元素
+                        this.color = this.color || '#aaa';
                         const keyShape = group.addShape('rect', {
                             attrs: {
                                 x,
@@ -77,82 +68,38 @@
                         //             ['L', x + borderRadius, y],
                         //             ['A', borderRadius, borderRadius, 0, 0, 0, x, y + borderRadius]
                         //         ],
-                        //         fill: this.color_type
+                        //         fill: this.color
                         //     }
                         // });
 
                         // 名称
-                        const a = group.addShape('text', {
+                        group.addShape('text', {
                             attrs: {
-                                fontSize: 17,
                                 text: this.module,
-                                x: x + 20,
-                                y: y + 10,
+                                fontSize: 17,
+                                x: x + 10,
+                                y: y + 9,
                                 textAlign: 'start',
                                 textBaseline: 'top',
                                 fill: '#ff8800'
                             }
                         });
 
-                        // buildOpt(this.checkBoxList, this.optionList, x, y);
-                        function buildOpt(attrs, options, x, y) {
-                            x = x + 20;
-                            y = y + 10;
-                            if (attrs) {
-                                attrs.map(attr => {
-                                    const { key } = attr;
-                                    y += 30;
-                                    group.addShape('text', {
-                                        attrs: {
-                                            text: key,
-                                            x,
-                                            y,
-                                            textAlign: 'start',
-                                            textBaseline: 'top',
-                                            fill: 'rgba(0,0,0,0.65)'
-                                        }
-                                    });
-                                    group.addShape('text', {
-                                        attrs: {
-                                            text: model.checkedBox && model.checkedBox.includes(key) ? 'on' : 'off',
-                                            x: x + 150,
-                                            y,
-                                            textAlign: 'start',
-                                            textBaseline: 'top',
-                                            fill: 'rgba(0,0,0,0.65)'
-                                        }
-                                    });
-                                })
-                            }
-                            if (options) {
-                                options.map(option => {
-                                    const { key } = option;
-                                    y += 30;
-                                    group.addShape('text', {
-                                        attrs: {
-                                            text: key,
-                                            x,
-                                            y,
-                                            textAlign: 'start',
-                                            textBaseline: 'top',
-                                            fill: 'rgba(0,0,0,0.65)'
-                                        }
-                                    });
-                                    group.addShape('text', {
-                                        attrs: {
-                                            text: model[key] === undefined ? '' : model[key],
-                                            x: x + 130,
-                                            y,
-                                            textAlign: 'start',
-                                            textBaseline: 'top',
-                                            fill: 'rgba(0,0,0,0.65)'
-                                        }
-                                    });
-                                })
-                            }
-                        }
-
                         return keyShape;
+                    },
+                    setAnchors(item) {
+                        // 生成锚点
+                        const outputs = this.exec_outputs;
+                        const inputs = this.exec_params;
+                        const inLength = Object.keys(inputs).length;
+                        const outLength = Object.keys(outputs).length;
+                        const inAnchors = Object.keys(inputs).map((ii, index) => {
+                            return [(index + 1) / (inLength + 1), 0, { name: ii, type: inputs[ii].type, anchorType: 'input' }]
+                        })
+                        const outAnchors = Object.keys(outputs).map((oo, index) => {
+                            return [(index + 1) / (outLength + 1), 1, { name: oo, type: outputs[oo].type, anchorType: 'output' }]
+                        })
+                        this.anchor = [...inAnchors, ...outAnchors];
                     }
                 });
 
@@ -211,8 +158,7 @@
                 for (const key in this.algorithmConf) {
                     const value = this.algorithmConf[key]
                     Flow.registerNode(value.module, {
-                        ...value,
-                        color_type: '#1890FF'
+                        ...value
                     }, 'model-card');
                 }
             },
