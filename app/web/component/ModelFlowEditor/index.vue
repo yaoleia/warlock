@@ -80,41 +80,11 @@
                 this.name = params.flow.name;
                 this.readData();
             }
-            const flow = this.flow;
 
-            flow.changeAddEdgeModel({
+            this.flow.changeAddEdgeModel({
                 shape: 'flow-polyline-round'
             });
 
-            // 输入锚点不可以连出边
-            flow.on('hoveranchor:beforeaddedge', ev => {
-                this.pushMsg(ev.anchor, 'anchor:hover')
-                if (ev.anchor.anchorType === 'input') {
-                    ev.cancel = true;
-                }
-            });
-            flow.on('dragedge:beforeshowanchor', ev => {
-                // 只允许目标锚点是输入，源锚点是输出，才能连接
-                if (!(ev.targetAnchor.anchorType === 'input' && ev.sourceAnchor.anchorType === 'output')) {
-                    ev.cancel = true;
-                }
-                // 不允许自己连自己
-                if (ev.target.id === ev.source.id) {
-                    ev.cancel = true;
-                }
-                // 判断数据类型
-                if (ev.targetAnchor.type.toString() !== ev.sourceAnchor.type.toString()) {
-                    ev.cancel = true;
-                }
-                // 如果拖动的是目标方向，则取消显示目标节点中已被连过的锚点
-                if (ev.dragEndPointType === 'target' && flow.anchorHasBeenLinked(ev.target, ev.targetAnchor)) {
-                    ev.cancel = true;
-                }
-                // 如果拖动的是源方向，则取消显示源节点中已被连过的锚点
-                if (ev.dragEndPointType === 'source' && flow.anchorHasBeenLinked(ev.source, ev.sourceAnchor)) {
-                    ev.cancel = true;
-                }
-            });
         },
         methods: {
             terminalFor(component) {

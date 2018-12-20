@@ -139,6 +139,57 @@ export default {
                 this.pushMsg(action)
             });
 
+            // 输入锚点不可以连出边
+            flow.on('hoveranchor:beforeaddedge', ev => {
+                if (this.readMode) {
+                    ev.cancel = true;
+                }
+                this.pushMsg(ev.anchor, 'anchor:hover')
+                if (ev.anchor.anchorType === 'input') {
+                    ev.cancel = true;
+                }
+            });
+            flow.on('dragedge:beforeshowanchor', ev => {
+                if (this.readMode) {
+                    ev.cancel = true;
+                }
+                // 只允许目标锚点是输入，源锚点是输出，才能连接
+                if (!(ev.targetAnchor.anchorType === 'input' && ev.sourceAnchor.anchorType === 'output')) {
+                    ev.cancel = true;
+                }
+                // 不允许自己连自己
+                if (ev.target.id === ev.source.id) {
+                    ev.cancel = true;
+                }
+
+                // 判断数据类型
+                if (ev.targetAnchor.type && ev.sourceAnchor.type) {
+                    if (ev.targetAnchor.type.toString() !== ev.sourceAnchor.type.toString()) {
+                        ev.cancel = true;
+                    }
+                }
+
+                // 关掉可能重复的点
+                if (flow.anchorHasBeenLinked(ev.target, ev.targetAnchor) || flow.anchorHasBeenLinked(ev.source, ev.sourceAnchor)) {
+                    const edges = flow.getEdges();
+                    const cancel = edges.some(e => {
+                        const model = e.getModel();
+                        return model.source === ev.source.id && model.target === ev.target.id && model.sourceAnchor === ev.sourceAnchor.index && model.targetAnchor === ev.targetAnchor.index;
+                    })
+                    if (cancel) {
+                        ev.cancel = true;
+                    }
+                }
+                // 如果拖动的是目标方向，则取消显示目标节点中已被连过的锚点
+                // if (ev.dragEndPointType === 'target' && flow.anchorHasBeenLinked(ev.target, ev.targetAnchor)) {
+                //     ev.cancel = true;
+                // }
+                // 如果拖动的是源方向，则取消显示源节点中已被连过的锚点
+                // if (ev.dragEndPointType === 'source' && flow.anchorHasBeenLinked(ev.source, ev.sourceAnchor)) {
+                //     ev.cancel = true;
+                // }
+            });
+
             // ==========================查看模式,不用加载的一些组件==========================
             if (params.read) {
                 return
