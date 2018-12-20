@@ -80,6 +80,7 @@
         },
         data() {
             return {
+                innerHeight: 0,
                 pickerOptions: {
                     shortcuts: [
                         {

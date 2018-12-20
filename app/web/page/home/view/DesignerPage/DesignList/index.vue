@@ -110,6 +110,7 @@
     export default {
         data() {
             return {
+                innerHeight: 0,
                 active: null,
                 total: 30,
                 designList: [],
