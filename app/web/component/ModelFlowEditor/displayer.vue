@@ -1,9 +1,15 @@
 <template>
-    <div class="g6-displayer" ref="display" />
+    <div class="g6-displayer" />
 </template>
 
 <script>
     export default {
+        data() {
+            return {
+                width: 0,
+                height: 0
+            }
+        },
         props: {
             flowData: {
                 type: Object
@@ -15,9 +21,11 @@
                 const editor = new G6Editor.Editor();
                 const page = new G6Editor.Flow({
                     graph: {
-                        container: this.$refs.display,
+                        container: this.$el,
                         mode: 'read',
-                        fitView: 'autoZoom'
+                        fitView: 'autoZoom',
+                        width: this.width,
+                        height: this.height
                     },
                     align: {
                         grid: true
@@ -32,6 +40,8 @@
             }
         },
         async mounted() {
+            this.width = this.$el.clientWidth;
+            this.height = this.$el.clientHeight;
             await this.init();
             this.draw();
         },
