@@ -41,7 +41,7 @@
             this.$options.components.webcam = () => import('component/webcam')
         },
         mounted() {
-            this.$request.post('/api/article/list', {}).then(resp => {
+            this.$request.get('/api/record').then(resp => {
                 if (resp.data.list) {
                     if (this.productList.length === 0 && resp.data.list[0]) {
                         this.curProduct = { ...curObj, ...resp.data.list[0] }

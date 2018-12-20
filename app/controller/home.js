@@ -43,11 +43,6 @@ module.exports = app => {
       }
     }
 
-    async list(ctx) {
-      const body = ctx.request.body;
-      this.ctx.body = await ctx.service.record.getRecordList(body);
-    }
-
     async add(ctx) {
       ctx.body = this.service.article.saveArticle(ctx.request.body);
     }

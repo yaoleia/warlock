@@ -61,7 +61,7 @@
 </template>
 <script type="babel">
     import DialogDetail from './DialogDetail.vue'
-    import { SET_ARTICLE_LIST } from '../../store/app/mutation-type'
+    import { SET_RECORD_LIST } from '../../store/app/mutation-type'
     import utils from 'framework/utils'
     const curObj = {
         cutBase64: '',
@@ -159,7 +159,7 @@
                 if (EASY_ENV_IS_BROWSER) {
                     this.loading = true;
                 }
-                return store.dispatch(SET_ARTICLE_LIST, json).catch(error => {
+                return store.dispatch(SET_RECORD_LIST).catch(error => {
                     this.$message.error(`请求失败 ${error.response.status}`);
                     this.loading = false;
                 });

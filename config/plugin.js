@@ -1,7 +1,7 @@
 exports.vuessr = {
 	enable: true,
 	package: 'egg-view-vue-ssr'
-};
+}
 
 exports.http = {
 	enable: true,
@@ -11,4 +11,9 @@ exports.http = {
 exports.io = {
 	enable: true,
 	package: 'egg-socket.io',
-};
+}
+
+exports.validate = {
+	enable: true,
+	package: 'egg-validate',
+}

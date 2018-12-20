@@ -7,10 +7,10 @@ module.exports = app => {
   router.get('/logout', controller.home.logout);
   router.post('/api/login', controller.home.postLogin);
   router.post('/api/upload', controller.home.upload);
-  router.post('/api/article/list', controller.home.list);
-  router.post('/api/article/add', controller.home.add);
-  router.get('/api/article/del/:id', controller.home.del);
-  router.get('/api/article/:id', controller.home.detail);
+
+  // 历史记录
+  router.resources('record', '/api/record', controller.record);
+
   router.get('/api/start', controller.home.start);
   router.get('/api/stop', controller.home.stop);
   router.post('/api/usb', controller.home.usb);

@@ -1,12 +1,12 @@
 'use strict';
 
 import {
-  SET_ARTICLE_LIST,
+  SET_RECORD_LIST,
   SET_ALGORITHM_MAP
 } from './mutation-type';
 
 const mutations = {
-  [SET_ARTICLE_LIST](state, { list, total }) {
+  [SET_RECORD_LIST](state, { list, total }) {
     state.recordTotal = total;
     state.recordList = list;
   },
