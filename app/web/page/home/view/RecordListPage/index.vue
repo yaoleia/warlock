@@ -185,20 +185,18 @@
             defectType(type) {
                 const msg = utils.defectType(type)
                 return msg === '无缺陷' ? '-' : msg
+            },
+            getInnerHeight() {
+                if (EASY_ENV_IS_BROWSER) {
+                    if (window.innerWidth <= 1920) {
+                        this.innerHeight = 620;
+                    } else {
+                        this.innerHeight = 890;
+                    }
+                }
             }
         },
         computed: {
-            innerHeight() {
-                if (EASY_ENV_IS_BROWSER) {
-                    if (window.innerWidth <= 1920) {
-                        return 620;
-                    } else {
-                        return 890;
-                    }
-                } else {
-                    return 400
-                }
-            },
             status() {
                 return [
                     { status: undefined, name: '--请选择--' },
@@ -225,6 +223,11 @@
             if (!(this.recordList && this.recordList.length > 0)) {
                 this.fetchApi(this.$store, this.q)
             }
+            this.getInnerHeight();
+            $(window).on('resize.record', this.getInnerHeight)
+        },
+        beforeDestroy() {
+            $(window).off('resize.record');
         },
         watch: {
             'q.dateRange': function(r) {

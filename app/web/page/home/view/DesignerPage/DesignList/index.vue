@@ -64,11 +64,11 @@
                             </el-button>
                             <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row}}">
                                 <el-button title='修改' type="warning">
-                                    <v-icon name='xiugaitupian'></v-icon>
+                                    <v-icon name='xiugaitupian'></v-icon> 修改
                                 </el-button>
                             </router-link>
                             <el-button title="查看" type="info" @click="gotoWatch(scope.row)">
-                                <v-icon name='065chakandingdan'></v-icon>
+                                <v-icon name='065chakandingdan'></v-icon> 查看
                             </el-button>
                             <el-button title="更多按钮" type="text" @click="contextmenuHandle(scope.row,$event)">
                                 <v-icon name='gengduoanniu'></v-icon>
@@ -332,20 +332,18 @@
             handleCurrentChange(val) {
                 this.q.pageIndex = val
                 this.getDesignList(this.$store, this.q)
+            },
+            getInnerHeight() {
+                if (EASY_ENV_IS_BROWSER) {
+                    if (window.innerWidth <= 1920) {
+                        this.innerHeight = 620;
+                    } else {
+                        this.innerHeight = 890;
+                    }
+                }
             }
         },
         computed: {
-            innerHeight() {
-                if (EASY_ENV_IS_BROWSER) {
-                    if (window.innerWidth <= 1920) {
-                        return 620;
-                    } else {
-                        return 890;
-                    }
-                } else {
-                    return 400
-                }
-            },
             algorithmModuleList() {
                 return this.$store.getters.algorithmModuleList;
             }
@@ -357,9 +355,11 @@
             $(window).on('click.designList contextmenu.designList', () => {
                 this.active = null;
             });
+            this.getInnerHeight();
+            $(window).on('resize.record', this.getInnerHeight)
         },
         beforeDestroy() {
-            $(window).off('click.designList contextmenu.designList');
+            $(window).off('click.designList contextmenu.designList resize.record');
         },
         watch: {
             'q.dateRange': function(r) {
@@ -390,11 +390,6 @@
         .upload-pop-dialog {
             width: 500px;
         }
-        .top-btn {
-            .el-button {
-                padding: 6px 12px;
-            }
-        }
         .context-menu {
             position: fixed;
             top: 0;
@@ -421,11 +416,16 @@
             .cell .opration {
                 width: 330px;
                 margin: 0 auto;
-                > div {
+                .top-btn {
                     display: flex;
                     align-items: center;
                     display: table;
                     margin: 0 auto;
+                    .el-button {
+                        font-weight: normal;
+                        line-height: 18px;
+                        padding: 6px 12px;
+                    }
                     > * {
                         margin: 0;
                         margin-right: 15px;
