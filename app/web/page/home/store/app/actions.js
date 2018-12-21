@@ -14,8 +14,11 @@ const actions = {
     })
   },
   SET_ALGORITHM_MAP: async (store) => {
-    const response = await import('../../algorithm_conf.json');
-    store.commit(Type.SET_ALGORITHM_MAP, response.default);
+    // const response = await import('../../algorithm_conf.json');
+    // store.commit(Type.SET_ALGORITHM_MAP, response.default);
+
+    const response = await request.get('/api/plugin', store);
+    store.commit(Type.SET_ALGORITHM_MAP, response.data);
     return response;
   }
 };

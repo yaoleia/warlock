@@ -2,9 +2,9 @@
     <div class="design-list">
         <div class="search">
             <div class="search-left">
-                <el-date-picker v-model="q.dateRange" type="datetimerange" :picker-options="pickerOptions" start-placeholder="开始时间" end-placeholder="结束时间" align="left" value-format="timestamp">
+                <!-- <el-date-picker v-model="q.dateRange" type="datetimerange" :picker-options="pickerOptions" start-placeholder="开始时间" end-placeholder="结束时间" align="left" value-format="timestamp">
                 </el-date-picker>
-                <el-button class="search-button" type="text" @click="q.pageIndex = 1;getDesignList()">查询</el-button>
+                <el-button class="search-button" type="text" @click="q.pageIndex = 1;getDesignList()">查询</el-button> -->
             </div>
             <div class="search-right">
                 <div class="export-wrap">
@@ -52,7 +52,7 @@
             </el-table-column>
             <el-table-column label="运行状态">
                 <template slot-scope="scope">
-                    <el-switch v-model="scope.row.active"></el-switch>
+                    <el-switch @change="activeChange(scope.row,$event)" v-model="scope.row.active"></el-switch>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="340">
@@ -78,8 +78,8 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination background class="pager" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="q.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="q.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination>
+        <!-- <el-pagination background class="pager" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="q.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="q.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination> -->
         <el-dialog title="上传流程" :visible.sync="uploadOption.showPop" custom-class="upload-pop-dialog">
             <el-checkbox :indeterminate="uploadOption.isIndeterminate" v-model="uploadOption.checkAll" :disabled="uploadOption.checkAllDisabled" @change="handleCheckAllChange">全选</el-checkbox>
             <div style="margin-bottom:20px"></div>
@@ -106,7 +106,6 @@
 </template>
 <script type="babel">
     import FlowDisplayer from 'component/ModelFlowEditor/displayer'
-    import uuidv1 from 'uuid/v1';
     export default {
         data() {
             return {
@@ -189,6 +188,9 @@
             FlowDisplayer
         },
         methods: {
+            async activeChange(item, statu) {
+                await this.$request.patch(`/api/workflow/${item.id}`, item);
+            },
             gotoWatch(item) {
                 this.$router.push({ name: '新建流程', params: { id: item.id, flow: item, read: true } });
             },
@@ -226,7 +228,7 @@
                 if (!files.length) { return; }
                 this.createDesign(files[0]);
             },
-            uploadDesignList(list) {
+            async uploadDesignList(list) {
                 const addList = list.uploadList.filter(li => list.checkedList.includes(li.id));
                 if (!addList.length) {
                     this.$message({
@@ -235,16 +237,17 @@
                     })
                     return;
                 }
-                addList.forEach(r => {
-                    const li = this.designList.find(d => d.id === r.id)
-                    if (li) {
-                        Object.assign(li, r)
+                const promises = addList.map(async r => {
+                    const resp = await this.$request.get(`/api/workflow/${r.id}`);
+                    if (resp.data.id) {
+                        await this.$request.patch(`/api/workflow/${r.id}`, r);
                         return;
                     }
-                    this.designList.push(r)
+                    await this.$request.post('/api/workflow', r);
                 })
+                await Promise.all(promises);
                 this.uploadCancel();
-                this.designList.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf());
+                await this.getDesignList();
             },
             createDesign(file) {
                 const reader = new FileReader();
@@ -283,14 +286,14 @@
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
-                }).then(() => {
+                }).then(async () => {
+                    const resp = await this.$request.delete(`/api/workflow/${item.id}`)
                     this.$delete(this.designList, this.designList.indexOf(item));
                 })
             },
-            handleCopy(item) {
+            async handleCopy(item) {
                 const newItem = _.cloneDeep(item);
                 newItem.active = false;
-                newItem.id = uuidv1();
                 newItem.ts = this.$moment().format();
                 newItem.cts = this.$moment().format();
 
@@ -298,9 +301,10 @@
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     inputValue: `${newItem.name}_copy_${this.$moment().valueOf()}`
-                }).then(({ value }) => {
+                }).then(async ({ value }) => {
                     newItem.name = value;
-                    this.designList.unshift(newItem);
+                    await this.$request.post('/api/workflow', newItem);
+                    await this.getDesignList();
                     this.$message({
                         type: 'success',
                         message: `克隆流程 ${value} 成功！`
@@ -315,15 +319,8 @@
                 if (EASY_ENV_IS_BROWSER) {
                     this.loading = true;
                 }
-                let designList = window.localStorage.designList;
-                if (designList) {
-                    designList = JSON.parse(designList);
-                } else {
-                    window.localStorage.designList = JSON.stringify([])
-                    designList = [];
-                }
-
-                this.designList = designList;
+                const designList = await this.$request.get('/api/workflow');
+                this.designList = designList.data.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf());
                 this.loading = false;
             },
             handleSizeChange(val) {
@@ -368,13 +365,6 @@
                     this.q.pageIndex = 1
                     this.getDesignList()
                 }
-            },
-            designList: {
-                handler(i) {
-                    window.localStorage.designList = JSON.stringify(i);
-                    this.loading = false;
-                },
-                deep: true
             },
             '$route.query': function(q) {
                 if (q.reload) {

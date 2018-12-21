@@ -69,6 +69,7 @@ module.exports = app => {
 
   exports.security = {
     csrf: {
+      // enable: false,
       ignoreJSON: false,
       cookieName: 'csrfToken',
       sessionName: 'csrfToken',

@@ -32,7 +32,6 @@
     import ContextMenu from './context-menu';
     import Page from './page';
     import Editor from './editor.js';
-    import uuidv1 from 'uuid/v1';
 
     export default {
         components: {
@@ -150,29 +149,19 @@
                     this.saveDesign();
                 })
             },
-            saveDesign() {
-                let designList = window.localStorage.designList;
-                if (designList) {
-                    designList = JSON.parse(designList)
-                } else {
-                    designList = [];
-                }
+            async saveDesign() {
                 if (!this.designItem.id) {
                     Object.assign(this.designItem, {
-                        id: uuidv1(),
                         ts: this.$moment().format(),
                         cts: this.$moment().format(),
                         name: this.name,
                         flowData: this.flow.save(),
                         active: false
                     })
-                    designList.unshift(this.designItem)
-                    window.localStorage.designList = JSON.stringify(designList);
+                    await this.$request.post('/api/workflow', this.designItem);
                 } else {
-                    const li = designList.find(d => d.id === this.designItem.id);
-                    Object.assign(li, { name: this.name, flowData: this.flow.save(), ts: this.$moment().format() })
-                    designList.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf())
-                    window.localStorage.designList = JSON.stringify(designList);
+                    Object.assign(this.designItem, { name: this.name, flowData: this.flow.save(), ts: this.$moment().format() })
+                    await this.$request.patch(`/api/workflow/${this.designItem.id}`, this.designItem);
                 }
                 this.$nextTick(() => {
                     this.$router.push({ path: '/design/designList', query: { reload: true } })

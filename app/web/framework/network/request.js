@@ -16,5 +16,18 @@ export default {
   get(url, store = {}) {
     const { state = { origin: '' } } = store;
     return axios.get(`${state.origin}${url}`);
+  },
+  delete(url, store = {}) {
+    const { state = { origin: '' } } = store;
+    return axios.delete(`${state.origin}${url}`);
+  },
+  patch(url, json, store = {}) {
+    const { state = { origin: '' } } = store;
+    const headers = {};
+    if (EASY_ENV_IS_NODE) {
+      headers['x-csrf-token'] = state.csrf;
+      headers.Cookie = `csrfToken=${state.csrf}`;
+    }
+    return axios.patch(`${state.origin}${url}`, json, { headers });
   }
 };

@@ -29,10 +29,6 @@ module.exports = app => {
       await ctx.render('home/home.js', resp);
     }
 
-    async upload(ctx) {
-      ctx.body = await this.service.upload.uploadFile(ctx);
-    }
-
     async postLogin(ctx) {
       const body = ctx.request.body;
       if (body.username === 'admin' && body.password === 'admin') {

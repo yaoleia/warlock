@@ -6,10 +6,15 @@ module.exports = app => {
   router.get('/login', controller.home.login);
   router.get('/logout', controller.home.logout);
   router.post('/api/login', controller.home.postLogin);
-  router.post('/api/upload', controller.home.upload);
 
   // 历史记录
   router.resources('record', '/api/record', controller.record);
+
+  // 插件
+  router.resources('plugin', '/api/plugin', controller.plugin);
+
+  // workflow设计
+  router.resources('workflow', '/api/workflow', controller.workflow);
 
   router.get('/api/start', controller.home.start);
   router.get('/api/stop', controller.home.stop);
