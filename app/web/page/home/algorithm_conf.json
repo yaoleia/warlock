@@ -35,9 +35,79 @@
       }
     },
     "module": "put_text",
+    "plugin_key": "062381ad5a6f10f1b06ba85a36befbb8",
     "super_type": "Algorithm",
     "type": "test_algorithm",
     "version": "1_0_0"
+  },
+  "216d90493116ecf0d8cb893631b4019b": {
+    "author": "liwen",
+    "class": "InformPusher",
+    "create_time": 154234683346,
+    "exec_outputs": {
+      "socket_io": {
+        "type": "socket"
+      }
+    },
+    "exec_params": {
+      "push_info": {
+        "require": true
+      }
+    },
+    "init_params": {
+      "event": {
+        "require": true,
+        "type": "str",
+        "value": "server_response"
+      },
+      "host": {
+        "require": true,
+        "type": "str",
+        "value": "127.0.0.1"
+      },
+      "interval_time": {
+        "require": true,
+        "type": "float",
+        "value": 0.1
+      },
+      "namespace": {
+        "require": true,
+        "type": "str",
+        "value": "/push"
+      },
+      "port": {
+        "require": true,
+        "type": "int",
+        "value": 5002
+      }
+    },
+    "module": "inform_pusher",
+    "plugin_key": "216d90493116ecf0d8cb893631b4019b",
+    "super_type": "Other",
+    "type": "Pusher",
+    "version": "x"
+  },
+  "258c5cd2445372409cdd9d093d615f48": {
+    "author": "liwen",
+    "class": "SimulateTrigger",
+    "create_time": 154234683346,
+    "exec_outputs": {
+      "trigger_status": {
+        "type": "bool"
+      }
+    },
+    "init_param": {
+      "interval_time": {
+        "require": true,
+        "type": "float",
+        "value": 1
+      }
+    },
+    "module": "simulate_trigger",
+    "plugin_key": "258c5cd2445372409cdd9d093d615f48",
+    "super_type": "HardWare",
+    "type": "trigger",
+    "version": "x"
   },
   "57f678706abaf4dfd7788fa6fa52ba68": {
     "author": "liwen",
@@ -70,6 +140,7 @@
       }
     },
     "module": "get_rotation_matrix2d",
+    "plugin_key": "57f678706abaf4dfd7788fa6fa52ba68",
     "super_type": "Algorithm",
     "type": "test_algorithm",
     "version": "1_0_0"
@@ -105,6 +176,7 @@
       }
     },
     "module": "img_binary",
+    "plugin_key": "5b90bfe6ecfb09bbe81affcf3be22b10",
     "super_type": "Algorithm",
     "type": "test_algorithm",
     "version": "1_0_0"
@@ -140,6 +212,7 @@
       }
     },
     "module": "warpaffine",
+    "plugin_key": "75f937d5af573fb11796a52938185f3d",
     "super_type": "Algorithm",
     "type": "test_algorithm",
     "version": "1_0_0"
@@ -175,6 +248,7 @@
       }
     },
     "module": "bgr_gray",
+    "plugin_key": "acb0b6544d5ba772d907246fd12ddd40",
     "super_type": "Algorithm",
     "type": "test_algorithm",
     "version": "1_0_0"
@@ -221,6 +295,7 @@
       }
     },
     "module": "logitech_camera",
+    "plugin_key": "b7acc31b7535b5265e296ee2fcef76d5",
     "super_type": "HardWare",
     "type": "Camera",
     "version": "0_0_1"

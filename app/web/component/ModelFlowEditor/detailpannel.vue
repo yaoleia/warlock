@@ -1,5 +1,5 @@
 <template>
-    <div class="detail-pannel">
+    <div class="detail-pannel" :class="{fade:update}">
         <div id="node_detailpannel" data-status="node-selected" class="pannel">
             <div class="pannel-title">模块详情</div>
             <div class="block-container">
@@ -7,20 +7,35 @@
                     <div class="title">{{selectedModel.shape}}</div>
                     <el-form @submit.native.prevent v-if='selectedModel.init_params'>
                         <div class="params-title"><i class="el-icon-info"></i> init_params</div>
-                        <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.init_params' :key='key'>
+                        <el-form-item v-for='(item,key) in selectedModel.init_params' :key='key'>
+                            <div class="params-name"><span v-if="item.require" class="red">*</span> {{key}}:</div>
                             <component :is='typeOfComponent(item.value)' v-model="item.value" :disabled="readMode"></component>
                         </el-form-item>
                     </el-form>
                     <el-form @submit.native.prevent v-if='selectedModel.exec_params'>
                         <div class="params-title"><i class="el-icon-info"></i> exec_params</div>
-                        <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.exec_params' :key='key'>
-                            <component :is='typeOfComponent(item.value)' v-model="item.value" :disabled="readMode"></component>
+                        <el-form-item v-for='(item,key) in selectedModel.exec_params' :key='key'>
+                            <div class="params-name"><span v-if="item.require" class="red">*</span> {{key}}</div>
+                            <transition-group name="fade">
+                                <ul class="connect" v-if='item.list' v-for="i in item.list" :key="i.id">
+                                    <li><i class="el-icon-arrow-left"></i>{{i.name}}</li>
+                                    <li>id: {{i.id}}</li>
+                                    <li>module: {{i.module}}</li>
+                                </ul>
+                            </transition-group>
                         </el-form-item>
                     </el-form>
                     <el-form @submit.native.prevent v-if='selectedModel.exec_outputs'>
                         <div class="params-title"><i class="el-icon-info"></i> exec_outputs</div>
-                        <el-form-item :label='key+":"' v-for='(item,key) in selectedModel.exec_outputs' :key='key'>
-                            <component :is='typeOfComponent(item.value)' v-model="item.value" :disabled="readMode"></component>
+                        <el-form-item v-for='(item,key) in selectedModel.exec_outputs' :key='key'>
+                            <div class="params-name"><span v-if="item.require" class="red">*</span> {{key}}</div>
+                            <transition-group name="fade">
+                                <ul class="connect" v-if='item.list' v-for="i in item.list" :key="i.id">
+                                    <li><i class="el-icon-arrow-right"></i>{{i.name}}</li>
+                                    <li>id: {{i.id}}</li>
+                                    <li>module: {{i.module}}</li>
+                                </ul>
+                            </transition-group>
                         </el-form-item>
                     </el-form>
                     <!-- <div v-if="selectedModel.shape === 'factory-card'">
@@ -83,6 +98,7 @@
     export default {
         data() {
             return {
+                update: true,
                 checkedBox: []
             };
         },
@@ -119,6 +135,12 @@
         watch: {
             checkedBox(arr) {
                 this.$emit('updateGraph', ['checkedBox', arr]);
+            },
+            selectedModel() {
+                this.update = false
+                this.$nextTick(() => {
+                    this.update = true
+                })
             }
         }
     };
@@ -130,6 +152,27 @@
         right: 0px;
         z-index: 2;
         width: 200px;
+        opacity: 0;
+        &.fade {
+            opacity: 1;
+            transition: 0.2s linear;
+        }
+        .connect {
+            color: #ccc;
+            border: 1px solid #444;
+            line-height: 24px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            li {
+                > i {
+                    margin-right: 10px;
+                }
+                padding-left: 10px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
         #node_detailpannel {
             height: 100%;
         }
@@ -137,6 +180,13 @@
             color: #eee;
             background: #555;
             padding: 4px;
+        }
+        .params-name {
+            color: #878d99;
+            .red {
+                font-size: 18px;
+                color: red;
+            }
         }
         .pannel {
             display: none;
@@ -168,8 +218,8 @@
                 margin-bottom: 0;
             }
             .title {
-                font-size: 15px;
-                color: #eee;
+                font-size: 17px;
+                color: #ff8800;
                 padding-bottom: 30px;
             }
             input {

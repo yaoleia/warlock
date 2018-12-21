@@ -134,10 +134,23 @@ export default {
                 const { action, item } = ev;
                 if (item && item.model) {
                     this.pushMsg(item.model, action)
+                    if (item.model.sourceAnchor) {
+                        this.fixEvPramas();
+                    }
                     return;
                 }
                 this.pushMsg(action)
             });
+
+            let anchorItem = null;
+            // 锚点连接动作
+            flow.on('anchor:mousedown', ev => {
+                anchorItem = ev.shape.getItem();
+            })
+            flow.on('anchor:mouseup', ev => {
+                if (!anchorItem) return;
+                this.changeSelected(anchorItem);
+            })
 
             // 输入锚点不可以连出边
             flow.on('hoveranchor:beforeaddedge', ev => {
@@ -207,6 +220,37 @@ export default {
             editor.add(toolBar);
             editor.add(contextMenu);
             editor.add(itemPannel);
+        },
+        fixEvPramas() {
+            const nodes = this.flow.getNodes();
+            nodes.forEach(n => {
+                const model = n.getModel();
+                const object = { ...model.exec_outputs, ...model.exec_params };
+                for (const key in object) {
+                    if (object.hasOwnProperty(key)) {
+                        const element = object[key];
+                        element.list = [];
+                    }
+                }
+            })
+            const edges = this.flow.getEdges();
+            edges.forEach(e => {
+                const smodel = e.source.getModel();
+                const sIndex = e.model.sourceAnchor;
+                const sName = smodel.anchor[sIndex].name;
+                const toTarget = { name: smodel.anchor[sIndex].name, id: smodel.id, module: smodel.module };
+                const tmodel = e.target.getModel();
+                const tIndex = e.model.targetAnchor;
+                const tName = tmodel.anchor[tIndex].name;
+                const toSource = { name: tmodel.anchor[tIndex].name, id: tmodel.id, module: tmodel.module };
+
+                smodel.exec_outputs[sName].list.push(toSource);
+                tmodel.exec_params[tName].list.push(toTarget);
+            })
+        },
+        changeSelected(item) {
+            this.flow.clearSelected();
+            this.flow.setSelected(item, true)
         },
         modelFilter(model) {
             const { anchor, exec_outputs, exec_params, init_params, shape, size, x, y, index, ...msgFilt } = model;

@@ -90,14 +90,16 @@
                     },
                     setAnchors(item) {
                         // 生成锚点
-                        const outputs = this.exec_outputs;
-                        const inputs = this.exec_params;
+                        const outputs = this.exec_outputs || [];
+                        const inputs = this.exec_params || [];
                         const inLength = Object.keys(inputs).length;
                         const outLength = Object.keys(outputs).length;
                         const inAnchors = Object.keys(inputs).map((ii, index) => {
+                            inputs[ii].list = []
                             return [(index + 1) / (inLength + 1), 0, { name: ii, type: inputs[ii].type, anchorType: 'input' }]
                         })
                         const outAnchors = Object.keys(outputs).map((oo, index) => {
+                            outputs[oo].list = []
                             return [(index + 1) / (outLength + 1), 1, { name: oo, type: outputs[oo].type, anchorType: 'output' }]
                         })
                         this.anchor = [...inAnchors, ...outAnchors];
