@@ -131,12 +131,10 @@ export default {
             });
 
             flow.on('afterchange', ev => {
+                this.fixEvPramas();
                 const { action, item } = ev;
                 if (item && item.model) {
                     this.pushMsg(item.model, action)
-                    if (item.model.sourceAnchor) {
-                        this.fixEvPramas();
-                    }
                     return;
                 }
                 this.pushMsg(action)
