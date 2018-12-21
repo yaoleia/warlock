@@ -11,7 +11,7 @@
                     <v-icon name="console" />
                 </el-button>
                 <el-button type="text" :class="componentIs=='run'?'active':''" @click="runClick">
-                    <v-icon v-if='!runOrStop' name="play" />
+                    <v-icon v-if='!runDesign' name="play" />
                     <v-icon v-else name="stop" />
                 </el-button>
             </div>
@@ -63,15 +63,14 @@
                 showContextMenu: false,
                 canMove: false,
                 mouse: {},
-                componentIs: 'output',
-                runOrStop: false
+                componentIs: 'output'
             };
         },
         components: {
             outputMsg,
             runMsg
         },
-        props: ['showTerminal', 'msgList', 'terminalIs'],
+        props: ['showTerminal', 'msgList', 'terminalIs', 'runDesign'],
         watch: {
             terminalIs(s) {
                 if (s) {
@@ -82,7 +81,7 @@
         methods: {
             runClick() {
                 if (this.componentIs === 'run') {
-                    this.runOrStop = !this.runOrStop;
+                    this.$emit('update:runDesign', !this.runDesign)
                 }
                 this.componentIs = 'run';
             },
@@ -93,7 +92,9 @@
             },
             clearMsgList() {
                 this.showContextMenu = false;
-                this.$emit('update:msgList', [])
+                if (this.componentIs === 'output') {
+                    this.$emit('update:msgList', [])
+                }
             },
             mousemove(e) {
                 const { diffH } = this.mouse;

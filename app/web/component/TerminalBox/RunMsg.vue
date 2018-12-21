@@ -10,7 +10,7 @@
             return {
             };
         },
-        props: [],
+        props: ['runDesign'],
         methods: {
 
         }

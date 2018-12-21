@@ -17,7 +17,7 @@
                 <div ref="minimap" slot="minimap"></div>
             </navigator>
             <page ref="page" @keydown.native.ctrl.192='ctrl192' />
-            <terminal-box :msgList.sync='msgList' :showTerminal.sync='showTerminal' :terminalIs='terminalIs'></terminal-box>
+            <terminal-box :runDesign.sync='runDesign' :msgList.sync='msgList' :showTerminal.sync='showTerminal' :terminalIs='terminalIs'></terminal-box>
             <context-menu ref="contextmenu" v-show="!readMode" @terminalFor='terminalFor' />
         </div>
     </div>
@@ -47,6 +47,7 @@
         extends: Editor,
         data() {
             return {
+                runDesign: false,
                 msgList: [],
                 showTerminal: false,
                 name: '',
