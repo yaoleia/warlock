@@ -1,7 +1,5 @@
 <template>
-    <keep-alive>
-        <router-view :editorLoaded='editorLoaded'></router-view>
-    </keep-alive>
+    <router-view :editorLoaded='editorLoaded'></router-view>
 </template>
 <style>
 </style>
@@ -178,6 +176,10 @@
                     await this.$store.dispatch(SET_ALGORITHM_MAP);
                     await this.registerBase();
                 } catch (error) {
+                    this.$message({
+                        type: 'error',
+                        message: '获取plugins列表失败！'
+                    })
                     throw error;
                 } finally {
                     this.editorLoaded.resolve();

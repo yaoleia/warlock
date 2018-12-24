@@ -99,12 +99,28 @@
             }
         },
         methods: {
+            loadingUi() {
+                return this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            },
             indexMethod(index) {
                 return (this.q.pageIndex - 1) * this.q.pageSize + index + 1
             },
             async deletePlugin(obj) {
-                const resp = await this.$request.delete(`/api/plugin/${obj.plugin_key}`);
-                this.setAlgorithm();
+                try {
+                    const resp = await this.$request.delete(`/api/plugin/${obj.plugin_key}`);
+                    this.setAlgorithm();
+                } catch (error) {
+                    this.$message({
+                        type: 'error',
+                        message: '删除插件失败！'
+                    })
+                    throw error;
+                }
             },
             getInnerHeight() {
                 if (EASY_ENV_IS_BROWSER) {

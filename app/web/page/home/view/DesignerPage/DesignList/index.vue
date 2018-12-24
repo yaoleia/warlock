@@ -372,9 +372,18 @@
                 if (EASY_ENV_IS_BROWSER) {
                     this.loading = true;
                 }
-                const designList = await this.$request.get('/api/workflow');
-                this.designList = designList.data.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf());
-                this.loading = false;
+                try {
+                    const designList = await this.$request.get('/api/workflow');
+                    this.designList = designList.data.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf());
+                } catch (error) {
+                    this.$message({
+                        type: 'error',
+                        message: '获取流程流程列表失败！'
+                    })
+                    throw error;
+                } finally {
+                    this.loading = false;
+                }
             },
             handleSizeChange(val) {
                 this.q.pageSize = val
