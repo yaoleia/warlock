@@ -1,10 +1,15 @@
 <template>
     <div class="upload-page">
-        <el-upload class="uploader" accept=".qz,.zip" drag action="/api/plugin" name='file' multiple :on-success='setAlgorithm' :before-upload="beforeAvatarUpload" :on-error='uploadError' :with-credentials='true' :headers="{'x-csrf-token':csrf}">
+        <el-upload class="uploader" accept=".qz,.zip" :on-progress='onProgress' :show-file-list='false' drag :action="'/api/proxyurl?url='+serverUrl+'/api/plugin'" name='file' multiple :on-success='setAlgorithm' :before-upload="beforeAvatarUpload" :on-error='uploadError' :with-credentials='true' :headers="{'x-csrf-token':csrf}">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传.qz文件</div>
         </el-upload>
+        <div class="progress-model" v-show="showProgess">
+            <div class="progress-wrap">
+                <el-progress type="circle" :percentage="progress.percent" :status="progress.status"></el-progress>
+                <p>{{progress.name}}</p>
+            </div>
+        </div>
         <el-table ref="multipleTable" stripe :data="pluginList" v-loading="loading" :height="innerHeight">
             <div slot="empty">
                 <p v-if='!loading'>No Content</p>
@@ -42,7 +47,7 @@
                 <template slot-scope="scope">
                     <div class="opration">
                         <div class="top-btn">
-                            <el-button title="删除" type="text" @click="deletePlugin(scope.row)">
+                            <el-button title="删除" type="text" @click="handleDelete(scope.row)">
                                 删除
                             </el-button>
                         </div>
@@ -57,7 +62,13 @@
     .upload-page {
         position: relative;
         .uploader {
-            width: 360px;
+            .el-upload-dragger {
+                width: 250px;
+                height: 130px;
+                .el-icon-upload {
+                    margin: 20px 0 16px;
+                }
+            }
         }
         .demo-table-expand {
             display: flex;
@@ -70,6 +81,35 @@
         .el-table__expand-icon--expanded {
             color: #ff8800;
             font-weight: bolder;
+        }
+        .progress-model {
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10;
+            background: rgba($color: #000000, $alpha: 0.7);
+            .progress-wrap {
+                position: absolute;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                margin: auto;
+                width: 500px;
+                height: 200px;
+                text-align: center;
+                color: #ddd;
+                > p {
+                    margin-top: 20px;
+                }
+            }
+            .el-progress {
+                display: block;
+                width: 126px;
+                margin: 0 auto;
+            }
         }
     }
 </style>
@@ -87,7 +127,13 @@
                     pageSize: 20,
                     dateRange: '',
                     endTime: ''
-                }
+                },
+                progress: {
+                    percent: 0,
+                    status: '',
+                    name: ''
+                },
+                showProgess: false
             }
         },
         computed: {
@@ -96,9 +142,18 @@
             },
             algorithmConf() {
                 return this.$store.state.algorithmMap;
+            },
+            serverUrl() {
+                return this.$store.state.serverUrl
             }
         },
         methods: {
+            onProgress(event, file) {
+                const { percent } = event;
+                const { name } = file;
+                this.progress.percent = percent.toFixed(1) - 0;
+                this.progress.name = name;
+            },
             loadingUi() {
                 return this.$loading({
                     lock: true,
@@ -110,7 +165,17 @@
             indexMethod(index) {
                 return (this.q.pageIndex - 1) * this.q.pageSize + index + 1
             },
+            handleDelete(obj) {
+                this.$confirm('此操作将删除该插件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    await this.deletePlugin(obj);
+                })
+            },
             async deletePlugin(obj) {
+                const loading = this.loadingUi();
                 try {
                     const resp = await this.$request.delete(`/api/plugin/${obj.plugin_key}`);
                     this.setAlgorithm();
@@ -120,6 +185,8 @@
                         message: '删除插件失败！'
                     })
                     throw error;
+                } finally {
+                    loading.close();
                 }
             },
             getInnerHeight() {
@@ -136,6 +203,9 @@
                 if (!isLt100M) {
                     this.$message.error('上传头像图片大小不能超过 200MB!');
                 }
+                if (isLt100M) {
+                    this.showProgess = true;
+                }
                 return isLt100M;
             },
             uploadError(err, file, fileList) {
@@ -143,12 +213,31 @@
                     message: `上传失败，${err.status}`,
                     type: 'error'
                 })
+                this.progress.status = 'exception'
             },
-            setAlgorithm() {
+            setAlgorithm(response) {
+                if (response) {
+                    this.$message({
+                        type: 'info',
+                        message: response
+                    })
+                    if (response.indexOf('error') != -1) {
+                        this.progress.status = 'exception'
+                    }
+                }
                 this.$store.dispatch(SET_ALGORITHM_MAP);
             }
         },
         watch: {
+            'progress.percent': function(p) {
+                if (p == 100) {
+                    setTimeout(() => {
+                        this.showProgess = false;
+                        this.progress.percent = 0;
+                        this.progress.status = '';
+                    }, 1500);
+                }
+            },
             algorithmConf(obj) {
                 this.pluginList = Object.values(obj);
             }

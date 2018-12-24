@@ -54,10 +54,13 @@ class PluginService extends Service {
       const resp = await this.app.curl(`${this.serverUrl}/api/plugin`, {
         method: 'POST',
         headers: form.headers(),
-        // stream
+        // stream,
         stream: form,
         dataType: 'json'
       });
+      // const resp = await this.app.http.post(`${this.serverUrl}/api/plugin`, form, {
+      //   headers: form.headers()
+      // })
       return resp;
     } catch (error) {
       await sendToWormhole(stream);
