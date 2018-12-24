@@ -188,8 +188,61 @@
             FlowDisplayer
         },
         methods: {
+            loadingUi() {
+                return this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            },
             async activeChange(item, statu) {
-                await this.$request.patch(`/api/workflow/${item.id}`, item);
+                const loading = this.loadingUi();
+                try {
+                    if (statu) {
+                        await this.creatTask(item);
+                    } else {
+                        await this.deleteTask(item);
+                    }
+                    await this.$request.patch(`/api/workflow/${item.id}`, item);
+                } catch (error) {
+                    throw error;
+                } finally {
+                    loading.close();
+                }
+            },
+            async creatTask(item) {
+                try {
+                    // 获取一个任务id
+                    const task = await this.$request.get('/api/task');
+                    const taskId = task.data.data;
+                    if (taskId) {
+                        const creatTask = await this.$request.post('/api/task', {
+                            task_id: taskId,
+                            workflow_id: item.id
+                        });
+                        if (creatTask.data === 'server_error') {
+                            item.task_id = '';
+                            item.active = false;
+                            this.$message({
+                                message: `开启任务失败! ${creatTask.data}`,
+                                type: 'error'
+                            })
+                            return;
+                        }
+                        item.task_id = taskId;
+                    }
+                } catch (error) {
+                    item.active = false;
+                }
+            },
+            async deleteTask(item) {
+                try {
+                    const deleteTask = await this.$request.delete(`/api/task/${item.task_id}`);
+                    item.task_id = '';
+                } catch (error) {
+                    item.active = true;
+                }
             },
             gotoWatch(item) {
                 this.$router.push({ name: '新建流程', params: { id: item.id, flow: item, read: true } });

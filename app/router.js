@@ -16,6 +16,9 @@ module.exports = app => {
   // workflow设计
   router.resources('workflow', '/api/workflow', controller.workflow);
 
+  // task任务
+  router.resources('task', '/api/task', controller.task);
+
   router.get('/api/start', controller.home.start);
   router.get('/api/stop', controller.home.stop);
   router.post('/api/usb', controller.home.usb);

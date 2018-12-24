@@ -15,6 +15,14 @@
             };
         },
         methods: {
+            loadingUi() {
+                return this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            },
             async importG6Editor() {
                 const G6Editor = await import('@antv/g6-editor');
                 G6Editor.track(false)
@@ -164,10 +172,17 @@
                 }
             },
             async init() {
+                const loading = this.loadingUi();
                 this.editorLoaded = $.Deferred();
-                await this.$store.dispatch(SET_ALGORITHM_MAP);
-                await this.registerBase();
-                this.editorLoaded.resolve();
+                try {
+                    await this.$store.dispatch(SET_ALGORITHM_MAP);
+                    await this.registerBase();
+                } catch (error) {
+                    throw error;
+                } finally {
+                    this.editorLoaded.resolve();
+                    loading.close();
+                }
             }
         },
         computed: {

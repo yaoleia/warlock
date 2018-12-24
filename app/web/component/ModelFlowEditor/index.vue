@@ -68,7 +68,7 @@
             }
         },
         beforeDestroy() {
-            this.editor.destroy();
+            this.editor && this.editor.destroy();
         },
         async mounted() {
             await this.editorLoaded;
@@ -122,10 +122,12 @@
                 })
             },
             readData() {
+                if (!this.flow) return;
                 this.pushMsg(this.flowData)
                 this.flow.read(this.flowData)
             },
             isEdited() {
+                if (!this.flow) return false;
                 const editData = JSON.stringify({ flowData: this.flow.save(), name: this.name });
                 const cacheData = JSON.stringify({ flowData: this.designItem.flowData, name: this.designItem.name });
                 if (editData === cacheData) {
