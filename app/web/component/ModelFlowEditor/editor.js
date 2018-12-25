@@ -131,6 +131,7 @@ export default {
             });
 
             flow.on('afterchange', ev => {
+                this.runDesign = false;
                 this.fixEvPramas();
                 const { action, item } = ev;
                 if (item && item.model) {

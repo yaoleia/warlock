@@ -146,7 +146,7 @@
     .el-table th.is-leaf {
         border: none;
     }
-    .el-table--enable-row-hover .el-table__body tr:hover > td {
+    .el-table--enable-row-hover .el-table__body .el-table__row:hover > td {
         background: none;
         &:nth-child(1) {
             border-left: 1px solid #ff8800;
@@ -155,7 +155,7 @@
             border-right: 1px solid #ff8800;
         }
     }
-    .el-table--enable-row-hover .el-table__body tr:hover {
+    .el-table--enable-row-hover .el-table__body .el-table__row:hover {
         box-shadow: 0 0 0 1px #ff8800;
     }
 

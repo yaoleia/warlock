@@ -1,16 +1,19 @@
 <template>
     <div class="upload-page">
-        <el-upload class="uploader" accept=".qz,.zip" :on-progress='onProgress' :show-file-list='false' drag :action="'/api/proxyurl?url='+serverUrl+'/api/plugin'" name='file' multiple :on-success='setAlgorithm' :before-upload="beforeAvatarUpload" :on-error='uploadError' :with-credentials='true' :headers="{'x-csrf-token':csrf}">
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        </el-upload>
+        <div class="top-wrap">
+            <el-upload class="uploader" accept=".qz,.zip" :on-progress='onProgress' :show-file-list='false' drag :action="'/api/proxyurl?url='+serverUrl+'/api/plugin'" name='file' multiple :on-success='setAlgorithm' :before-upload="beforeAvatarUpload" :on-error='uploadError' :with-credentials='true' :headers="{'x-csrf-token':csrf}">
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+            <el-input v-model="search" size="small" clearable placeholder="输入module/type/super_type关键字搜索" />
+        </div>
         <div class="progress-model" v-show="showProgess">
             <div class="progress-wrap">
                 <el-progress type="circle" :percentage="progress.percent" :status="progress.status"></el-progress>
                 <p>{{progress.name}}</p>
             </div>
         </div>
-        <el-table ref="multipleTable" stripe :data="pluginList" v-loading="loading" :height="innerHeight">
+        <el-table ref="multipleTable" stripe :data="pluginListFilter" v-loading="loading" :height="innerHeight">
             <div slot="empty">
                 <p v-if='!loading'>No Content</p>
             </div>
@@ -47,7 +50,13 @@
                 <template slot-scope="scope">
                     <div class="opration">
                         <div class="top-btn">
-                            <el-button title="删除" type="text" @click="handleDelete(scope.row)">
+                            <el-button v-if='!scope.row.open' title="展开" type="text" @click.native="handleExpand(scope.row)">
+                                展开
+                            </el-button>
+                            <el-button v-else title="收起" type="text" @click.native="handleExpand(scope.row)">
+                                收起
+                            </el-button>
+                            <el-button title="删除" type="text" @click.native="handleDelete(scope.row)">
                                 删除
                             </el-button>
                         </div>
@@ -70,17 +79,37 @@
                 }
             }
         }
-        .demo-table-expand {
-            display: flex;
-            justify-content: space-between;
-            > .el-form-item {
-                padding: 0 10px;
-                flex: 1;
+
+        .el-table {
+            .demo-table-expand {
+                display: flex;
+                justify-content: space-between;
+                > .el-form-item {
+                    padding: 0 10px;
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
             }
-        }
-        .el-table__expand-icon--expanded {
-            color: #ff8800;
-            font-weight: bolder;
+            table.el-table__body {
+                td.el-table__expanded-cell {
+                    background: #222 !important;
+                    border-radius: 0 !important;
+                }
+            }
+            .el-table__expand-icon,
+            .el-table__expand-icon--expanded {
+                font-weight: bolder;
+            }
+            .el-table__expand-icon--expanded {
+                color: #ff8800;
+            }
+            .top-btn {
+                *:hover {
+                    color: #ff8800;
+                }
+            }
         }
         .progress-model {
             position: fixed;
@@ -111,6 +140,17 @@
                 margin: 0 auto;
             }
         }
+        .top-wrap {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            .el-upload {
+                display: block;
+            }
+            > .el-input {
+                width: 300px;
+            }
+        }
     }
 </style>
 
@@ -133,7 +173,8 @@
                     status: '',
                     name: ''
                 },
-                showProgess: false
+                showProgess: false,
+                search: ''
             }
         },
         computed: {
@@ -145,9 +186,23 @@
             },
             serverUrl() {
                 return this.$store.state.serverUrl
+            },
+            pluginListFilter() {
+                return this.pluginList.filter(data => {
+                    data.open = false;
+                    if (!this.search) return true;
+                    const search = this.search.toLowerCase()
+                    if (data.module.toLowerCase().includes(search)) return true;
+                    if (data.type.toLowerCase().includes(search)) return true;
+                    if (data.super_type.toLowerCase().includes(search)) return true;
+                })
             }
         },
         methods: {
+            handleExpand(row) {
+                row.open = !row.open;
+                this.$refs.multipleTable.toggleRowExpansion(row)
+            },
             onProgress(event, file) {
                 const { percent } = event;
                 const { name } = file;

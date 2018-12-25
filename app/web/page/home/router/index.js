@@ -46,7 +46,7 @@ export const userRouterMap = {
     }
   },
   upload: {
-    name: '模块上传',
+    name: '插件上传',
     path: '/upload',
     component: UploadPage,
     meta: { role: ['admin'] }

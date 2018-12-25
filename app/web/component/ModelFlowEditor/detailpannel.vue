@@ -1,7 +1,7 @@
 <template>
     <div class="detail-pannel" :class="{fade:update}">
         <div id="node_detailpannel" data-status="node-selected" class="pannel">
-            <div class="pannel-title">模块详情</div>
+            <div class="pannel-title">插件详情</div>
             <div class="block-container">
                 <div v-if="selectedModel && selectedModel.module">
                     <div class="title">{{selectedModel.shape}}</div>

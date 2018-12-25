@@ -87,6 +87,14 @@
 
         },
         methods: {
+            loadingUi() {
+                return this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            },
             terminalFor(component) {
                 this.showTerminal = true;
                 this.terminalIs = component;
@@ -160,14 +168,45 @@
                         flowData: this.flow.save(),
                         active: false
                     })
-                    await this.$request.post('/api/workflow', this.designItem);
+                    await this.creatFlow();
                 } else {
                     Object.assign(this.designItem, { name: this.name, flowData: this.flow.save(), ts: this.$moment().format() })
-                    await this.$request.patch(`/api/workflow/${this.designItem.id}`, this.designItem);
+                    await this.patchFlow();
                 }
-                this.$nextTick(() => {
-                    this.$router.push({ path: '/design/designList', query: { reload: true } })
-                })
+            },
+            async patchFlow() {
+                const loading = this.loadingUi();
+                try {
+                    const resp = await this.$request.patch(`/api/workflow/${this.designItem.id}`, this.designItem);
+                    this.$nextTick(() => {
+                        this.$router.push({ path: '/design/designList', query: { reload: true } })
+                    })
+                } catch (error) {
+                    this.$message({
+                        type: 'error',
+                        message: '保存失败！'
+                    })
+                    throw error;
+                } finally {
+                    loading.close();
+                }
+            },
+            async creatFlow() {
+                const loading = this.loadingUi();
+                try {
+                    const resp = await this.$request.post('/api/workflow', this.designItem);
+                    this.$nextTick(() => {
+                        this.$router.push({ path: '/design/designList', query: { reload: true } })
+                    })
+                } catch (error) {
+                    this.$message({
+                        type: 'error',
+                        message: '保存失败！'
+                    })
+                    throw error;
+                } finally {
+                    loading.close();
+                }
             },
             changeEage(type) {
                 this.flow.changeAddEdgeModel({
@@ -181,6 +220,9 @@
                     this.data = p.flow.flowData;
                     this.readData();
                 }
+            },
+            runDesign(bol) {
+                console.log(bol)
             }
         }
     };
