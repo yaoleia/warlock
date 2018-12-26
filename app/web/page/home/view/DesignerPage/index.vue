@@ -37,8 +37,8 @@
 
                         const group = item.getGraphicGroup();
                         const model = item.getModel();
-                        const width = 200;
-                        const height = 40;
+                        const width = 160;
+                        const height = 36;
                         const x = -width / 2;
                         const y = -height / 2;
                         const borderRadius = 4;
@@ -83,9 +83,9 @@
                         group.addShape('text', {
                             attrs: {
                                 text: this.module,
-                                fontSize: 17,
-                                x: x + 10,
-                                y: y + 11,
+                                fontSize: 15,
+                                x: x + 8,
+                                y: y + 10,
                                 textAlign: 'start',
                                 textBaseline: 'top',
                                 fill: '#ff8800'

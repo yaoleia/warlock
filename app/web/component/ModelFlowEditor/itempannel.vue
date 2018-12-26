@@ -63,8 +63,10 @@
             font-size: 15px;
             padding-left: 12px;
         }
-        ul {
+        ul.item-pannel-list {
             padding: 0 15px;
+            height: calc(100% - 32px);
+            overflow: auto;
             li {
                 font-size: 15px;
                 line-height: 26px;

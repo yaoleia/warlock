@@ -246,11 +246,13 @@
             },
             getInnerHeight() {
                 if (EASY_ENV_IS_BROWSER) {
-                    if (window.innerWidth <= 1920) {
-                        this.innerHeight = 620;
-                    } else {
-                        this.innerHeight = 890;
-                    }
+                    this.innerHeight = window.innerHeight - 305;
+                    // if (window.innerWidth <= 1920) {
+                    //     console.log(window.innerHeight)
+                    //     this.innerHeight = 620;
+                    // } else {
+                    //     this.innerHeight = 890;
+                    // }
                 }
             },
             beforeAvatarUpload(file) {

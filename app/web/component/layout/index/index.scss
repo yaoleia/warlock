@@ -347,3 +347,15 @@ body {
         }
     }
 }
+
+@media screen and (max-width: 1440px) {
+    #app .main {
+        max-height: 684px;
+        .main-container {
+            >div {
+                min-width: 1420px;
+                width: 1420px;
+            }
+        }
+    }
+}

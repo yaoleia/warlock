@@ -35,17 +35,17 @@
             </el-table-column>
             <el-table-column prop="name" label="流程名称">
             </el-table-column>
-            <el-table-column label="预览" width="300">
+            <el-table-column label="概览" width="230">
                 <template slot-scope="scope">
                     <flow-displayer :flowData='scope.row.flowData' class="flow-wrap"></flow-displayer>
                 </template>
             </el-table-column>
-            <el-table-column label="创建时间" width="170">
+            <el-table-column label="创建时间" width="180">
                 <template slot-scope="scope">
                     <span v-text="$moment(scope.row.cts).format('YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
             </el-table-column>
-            <el-table-column label="最后修改时间" width="170">
+            <el-table-column label="最后修改时间" width="180">
                 <template slot-scope="scope">
                     <span v-text="$moment(scope.row.ts).format('YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
@@ -55,7 +55,7 @@
                     <el-switch @change="activeChange(scope.row,$event)" :disabled="scope.row.flowData.disabled" v-model="scope.row.active"></el-switch>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="340">
+            <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
                     <div class="opration">
                         <div class="top-btn">
@@ -463,11 +463,12 @@
             },
             getInnerHeight() {
                 if (EASY_ENV_IS_BROWSER) {
-                    if (window.innerWidth <= 1920) {
-                        this.innerHeight = 620;
-                    } else {
-                        this.innerHeight = 890;
-                    }
+                    this.innerHeight = window.innerHeight - 214;
+                    // if (window.innerWidth <= 1920) {
+                    //     this.innerHeight = 620;
+                    // } else {
+                    //     this.innerHeight = 890;
+                    // }
                 }
             }
         },
@@ -557,8 +558,8 @@
                 }
             }
             .cell .flow-wrap {
-                width: 300px;
-                height: 200px;
+                width: 210px;
+                height: 140px;
                 margin: 0 auto;
             }
             .el-loading-mask {
