@@ -1,6 +1,8 @@
 <template>
-    <div>
-        taskId:{{taskId}}
+    <div class="run-msg">
+        <div class="title" v-if='taskId'>
+            taskId: {{taskId}}
+        </div>
     </div>
 </template>
 
@@ -24,4 +26,7 @@
     };
 </script>
 <style lang="scss">
+    .run-msg {
+        color: #eee;
+    }
 </style>
