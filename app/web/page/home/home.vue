@@ -83,6 +83,10 @@
                     return;
                 }
             }
+            if (to.path === '/') {
+                next({ path: '/design/designList' })
+                return;
+            }
             next()
         }
     });

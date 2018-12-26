@@ -16,7 +16,7 @@
                 </el-button>
             </div>
             <keep-alive>
-                <component :is='componentIs+"-msg"' :msgList='msgList' :showTerminal='showTerminal'></component>
+                <component :is='componentIs+"-msg"' :msgList='msgList' :runDesign='runDesign' :taskId='taskId' :showTerminal='showTerminal'></component>
             </keep-alive>
         </div>
     </transition>
@@ -70,7 +70,7 @@
             outputMsg,
             runMsg
         },
-        props: ['showTerminal', 'msgList', 'terminalIs', 'runDesign'],
+        props: ['showTerminal', 'msgList', 'terminalIs', 'runDesign', 'taskId'],
         watch: {
             terminalIs(s) {
                 if (s) {

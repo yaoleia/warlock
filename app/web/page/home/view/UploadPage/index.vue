@@ -148,7 +148,7 @@
                 display: block;
             }
             > .el-input {
-                width: 300px;
+                width: 350px;
             }
         }
     }

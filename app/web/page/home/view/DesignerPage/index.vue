@@ -45,8 +45,8 @@
 
                         // 如果是新模块,则把注册数据安到model上
                         if (!model.module) {
-                            const { type, author, create_time, dependencies, exec_outputs, exec_params, init_params, module, version } = this;
-                            Object.assign(model, { type, author, create_time, dependencies, exec_outputs, exec_params, init_params, module, version, anchor: this.anchor.map(a => a[2]) })
+                            const { super_type, type, author, create_time, dependencies, exec_outputs, exec_params, init_params, module, version, plugin_key } = this;
+                            Object.assign(model, { super_type, type, author, create_time, dependencies, exec_outputs, exec_params, init_params, module, version, plugin_key, anchor: this.anchor.map(a => a[2]) })
                         }
 
                         // 生成元素

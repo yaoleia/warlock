@@ -52,7 +52,7 @@
             </el-table-column>
             <el-table-column label="运行状态">
                 <template slot-scope="scope">
-                    <el-switch @change="activeChange(scope.row,$event)" v-model="scope.row.active"></el-switch>
+                    <el-switch @change="activeChange(scope.row,$event)" :disabled="scope.row.flowData.disabled" v-model="scope.row.active"></el-switch>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="340">
@@ -197,6 +197,7 @@
                 });
             },
             async activeChange(item, statu) {
+                // task开关
                 const loading = this.loadingUi();
                 try {
                     if (statu) {
@@ -212,6 +213,7 @@
                 }
             },
             async creatTask(item) {
+                // 创建task
                 try {
                     // 获取一个任务id
                     const task = await this.$request.get('/api/task');
@@ -221,7 +223,7 @@
                             task_id: taskId,
                             workflow_id: item.id
                         });
-                        if (creatTask.data === 'server_error') {
+                        if (creatTask.data.indexOf('error') != -1) {
                             item.task_id = '';
                             item.active = false;
                             this.$message({
@@ -237,6 +239,7 @@
                 }
             },
             async deleteTask(item) {
+                // 删除task
                 try {
                     const deleteTask = await this.$request.delete(`/api/task/${item.task_id}`);
                     item.task_id = '';
@@ -245,6 +248,7 @@
                 }
             },
             gotoWatch(item) {
+                // 跳转到查看work-flow的displayer
                 this.$router.push({ name: '新建流程', params: { id: item.id, flow: item, read: true } });
             },
             jumperHandle(id) {
@@ -277,6 +281,7 @@
                 this.uploadOption.isIndeterminate = checkedCount > 0 && checkedCount < uploadCount;
             },
             onFileAdd(e) {
+                // input的file change事件
                 const files = e.target.files || e.dataTransfer.files;
                 if (!files.length) { return; }
                 this.createDesign(files[0]);
@@ -290,29 +295,43 @@
                     })
                     return;
                 }
-                const promises = addList.map(async r => {
-                    const resp = await this.$request.get(`/api/workflow/${r.id}`);
-                    if (resp.data.id) {
-                        await this.$request.patch(`/api/workflow/${r.id}`, r);
-                        return;
-                    }
-                    await this.$request.post('/api/workflow', r);
-                })
-                await Promise.all(promises);
-                this.uploadCancel();
-                await this.getDesignList();
+                const loading = this.loadingUi();
+                try {
+                    const promises = addList.map(async r => {
+                        // const resp = await this.$request.get(`/api/workflow/${r.id}`);
+                        // if (resp.data.id) {
+                        //     if (resp.data.active) {
+                        //         await this.deleteTask(r);
+                        //     }
+                        //     await this.$request.patch(`/api/workflow/${r.id}`, r);
+                        //     return;
+                        // }
+                        r.ts = this.$moment().format();
+                        await this.creatWorkflow(r);
+                    })
+                    await Promise.all(promises);
+                    this.uploadCancel();
+                    await this.getDesignList();
+                } catch (error) {
+                    throw error;
+                } finally {
+                    loading.close();
+                }
             },
             createDesign(file) {
+                // 创建可添加的流程（过滤和判断是不是可用）
                 const reader = new FileReader();
                 const self = this;
                 reader.onload = (e) => {
                     const result = JSON.parse(e.target.result)
                     result.forEach(r => {
-                        const notPass = r.flowData.nodes.some(node => !this.algorithmModuleList.includes(node.module));
-                        r.disabled = notPass;
+                        const notPass = r.flowData.nodes.some(node => !this.algorithmModuleList.includes(node.shape));
+                        // r.disabled = notPass;
+                        r.active = false;
+                        r.flowData.disabled = notPass;
                         if (notPass && this.uploadOption.checkAll) {
-                            this.uploadOption.checkAllDisabled = true;
-                            this.uploadOption.checkAll = false;
+                            // this.uploadOption.checkAllDisabled = true;
+                            // this.uploadOption.checkAll = false;
                         }
                     })
                     this.uploadOption.uploadList = result;
@@ -322,6 +341,7 @@
                 reader.readAsText(file);
             },
             handleDownload(list) {
+                // 导出work-flow的json文件
                 if (!list.length) {
                     this.$message({
                         message: '当前没有流程可导出',
@@ -329,34 +349,71 @@
                     })
                     return;
                 }
+                list.forEach(li => {
+                    delete li.id;
+                    delete li.task_id;
+                    li.active = false;
+                });
                 import('file-saver').then(FileSaver => {
                     const blob = new Blob([JSON.stringify(list)], { type: 'text/plain;charset=utf-8' });
                     FileSaver.saveAs(blob, `design${this.$moment().format('YYYYMMDDHHmmss')}.json`);
                 })
             },
             handleDelete(item) {
-                this.$confirm('此操作将删除该流程, 是否继续?', '提示', {
+                let msg = '此操作将删除该流程, 是否继续?';
+                if (item.active) {
+                    msg = '*任务正在运行,此操作将关闭任务*，' + msg;
+                }
+                this.$confirm(msg, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(async () => {
-                    const resp = await this.$request.delete(`/api/workflow/${item.id}`)
-                    this.$delete(this.designList, this.designList.indexOf(item));
+                    await this.deleteWorkflow(item);
                 })
+            },
+            async creatWorkflow(item) {
+                try {
+                    const resp = await this.$request.post('/api/workflow', item);
+                } catch (error) {
+                    this.$message({
+                        type: 'error',
+                        message: '创建流程失败！'
+                    })
+                    throw error;
+                }
+            },
+            async deleteWorkflow(item) {
+                const loading = this.loadingUi();
+                try {
+                    if (item.active) {
+                        await this.deleteTask(item);
+                    }
+                    const resp = await this.$request.delete(`/api/workflow/${item.id}`);
+                    await this.getDesignList();
+                } catch (error) {
+                    this.$message({
+                        type: 'error',
+                        message: '删除流程失败！'
+                    })
+                } finally {
+                    loading.close();
+                }
             },
             async handleCopy(item) {
                 const newItem = _.cloneDeep(item);
                 newItem.active = false;
                 newItem.ts = this.$moment().format();
                 newItem.cts = this.$moment().format();
-
+                delete newItem.id;
+                delete newItem.task_id;
                 this.$prompt('请输入新克隆的流程名称', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     inputValue: `${newItem.name}_copy_${this.$moment().valueOf()}`
                 }).then(async ({ value }) => {
                     newItem.name = value;
-                    await this.$request.post('/api/workflow', newItem);
+                    await this.creatWorkflow(newItem);
                     await this.getDesignList();
                     this.$message({
                         type: 'success',
@@ -374,6 +431,17 @@
                 }
                 try {
                     const designList = await this.$request.get('/api/workflow');
+                    designList.data.forEach(d => {
+                        d.flowData.disabled = false;
+                        d.flowData.nodes.forEach(n => {
+                            if (!this.algorithmModuleList.includes(n.shape)) {
+                                n.shape = n.shape + '_delete'
+                                if (!d.flowData.disabled) {
+                                    d.flowData.disabled = true;
+                                }
+                            }
+                        })
+                    })
                     this.designList = designList.data.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf());
                 } catch (error) {
                     this.$message({
@@ -432,6 +500,9 @@
                 if (q.reload) {
                     this.getDesignList()
                 }
+            },
+            algorithmModuleList() {
+                this.getDesignList()
             }
         }
     }

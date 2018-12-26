@@ -17,7 +17,7 @@
                 <div ref="minimap" slot="minimap"></div>
             </navigator>
             <page ref="page" @keydown.native.ctrl.192='ctrl192' />
-            <terminal-box :runDesign.sync='runDesign' :msgList.sync='msgList' :showTerminal.sync='showTerminal' :terminalIs='terminalIs'></terminal-box>
+            <terminal-box :runDesign.sync='runDesign' :taskId='taskId' :msgList.sync='msgList' :showTerminal.sync='showTerminal' :terminalIs='terminalIs'></terminal-box>
             <context-menu ref="contextmenu" v-show="!readMode" @terminalFor='terminalFor' />
         </div>
     </div>
@@ -46,6 +46,7 @@
         extends: Editor,
         data() {
             return {
+                taskId: '',
                 runDesign: false,
                 msgList: [],
                 showTerminal: false,
@@ -137,7 +138,9 @@
             isEdited() {
                 if (!this.flow) return false;
                 const editData = JSON.stringify({ flowData: this.flow.save(), name: this.name });
-                const cacheData = JSON.stringify({ flowData: this.designItem.flowData, name: this.designItem.name });
+                const cacheFlowData = { ...this.designItem.flowData };
+                delete cacheFlowData.disabled;
+                const cacheData = JSON.stringify({ flowData: cacheFlowData, name: this.designItem.name });
                 if (editData === cacheData) {
                     return false;
                 }
@@ -212,6 +215,42 @@
                 this.flow.changeAddEdgeModel({
                     shape: type
                 });
+            },
+            async creatTestTask() {
+                // 创建test|task
+                try {
+                    // 获取一个任务id
+                    const task = await this.$request.get('/api/task');
+                    const taskId = task.data.data;
+                    const flowData = this.flow.save();
+                    if (taskId) {
+                        const creatTask = await this.$request.post('/api/task', {
+                            task_id: taskId,
+                            flowData
+                        });
+                        if (creatTask.data.indexOf('error') != -1) {
+                            this.taskId = '';
+                            this.runDesign = false;
+                            this.$message({
+                                message: `开启任务失败! ${creatTask.data}`,
+                                type: 'error'
+                            })
+                            return;
+                        }
+                        this.taskId = taskId;
+                    }
+                } catch (error) {
+                    throw error;
+                }
+            },
+            async deleteTestTask() {
+                if (!this.taskId) return;
+                try {
+                    const deleteTask = await this.$request.delete(`/api/task/${this.taskId}`);
+                    this.taskId = '';
+                } catch (error) {
+                    throw error;
+                }
             }
         },
         watch: {
@@ -221,8 +260,12 @@
                     this.readData();
                 }
             },
-            runDesign(bol) {
-                console.log(bol)
+            async runDesign(bol) {
+                if (bol) {
+                    await this.creatTestTask();
+                } else {
+                    await this.deleteTestTask();
+                }
             }
         }
     };
