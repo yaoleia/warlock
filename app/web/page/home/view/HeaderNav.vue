@@ -19,7 +19,7 @@
                 </el-menu-item>
             </template>
         </el-menu>
-        <div class="logout" v-if="username&&!$root.designId">
+        <div class="logout" v-if="username&&!$root.taskId">
             <v-icon name='user'></v-icon>
             <el-button type="text" @click='logout'>退出</el-button>
         </div>

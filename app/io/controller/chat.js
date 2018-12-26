@@ -3,9 +3,16 @@ module.exports = app => {
   return async function() {
     const message = this.args[0];
     const serverUrl = app.config.serverUrl;
+    if (this.socket.ioClient) {
+      this.socket.ioClient.close();
+      this.socket.ioClient = null
+    }
+    if (!message) return;
+
+    const wsServerUrl = `${serverUrl.replace('5000', '5002')}/${message}`;
     if (!this.socket.ioClient) {
       this.socket.ioClient = ioClient(
-        `${serverUrl}/detect_push`,
+        wsServerUrl,
         this.socket,
         'ak', serverUrl
       );

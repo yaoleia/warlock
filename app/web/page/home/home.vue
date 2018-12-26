@@ -47,13 +47,13 @@
 
     router.beforeEach((to, from, next) => {
         if (!EASY_ENV_IS_BROWSER) return;
-        const designId = window.sessionStorage.designId;
-        if (designId && !to.query.id) {
-            to.query.id = designId;
+        const taskId = window.sessionStorage.taskId;
+        if (taskId && !to.query.id) {
+            to.query.id = taskId;
         }
         const id = to.query.id;
         if (to.path === '/login') {
-            window.sessionStorage.designId = '';
+            window.sessionStorage.taskId = '';
             store.state.username = '';
             to.query.id = ''
             next();
@@ -63,7 +63,7 @@
             // 有id查看模式
             if (!routered) {
                 routered = true;
-                window.sessionStorage.designId = id;
+                window.sessionStorage.taskId = id;
                 router.addRoutes(getRouer(visitorRouterMap)) // 动态添加可访问路由表
                 next({ path: '/', query: to.query })
                 return;
@@ -98,7 +98,7 @@
             return {
                 globalWebsocket: null,
                 menu: null,
-                designId: null
+                taskId: null
             }
         },
         components: {
@@ -117,7 +117,7 @@
             }
         },
         watch: {
-            designId(id) {
+            taskId(id) {
                 if (id) {
                     this.menu = { ...visitorRouterMap, ...constantRouterMap }
                 }
@@ -127,7 +127,7 @@
             checkMode() {
                 const query = this.$route.query;
                 if (query.id) {
-                    this.designId = query.id;
+                    this.taskId = query.id;
                 } else {
                     if (this.username) {
                         this.menu = { ...userRouterMap, ...constantRouterMap }

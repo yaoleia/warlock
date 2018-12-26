@@ -1,5 +1,6 @@
 'use strict';
 const FormData = require('form-data');
+const ms = require('ms');
 module.exports = app => {
   return class IndexController extends app.Controller {
     async login(ctx) {
@@ -33,6 +34,7 @@ module.exports = app => {
       const body = ctx.request.body;
       if (body.username === 'admin' && body.password === 'admin') {
         ctx.session.username = body.username;
+        ctx.session.maxAge = ms('7d');
         ctx.body = 'success'
       } else {
         ctx.body = 'fail'

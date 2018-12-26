@@ -118,7 +118,7 @@
                 }
             },
             emitChat() {
-                window.ws.off('msg').emit('chat', 'get').on('msg', m => {
+                window.ws.off('msg').emit('chat', this.$root.taskId).on('msg', m => {
                     if (this.switchCraft) {
                         this.curProduct = { ...curObj, ...m }
                     }

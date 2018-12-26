@@ -13,6 +13,10 @@ module.exports = app => {
     }
   };
 
+  exports.session = {
+    renew: true,
+  }
+
   exports.io = {
     namespace: {
       '/': {

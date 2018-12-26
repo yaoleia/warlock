@@ -59,7 +59,7 @@
                 <template slot-scope="scope">
                     <div class="opration">
                         <div class="top-btn">
-                            <el-button v-if='scope.row.active' title="外链" type="primary" @click="jumperHandle(scope.row.id)">
+                            <el-button v-if='scope.row.active' title="外链" type="primary" @click="jumperHandle(scope.row.task_id)">
                                 <v-icon name='wailian'></v-icon>
                             </el-button>
                             <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row}}">
@@ -251,8 +251,8 @@
                 // 跳转到查看work-flow的displayer
                 this.$router.push({ name: '新建流程', params: { id: item.id, flow: item, read: true } });
             },
-            jumperHandle(id) {
-                window.open(`/?id=${id}}`);
+            jumperHandle(taskId) {
+                window.open(`/?id=${taskId}}`);
             },
             contextmenuHandle(row, e) {
                 this.active = row;

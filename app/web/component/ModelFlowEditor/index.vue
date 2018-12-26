@@ -69,9 +69,15 @@
             }
         },
         beforeDestroy() {
+            window.onbeforeunload = null;
             this.editor && this.editor.destroy();
+            this.deleteTestTask()
         },
         async mounted() {
+            window.onbeforeunload = async (event) => {
+                await this.deleteTestTask();
+                event.returnValue = '确定退出当前页面吗?';
+            };
             await this.editorLoaded;
             const params = this.$route.params;
             this.init(params)
@@ -109,13 +115,15 @@
             },
             goBack(bol) {
                 if (bol) {
-                    this.$nextTick(() => {
+                    this.$nextTick(async () => {
+                        await this.deleteTestTask();
                         this.$router.go(-1)
                     })
                     return;
                 }
                 if (!this.isEdited()) {
-                    this.$nextTick(() => {
+                    this.$nextTick(async () => {
+                        await this.deleteTestTask();
                         this.$router.go(-1)
                     })
                     return;
@@ -125,7 +133,8 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$nextTick(() => {
+                    this.$nextTick(async () => {
+                        await this.deleteTestTask();
                         this.$router.go(-1)
                     })
                 })
@@ -181,7 +190,8 @@
                 const loading = this.loadingUi();
                 try {
                     const resp = await this.$request.patch(`/api/workflow/${this.designItem.id}`, this.designItem);
-                    this.$nextTick(() => {
+                    this.$nextTick(async () => {
+                        await this.deleteTestTask()
                         this.$router.push({ path: '/design/designList', query: { reload: true } })
                     })
                 } catch (error) {
@@ -198,7 +208,8 @@
                 const loading = this.loadingUi();
                 try {
                     const resp = await this.$request.post('/api/workflow', this.designItem);
-                    this.$nextTick(() => {
+                    this.$nextTick(async () => {
+                        await this.deleteTestTask()
                         this.$router.push({ path: '/design/designList', query: { reload: true } })
                     })
                 } catch (error) {
