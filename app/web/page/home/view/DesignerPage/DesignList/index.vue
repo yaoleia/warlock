@@ -252,7 +252,7 @@
                 this.$router.push({ name: '新建流程', params: { id: item.id, flow: item, read: true } });
             },
             jumperHandle(taskId) {
-                window.open(`/?id=${taskId}}`);
+                window.open(`/?id=${taskId}`);
             },
             contextmenuHandle(row, e) {
                 this.active = row;
@@ -431,7 +431,7 @@
                 }
                 try {
                     const designList = await this.$request.get('/api/workflow');
-                    designList.data.forEach(d => {
+                    const promises = designList.data.map(async d => {
                         d.flowData.disabled = false;
                         d.flowData.nodes.forEach(n => {
                             if (!this.algorithmModuleList.includes(n.shape)) {
@@ -441,7 +441,16 @@
                                 }
                             }
                         })
+                        if (d.task_id) {
+                            const resp = await this.$request.get(`/api/task/${d.task_id}`)
+                            if (resp.data !== true) {
+                                d.task_id = '';
+                                d.active = false;
+                                await this.$request.patch(`/api/workflow/${d.id}`, d);
+                            }
+                        }
                     })
+                    await Promise.all(promises);
                     this.designList = designList.data.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf());
                 } catch (error) {
                     this.$message({

@@ -48,6 +48,7 @@ function ioClient(addr, socket, ak, serverUrl) {
   });
 
   client.on('server_response', message => {
+    console.log(message)
     // 转发detect_push到warlock前端
     for (const attr in message.data) {
       if (attr.indexOf('_path') !== -1) {

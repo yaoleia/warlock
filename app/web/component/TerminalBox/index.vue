@@ -16,7 +16,7 @@
                 </el-button>
             </div>
             <keep-alive>
-                <component :is='componentIs+"-msg"' :msgList='msgList' :runDesign='runDesign' :taskId='taskId' :showTerminal='showTerminal'></component>
+                <component :is='componentIs+"-msg"' :msgList='msgList' :runDesign='runDesign' :runMsgList='runMsgList' :taskId='taskId' :showTerminal='showTerminal'></component>
             </keep-alive>
         </div>
     </transition>
@@ -63,7 +63,8 @@
                 showContextMenu: false,
                 canMove: false,
                 mouse: {},
-                componentIs: 'output'
+                componentIs: 'output',
+                runMsgList: []
             };
         },
         components: {
@@ -94,6 +95,8 @@
                 this.showContextMenu = false;
                 if (this.componentIs === 'output') {
                     this.$emit('update:msgList', [])
+                } else {
+                    this.runMsgList = [];
                 }
             },
             mousemove(e) {
