@@ -1,6 +1,6 @@
 'use strict';
 import axios from 'axios';
-axios.defaults.timeout = 15000;
+axios.defaults.timeout = 5000;
 axios.defaults.xsrfHeaderName = 'x-csrf-token';
 axios.defaults.xsrfCookieName = 'csrfToken';
 export default {
