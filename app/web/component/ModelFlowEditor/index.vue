@@ -17,7 +17,7 @@
                 <div ref="minimap" slot="minimap"></div>
             </navigator>
             <page ref="page" @keydown.native.ctrl.192='ctrl192' />
-            <terminal-box :runDesign.sync='runDesign' :taskId='taskId' :msgList.sync='msgList' :showTerminal.sync='showTerminal' :terminalIs='terminalIs'></terminal-box>
+            <terminal-box :runDesign.sync='runDesign' @stop='deleteTestTask' @start='creatTestTask' :taskId='taskId' :msgList.sync='msgList' :showTerminal.sync='showTerminal' :terminalIs='terminalIs'></terminal-box>
             <context-menu ref="contextmenu" v-show="!readMode" @terminalFor='terminalFor' />
         </div>
     </div>
@@ -229,6 +229,7 @@
             },
             async creatTestTask() {
                 // 创建test|task
+                const loading = this.loadingUi();
                 try {
                     // 获取一个任务id
                     const task = await this.$request.task.getTaskId();
@@ -241,7 +242,6 @@
                         })
                         if (creatTask.data.indexOf('error') != -1) {
                             this.taskId = '';
-                            this.runDesign = false;
                             this.$message({
                                 message: `开启任务失败! ${creatTask.data}`,
                                 type: 'error'
@@ -249,23 +249,29 @@
                             return;
                         }
                         this.taskId = taskId;
+                        this.runDesign = true;
                     }
                 } catch (error) {
-                    this.runDesign = false;
                     this.$message({
                         message: `开启任务失败! ${error}`,
                         type: 'error'
                     })
                     throw error;
+                } finally {
+                    loading.close();
                 }
             },
             async deleteTestTask() {
                 if (!this.taskId) return;
+                const loading = this.loadingUi();
                 try {
                     const deleteTask = await this.$request.task.deleteTask(this.taskId);
                     this.taskId = '';
+                    this.runDesign = false;
                 } catch (error) {
                     throw error;
+                } finally {
+                    loading.close();
                 }
             }
         },
@@ -274,13 +280,6 @@
                 if (p.flow) {
                     this.data = p.flow.flowData;
                     this.readData();
-                }
-            },
-            async runDesign(bol) {
-                if (bol) {
-                    await this.creatTestTask();
-                } else {
-                    await this.deleteTestTask();
                 }
             }
         }

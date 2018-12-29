@@ -82,7 +82,11 @@
         methods: {
             runClick() {
                 if (this.componentIs === 'run') {
-                    this.$emit('update:runDesign', !this.runDesign)
+                    if (this.runDesign) {
+                        this.$emit('stop')
+                    } else {
+                        this.$emit('start')
+                    }
                 }
                 this.componentIs = 'run';
             },

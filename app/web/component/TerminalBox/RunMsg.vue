@@ -1,7 +1,7 @@
 <template>
     <div class="run-msg">
         <div class="title" v-if='taskId'>
-            taskId: {{taskId}}
+            <!-- taskId: {{taskId}} -->
         </div>
         <transition-group name="list-complete" tag="div" class="msg-list" ref="runMsgList">
             <ul class="list-complete-item" v-for='li in runMsgList' :key="li.ts">
