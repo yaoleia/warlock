@@ -62,7 +62,7 @@
                 this.$refs.password.focus();
             },
             async login() {
-                const resp = await this.$request.post('/api/login', {
+                const resp = await this.$request.account.login({
                     username: this.userName,
                     password: this.password
                 })

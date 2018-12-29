@@ -3,13 +3,13 @@
 import * as Type from './mutation-type';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import request from 'framework/network/request';
+import clientApi from 'clientApi'
 
 Vue.use(Vuex);
 
 const actions = {
   SET_RECORD_LIST: (store) => {
-    return request.get('/api/record', store).then(response => {
+    return clientApi.record.getRecordList(store).then(response => {
       store.commit(Type.SET_RECORD_LIST, response.data);
     })
   },
@@ -17,7 +17,7 @@ const actions = {
     // const response = await import('../../algorithm_conf.json');
     // store.commit(Type.SET_ALGORITHM_MAP, response.default);
 
-    const response = await request.get('/api/plugin', store);
+    const response = await clientApi.plugin.getPlugins(store);
     store.commit(Type.SET_ALGORITHM_MAP, response.data);
     return response;
   }

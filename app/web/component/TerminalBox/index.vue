@@ -31,7 +31,7 @@
         },
         props: ['msgList', 'showTerminal'],
         template: `<transition-group name="list-complete" tag="ul" class="msg-list" ref="msgList">
-                <li class="list-complete-item" v-for="(item,index) in msgList" :key="index">> {{item}}</li>
+                <li class="list-complete-item" v-for="item in msgList" :key="item.ts">> {{item.msg}}</li>
             </transition-group>`,
         methods: {
             scrollTobottom() {

@@ -6,7 +6,7 @@ module.exports = class ArticeService extends egg.Service {
     this.ctx = ctx;
     this.serverUrl = this.app.config.serverUrl;
   }
-  async getTask() {
+  async getTaskId() {
     const task = await this.app.curl(`${this.serverUrl}/api/task`, { method: 'GET', dataType: 'json' });
     return task;
   }

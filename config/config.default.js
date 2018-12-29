@@ -5,7 +5,8 @@ const env = process.env;
 module.exports = app => {
   const exports = {};
 
-  exports.serverUrl = env.SERVER_URL || 'http://0.0.0.0:5000';
+  // exports.serverUrl = env.SERVER_URL || 'http://0.0.0.0:5000';
+  exports.serverUrl = env.SERVER_URL || 'https://easy-mock.com/mock/5c25a7aac2518a5416c67ccd/designer';
 
   exports.cluster = {
     listen: {

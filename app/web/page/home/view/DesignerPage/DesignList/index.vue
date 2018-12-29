@@ -23,7 +23,7 @@
                 </router-link>
             </div>
         </div>
-        <el-table ref="multipleTable" stripe :data="designList" @row-contextmenu="contextmenuHandle" v-loading="loading" :height="innerHeight" @selection-change="handleSelectionChange">
+        <el-table v-if='innerHeight' ref="multipleTable" stripe :data="designList" @row-contextmenu="contextmenuHandle" v-loading="loading" :height="innerHeight" @selection-change="handleSelectionChange">
             <div slot="empty">
                 <p v-if='!loading'>No Content</p>
             </div>
@@ -205,7 +205,7 @@
                     } else {
                         await this.deleteTask(item);
                     }
-                    await this.$request.patch(`/api/workflow/${item.id}`, item);
+                    await this.$request.workflow.patchWorkflow(item.id, item);
                 } catch (error) {
                     throw error;
                 } finally {
@@ -216,10 +216,10 @@
                 // 创建task
                 try {
                     // 获取一个任务id
-                    const task = await this.$request.get('/api/task');
+                    const task = await this.$request.task.getTaskId();
                     const taskId = task.data.data;
                     if (taskId) {
-                        const creatTask = await this.$request.post('/api/task', {
+                        const creatTask = await this.$request.task.postTask({
                             task_id: taskId,
                             workflow_id: item.id
                         });
@@ -241,7 +241,7 @@
             async deleteTask(item) {
                 // 删除task
                 try {
-                    const deleteTask = await this.$request.delete(`/api/task/${item.task_id}`);
+                    const deleteTask = await this.$request.task.deleteTask(item.task_id);
                     item.task_id = '';
                 } catch (error) {
                     item.active = true;
@@ -298,12 +298,12 @@
                 const loading = this.loadingUi();
                 try {
                     const promises = addList.map(async r => {
-                        // const resp = await this.$request.get(`/api/workflow/${r.id}`);
+                        // const resp = await this.$request.workflow.getWorkflowById(r.id);
                         // if (resp.data.id) {
                         //     if (resp.data.active) {
                         //         await this.deleteTask(r);
                         //     }
-                        //     await this.$request.patch(`/api/workflow/${r.id}`, r);
+                        //     await this.$request.workflow.patchWorkflow(r.id ,r);
                         //     return;
                         // }
                         r.ts = this.$moment().format();
@@ -374,7 +374,7 @@
             },
             async creatWorkflow(item) {
                 try {
-                    const resp = await this.$request.post('/api/workflow', item);
+                    const resp = await this.$request.workflow.postWorkflow(item);
                 } catch (error) {
                     this.$message({
                         type: 'error',
@@ -389,7 +389,7 @@
                     if (item.active) {
                         await this.deleteTask(item);
                     }
-                    const resp = await this.$request.delete(`/api/workflow/${item.id}`);
+                    const resp = await this.$request.workflow.deleteWorkflow(item.id);
                     await this.getDesignList();
                 } catch (error) {
                     this.$message({
@@ -424,13 +424,13 @@
             indexMethod(index) {
                 return (this.q.pageIndex - 1) * this.q.pageSize + index + 1
             },
-            async getDesignList(store, json) {
+            async getDesignList() {
                 await this.editorLoaded;
                 if (EASY_ENV_IS_BROWSER) {
                     this.loading = true;
                 }
                 try {
-                    const designList = await this.$request.get('/api/workflow');
+                    const designList = await this.$request.workflow.getWorkflows();
                     const promises = designList.data.map(async d => {
                         d.flowData.disabled = false;
                         d.flowData.nodes.forEach(n => {
@@ -442,11 +442,11 @@
                             }
                         })
                         if (d.task_id) {
-                            const resp = await this.$request.get(`/api/task/${d.task_id}`)
+                            const resp = await this.$request.task.getTaskById(d.task_id);
                             if (resp.data !== true) {
                                 d.task_id = '';
                                 d.active = false;
-                                await this.$request.patch(`/api/workflow/${d.id}`, d);
+                                await this.$request.workflow.patchWorkflow(d.id, d);
                             }
                         }
                     })
@@ -464,20 +464,15 @@
             },
             handleSizeChange(val) {
                 this.q.pageSize = val
-                this.getDesignList(this.$store, this.q)
+                this.getDesignList()
             },
             handleCurrentChange(val) {
                 this.q.pageIndex = val
-                this.getDesignList(this.$store, this.q)
+                this.getDesignList()
             },
             getInnerHeight() {
                 if (EASY_ENV_IS_BROWSER) {
-                    this.innerHeight = window.innerHeight - 214;
-                    // if (window.innerWidth <= 1920) {
-                    //     this.innerHeight = 620;
-                    // } else {
-                    //     this.innerHeight = 890;
-                    // }
+                    this.innerHeight = this.$el.clientHeight - 70;
                 }
             }
         },
@@ -486,15 +481,17 @@
                 return this.$store.getters.algorithmModuleList;
             }
         },
+        mounted() {
+            this.getInnerHeight();
+            $(window).on('resize.record', this.getInnerHeight)
+        },
         beforeMount() {
-            if (!(this.designList && this.designList.length > 0)) {
-                this.getDesignList(this.$store, this.q)
+            if (this.algorithmModuleList.length) {
+                this.getDesignList()
             }
             $(window).on('click.designList contextmenu.designList', () => {
                 this.active = null;
             });
-            this.getInnerHeight();
-            $(window).on('resize.record', this.getInnerHeight)
         },
         beforeDestroy() {
             $(window).off('click.designList contextmenu.designList resize.record');
@@ -511,7 +508,8 @@
                     this.getDesignList()
                 }
             },
-            algorithmModuleList() {
+            algorithmModuleList(arr, oldArr) {
+                if (arr.toString() === oldArr.toString()) return;
                 this.getDesignList()
             }
         }

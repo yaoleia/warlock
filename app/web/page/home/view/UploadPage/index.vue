@@ -1,7 +1,7 @@
 <template>
     <div class="upload-page">
         <div class="top-wrap">
-            <el-upload class="uploader" accept=".qz,.zip" :on-progress='onProgress' :show-file-list='false' drag :action="'/api/proxyurl?url='+serverUrl+'/api/plugin'" name='file' multiple :on-success='setAlgorithm' :before-upload="beforeAvatarUpload" :on-error='uploadError' :with-credentials='true' :headers="{'x-csrf-token':csrf}">
+            <el-upload class="uploader" accept=".qz,.zip" :on-progress='onProgress' :show-file-list='false' drag :action="$request.plugin.postPluginAction(serverUrl)" name='file' multiple :on-success='setAlgorithm' :before-upload="beforeAvatarUpload" :on-error='uploadError' :with-credentials='true' :headers="{'x-csrf-token':csrf}">
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
@@ -13,7 +13,7 @@
                 <p>{{progress.name}}</p>
             </div>
         </div>
-        <el-table ref="multipleTable" stripe :data="pluginListFilter" v-loading="loading" :height="innerHeight">
+        <el-table ref="multipleTable" stripe :data="pluginListFilter" v-loading="loading" v-if="innerHeight" :height="innerHeight">
             <div slot="empty">
                 <p v-if='!loading'>No Content</p>
             </div>
@@ -170,7 +170,7 @@
                 },
                 progress: {
                     percent: 0,
-                    status: '',
+                    status: null,
                     name: ''
                 },
                 showProgess: false,
@@ -232,7 +232,7 @@
             async deletePlugin(obj) {
                 const loading = this.loadingUi();
                 try {
-                    const resp = await this.$request.delete(`/api/plugin/${obj.plugin_key}`);
+                    const resp = await this.$request.plugin.deletePlugin(obj.plugin_key);
                     this.setAlgorithm();
                 } catch (error) {
                     this.$message({
@@ -246,24 +246,18 @@
             },
             getInnerHeight() {
                 if (EASY_ENV_IS_BROWSER) {
-                    this.innerHeight = window.innerHeight - 305;
-                    // if (window.innerWidth <= 1920) {
-                    //     console.log(window.innerHeight)
-                    //     this.innerHeight = 620;
-                    // } else {
-                    //     this.innerHeight = 890;
-                    // }
+                    this.innerHeight = this.$el.clientHeight - 160;
                 }
             },
             beforeAvatarUpload(file) {
-                const isLt100M = file.size / 1024 / 1024 < 200;
-                if (!isLt100M) {
-                    this.$message.error('上传头像图片大小不能超过 200MB!');
+                const isLt200M = file.size / 1024 / 1024 < 200;
+                if (!isLt200M) {
+                    this.$message.error('上传文件大小不能超过 200MB!');
                 }
-                if (isLt100M) {
+                if (isLt200M) {
                     this.showProgess = true;
                 }
-                return isLt100M;
+                return isLt200M;
             },
             uploadError(err, file, fileList) {
                 this.$message({
@@ -271,6 +265,14 @@
                     type: 'error'
                 })
                 this.progress.status = 'exception'
+                this.clearProgress();
+            },
+            clearProgress() {
+                setTimeout(() => {
+                    this.showProgess = false;
+                    this.progress.percent = 0;
+                    this.progress.status = null;
+                }, 1500);
             },
             setAlgorithm(response) {
                 if (response) {
@@ -285,14 +287,14 @@
                 this.$store.dispatch(SET_ALGORITHM_MAP);
             }
         },
+        mounted() {
+            this.getInnerHeight();
+            $(window).on('resize.upload', this.getInnerHeight);
+        },
         watch: {
             'progress.percent': function(p) {
                 if (p == 100) {
-                    setTimeout(() => {
-                        this.showProgess = false;
-                        this.progress.percent = 0;
-                        this.progress.status = '';
-                    }, 1500);
+                    this.clearProgress();
                 }
             },
             algorithmConf(obj) {
@@ -300,8 +302,6 @@
             }
         },
         beforeMount() {
-            this.getInnerHeight();
-            $(window).on('resize.upload', this.getInnerHeight);
             this.pluginList = Object.values(this.algorithmConf);
         },
         beforeDestroy() {

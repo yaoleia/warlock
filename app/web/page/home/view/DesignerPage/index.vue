@@ -37,20 +37,21 @@
 
                         const group = item.getGraphicGroup();
                         const model = item.getModel();
-                        const width = 160;
-                        const height = 36;
+                        const size = this.params.size ? this.params.size.split('*') : [160, 36];
+                        const width = size[0] - 0;
+                        const height = size[1] - 0;
                         const x = -width / 2;
                         const y = -height / 2;
                         const borderRadius = 4;
 
-                        // 如果是新模块,则把注册数据安到model上
+                        // 如果是新添加模块,则把注册数据安到model上
                         if (!model.module) {
-                            const { super_type, type, author, create_time, dependencies, exec_outputs, exec_params, init_params, module, version, plugin_key } = this;
-                            Object.assign(model, { super_type, type, author, create_time, dependencies, exec_outputs, exec_params, init_params, module, version, plugin_key, anchor: this.anchor.map(a => a[2]) })
+                            const params = _.cloneDeep(this.params);
+                            Object.assign(model, { ...params, anchor: this.anchor.map(a => a[2]) })
                         }
 
                         // 生成元素
-                        this.color = this.color || '#aaa';
+                        this.color = this.params.color || '#aaa';
                         const keyShape = group.addShape('rect', {
                             attrs: {
                                 x,
@@ -66,28 +67,29 @@
                         });
 
                         // 左侧色条
-                        // const aaa = group.addShape('path', {
-                        //     attrs: {
-                        //         path: [
-                        //             ['M', x, y + borderRadius],
-                        //             ['L', x, y + height - borderRadius],
-                        //             ['A', borderRadius, borderRadius, 0, 0, 0, x + borderRadius, y + height],
-                        //             ['L', x + borderRadius, y],
-                        //             ['A', borderRadius, borderRadius, 0, 0, 0, x, y + borderRadius]
-                        //         ],
-                        //         fill: this.color
-                        //     }
-                        // });
+                        const aaa = group.addShape('path', {
+                            attrs: {
+                                path: [
+                                    ['M', x, y + borderRadius],
+                                    ['L', x, y + height - borderRadius],
+                                    ['A', borderRadius, borderRadius, 0, 0, 0, x + borderRadius, y + height],
+                                    ['L', x + borderRadius, y],
+                                    ['A', borderRadius, borderRadius, 0, 0, 0, x, y + borderRadius]
+                                ],
+                                fill: this.color
+                            }
+                        });
 
                         // 名称
                         group.addShape('text', {
                             attrs: {
-                                text: this.module,
-                                fontSize: 15,
-                                x: x + 8,
-                                y: y + 10,
-                                textAlign: 'start',
-                                textBaseline: 'top',
+                                text: this.params.module,
+                                fontSize: 14,
+                                fontWeight: 'bolder',
+                                x: 0,
+                                y: 0,
+                                textAlign: 'center',
+                                textBaseline: 'middle',
                                 fill: '#ff8800'
                             }
                         });
@@ -95,9 +97,10 @@
                         return keyShape;
                     },
                     setAnchors(item) {
+                        const params = this.params;
                         // 生成锚点
-                        const outputs = this.exec_outputs || [];
-                        const inputs = this.exec_params || [];
+                        const outputs = params.exec_outputs || [];
+                        const inputs = params.exec_params || [];
                         const inLength = Object.keys(inputs).length;
                         const outLength = Object.keys(outputs).length;
                         const inAnchors = Object.keys(inputs).map((ii, index) => {
@@ -163,9 +166,9 @@
                 const G6Editor = await this.importG6Editor();
                 const Flow = G6Editor.Flow;
                 for (const key in this.algorithmConf) {
-                    const value = this.algorithmConf[key]
-                    Flow.registerNode(value.module, {
-                        ...value
+                    const params = this.algorithmConf[key]
+                    Flow.registerNode(params.module, {
+                        params
                     }, 'model-card');
                 }
             },

@@ -3,8 +3,8 @@
         <div class="title" v-if='taskId'>
             taskId: {{taskId}}
         </div>
-        <transition-group name="list-complete" tag="div" class="msg-list" ref="msgList">
-            <ul class="list-complete-item" v-for='(li,index) in runMsgList' :key='index'>
+        <transition-group name="list-complete" tag="div" class="msg-list" ref="runMsgList">
+            <ul class="list-complete-item" v-for='li in runMsgList' :key="li">
                 <li v-for='(value,key) in li' :key='key'>
                     <div v-if='checkURL(value)'>
                         <p>{{key}}: </p>
@@ -44,7 +44,7 @@
             },
             scrollTobottom() {
                 this.$nextTick(() => {
-                    const item = this.$refs.msgList.$el;
+                    const item = this.$refs.runMsgList.$el;
                     item.scrollTop = item.scrollHeight;
                 })
             }

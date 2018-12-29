@@ -1,6 +1,8 @@
 const httpProxy = require('http-proxy');
 const URL = require('url-parse');
-const proxy = httpProxy.createProxyServer();
+const proxy = httpProxy.createProxyServer({
+  ws: true
+});
 
 proxy.on('proxyRes', (proxyRes, req, res) => {
   console.log(

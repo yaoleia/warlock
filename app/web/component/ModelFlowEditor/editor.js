@@ -251,23 +251,26 @@ export default {
             this.flow.clearSelected();
             this.flow.setSelected(item, true)
         },
-        modelFilter(model) {
-            const { anchor, exec_outputs, exec_params, init_params, shape, size, x, y, index, ...msgFilt } = model;
+        modelFilter(msg) {
+            const { anchor, exec_outputs, exec_params, init_params, shape, size, x, y, index, ...msgFilt } = msg;
             return CircularJSON.stringify(msgFilt);
         },
         pushMsg(msg, action) {
             if (typeof msg === 'object') {
-                this._pushMsg(this.modelFilter(msg), action);
-                return;
+                msg = this.modelFilter(msg);
             }
-            this._pushMsg(msg, action);
+            this._pushMsg({
+                ts: this.$moment().valueOf() + '#' + Math.floor(Math.random() * 1000),
+                msg
+            }, action);
         },
-        _pushMsg(newMsg, action) {
+        _pushMsg(msgObj, action) {
             if (action) {
-                newMsg = action + ' ' + newMsg;
+                msgObj.msg = action + ' ' + msgObj.msg;
             }
-            if (newMsg === this.msgList[this.msgList.length - 1]) return;
-            this.msgList.push(newMsg)
+            const prveMsg = _.at(this.msgList, `[${this.msgList.length - 1}].msg`)[0];
+            if (msgObj.msg === prveMsg) return;
+            this.msgList.push(msgObj)
         },
         changeZoom(zoom) {
             const flow = this.flow;

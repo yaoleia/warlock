@@ -2,7 +2,7 @@
 module.exports = app => {
   return class RecordController extends app.Controller {
     async index(ctx) {
-      ctx.body = await ctx.service.task.getTask();
+      ctx.body = await ctx.service.task.getTaskId();
     }
     async create(ctx) {
       ctx.body = await ctx.service.task.creatTask(ctx.request.body);

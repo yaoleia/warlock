@@ -47,7 +47,7 @@
         },
         methods: {
             async logout() {
-                await this.$request.get('/logout');
+                await this.$request.account.logout();
                 window.location.href = '/index/login';
             },
             slider() { }

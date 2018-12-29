@@ -214,7 +214,7 @@
                             return;
                         }
                     }
-                    const resp = await this.$request.post(`/api/${name}`, obj || this[name])
+                    const resp = await this.$request.test.postParam(name, obj || this[name])
                     if (resp.data && resp.data.code === 1) {
                         window.localStorage[name] = JSON.stringify(this[name])
                         this.$message.success(`提交${name}配置成功`);
@@ -226,11 +226,11 @@
                 }
             },
             async lightClick() {
-                const resp = await this.$request.post('/api/light', this.light)
+                const resp = await this.$request.test.postLight(this.light)
                 this.lightDialog = false
             },
             async tOnceClick() {
-                const resp = await this.$request.post('/api/tonce')
+                const resp = await this.$request.test.postTonce();
             }
         }
     }

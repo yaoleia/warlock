@@ -10,7 +10,7 @@
                     <div class="type">
                         <v-icon name='module-B'></v-icon> {{type}}
                     </div>
-                    <div class="getItem" v-for='item in modules' :key="item.module" :data-shape="item.module" data-type="node" data-size="200*50">
+                    <div class="getItem" v-for='item in modules' :key="item.module" :data-shape="item.module" data-type="node" :data-size="item.size||'160*36'">
                         <v-icon name='module'></v-icon><span> {{item.module}}</span>
                     </div>
                 </div>

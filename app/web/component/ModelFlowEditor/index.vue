@@ -189,7 +189,7 @@
             async patchFlow() {
                 const loading = this.loadingUi();
                 try {
-                    const resp = await this.$request.patch(`/api/workflow/${this.designItem.id}`, this.designItem);
+                    const resp = await this.$request.workflow.patchWorkflow(this.designItem.id, this.designItem);
                     this.$nextTick(async () => {
                         await this.deleteTestTask()
                         this.$router.push({ path: '/design/designList', query: { reload: true } })
@@ -207,7 +207,7 @@
             async creatFlow() {
                 const loading = this.loadingUi();
                 try {
-                    const resp = await this.$request.post('/api/workflow', this.designItem);
+                    const resp = await this.$request.workflow.postWorkflow(this.designItem);
                     this.$nextTick(async () => {
                         await this.deleteTestTask()
                         this.$router.push({ path: '/design/designList', query: { reload: true } })
@@ -231,14 +231,14 @@
                 // 创建test|task
                 try {
                     // 获取一个任务id
-                    const task = await this.$request.get('/api/task');
+                    const task = await this.$request.task.getTaskId();
                     const taskId = task.data.data;
                     const flowData = this.flow.save();
                     if (taskId) {
-                        const creatTask = await this.$request.post('/api/task', {
+                        const creatTask = await this.$request.task.postTask({
                             task_id: taskId,
                             flowData
-                        });
+                        })
                         if (creatTask.data.indexOf('error') != -1) {
                             this.taskId = '';
                             this.runDesign = false;
@@ -251,13 +251,18 @@
                         this.taskId = taskId;
                     }
                 } catch (error) {
+                    this.runDesign = false;
+                    this.$message({
+                        message: `开启任务失败! ${error}`,
+                        type: 'error'
+                    })
                     throw error;
                 }
             },
             async deleteTestTask() {
                 if (!this.taskId) return;
                 try {
-                    const deleteTask = await this.$request.delete(`/api/task/${this.taskId}`);
+                    const deleteTask = await this.$request.task.deleteTask(this.taskId);
                     this.taskId = '';
                 } catch (error) {
                     throw error;

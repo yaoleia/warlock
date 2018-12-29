@@ -197,3 +197,4 @@ $ tar -zcvf ../release.tar.gz .
 // import "../../asset/theme/index.css"
 sudo node_modules/.bin/et -c ./app/web/asset/theme/theme.scss -w -o ./app/web/asset/theme/
 ```
+yarn upgrade --latest
