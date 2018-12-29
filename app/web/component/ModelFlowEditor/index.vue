@@ -232,7 +232,7 @@
                 try {
                     // 获取一个任务id
                     const task = await this.$request.task.getTaskId();
-                    const taskId = task.data.data;
+                    const taskId = task.data;
                     const flowData = this.flow.save();
                     if (taskId) {
                         const creatTask = await this.$request.task.postTask({

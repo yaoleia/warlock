@@ -4,7 +4,7 @@
             taskId: {{taskId}}
         </div>
         <transition-group name="list-complete" tag="div" class="msg-list" ref="runMsgList">
-            <ul class="list-complete-item" v-for='li in runMsgList' :key="li">
+            <ul class="list-complete-item" v-for='li in runMsgList' :key="li.ts">
                 <li v-for='(value,key) in li' :key='key'>
                     <div v-if='checkURL(value)'>
                         <p>{{key}}: </p>

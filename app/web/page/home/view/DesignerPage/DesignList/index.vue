@@ -217,7 +217,7 @@
                 try {
                     // 获取一个任务id
                     const task = await this.$request.task.getTaskId();
-                    const taskId = task.data.data;
+                    const taskId = task.data;
                     if (taskId) {
                         const creatTask = await this.$request.task.postTask({
                             task_id: taskId,
@@ -298,14 +298,6 @@
                 const loading = this.loadingUi();
                 try {
                     const promises = addList.map(async r => {
-                        // const resp = await this.$request.workflow.getWorkflowById(r.id);
-                        // if (resp.data.id) {
-                        //     if (resp.data.active) {
-                        //         await this.deleteTask(r);
-                        //     }
-                        //     await this.$request.workflow.patchWorkflow(r.id ,r);
-                        //     return;
-                        // }
                         r.ts = this.$moment().format();
                         await this.creatWorkflow(r);
                     })
@@ -430,8 +422,13 @@
                     this.loading = true;
                 }
                 try {
-                    const designList = await this.$request.workflow.getWorkflows();
-                    const promises = designList.data.map(async d => {
+                    let designList,
+                        tasks;
+                    const p1 = this.$request.workflow.getWorkflows().then(resp => designList = resp.data);
+                    const p2 = this.$request.task.getTasks().then(resp => tasks = resp.data);
+                    await Promise.all([p1, p2]);
+
+                    const promises = designList.map(async d => {
                         d.flowData.disabled = false;
                         d.flowData.nodes.forEach(n => {
                             if (!this.algorithmModuleList.includes(n.shape)) {
@@ -442,8 +439,7 @@
                             }
                         })
                         if (d.task_id) {
-                            const resp = await this.$request.task.getTaskById(d.task_id);
-                            if (resp.data !== true) {
+                            if (!tasks.includes(d.task_id)) {
                                 d.task_id = '';
                                 d.active = false;
                                 await this.$request.workflow.patchWorkflow(d.id, d);
@@ -451,7 +447,7 @@
                         }
                     })
                     await Promise.all(promises);
-                    this.designList = designList.data.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf());
+                    this.designList = designList.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf());
                 } catch (error) {
                     this.$message({
                         type: 'error',

@@ -1,7 +1,11 @@
 import axios from 'framework/network/request';
 
-export function getTaskId() {
+export function getTasks() {
     return axios.get('/api/task');
+}
+
+export function getTaskId() {
+    return axios.get('/api/task/new');
 }
 
 export function getTaskById(task_id) {

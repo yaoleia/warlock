@@ -6,9 +6,15 @@ module.exports = class ArticeService extends egg.Service {
     this.ctx = ctx;
     this.serverUrl = this.app.config.serverUrl;
   }
+
+  async getTasks() {
+    const tasks = await this.app.curl(`${this.serverUrl}/api/tasks`, { method: 'GET', dataType: 'json' });
+    return tasks.data;
+  }
+
   async getTaskId() {
     const task = await this.app.curl(`${this.serverUrl}/api/task`, { method: 'GET', dataType: 'json' });
-    return task;
+    return task.data;
   }
 
   async creatTask(body) {
@@ -23,7 +29,6 @@ module.exports = class ArticeService extends egg.Service {
   async deleteTask(params) {
     try {
       const resp = await this.ctx.http.delete(`${this.serverUrl}/api/task/${params.id}`);
-      console.log(resp)
       return resp;
     } catch (error) {
       throw error;
@@ -33,7 +38,6 @@ module.exports = class ArticeService extends egg.Service {
   async showTask(params) {
     try {
       const resp = await this.ctx.http.get(`${this.serverUrl}/api/task/${params.id}`);
-      console.log(resp)
       return resp;
     } catch (error) {
       throw error;

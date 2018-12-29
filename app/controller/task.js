@@ -2,7 +2,7 @@
 module.exports = app => {
   return class RecordController extends app.Controller {
     async index(ctx) {
-      ctx.body = await ctx.service.task.getTaskId();
+      ctx.body = await ctx.service.task.getTasks();
     }
     async create(ctx) {
       ctx.body = await ctx.service.task.creatTask(ctx.request.body);
@@ -17,10 +17,9 @@ module.exports = app => {
     async show(ctx) {
       ctx.body = await ctx.service.task.showTask(ctx.params);
     }
-    // async new() {
-    //     const { ctx } = this;
-    //     this.ctx.body = '创建页面';
-    // }
+    async new(ctx) {
+      ctx.body = await ctx.service.task.getTaskId();
+    }
     // async edit() {
     //     const { ctx } = this;
     //     this.ctx.body = '修改页面';
