@@ -3,20 +3,22 @@
         <div slot="header">
             <p class="title" v-if="title">{{title}}</p>
         </div>
-        <div class="big-area-template" style="visibility: hidden;" ref="bigAreaTemplate"></div>
+        <transition name="el-fade-in">
+            <div v-show="showTemplate" class="big-area-template" ref="bigAreaTemplate"></div>
+        </transition>
         <div class="big-area-box" ref="bigAreaBox"></div>
         <img :src="opt.cutBase64" v-if="opt.cutBase64" class="big-area-img" @load="loaded" :class="{visibility:!show}">
-        <el-button :class="primaryBtn" type="text" title="查看模板" class="show-temp" icon="el-icon-view" @click="showTemp(showTemplate=!showTemplate)"></el-button>
+        <el-button :class="primaryBtn" type="text" title="查看模板" class="show-temp" icon="el-icon-view" @click="showTemp"></el-button>
     </el-card>
 </template>
 <script type="text/babel">
     export default {
         data() {
             return {
-                show: false,
-                try: 2,
                 timer: null,
+                timer2: null,
                 showTemplate: false,
+                show: false,
                 primaryBtn: ''
             };
         },
@@ -26,33 +28,19 @@
             loaded() {
                 this.show = true
             },
-            showTemp(bol) {
-                const bigAreaBox = this.$refs.bigAreaBox;
-                if (bol) {
-                    clearTimeout(this.timer);
-                    $(bigAreaBox).fadeOut();
-                    return;
-                }
-                if (bol === false) {
-                    clearTimeout(this.timer);
-                    $(bigAreaBox).fadeIn();
-                    return;
-                }
+            showTemp() {
+                this.clearTimer();
+                this.showTemplate = !this.showTemplate;
+            },
+            clearTimer() {
                 if (this.timer) {
                     clearTimeout(this.timer);
-                    this.timer = null;
+                    this.timer = null
                 }
-                const self = this;
-                this.timer = setTimeout(() => {
-                    self.showTemplate = true;
-                    $(bigAreaBox).finish().fadeOut(1000, function() {
-                        setTimeout(() => {
-                            $(this).fadeIn(1000);
-                            self.time = null;
-                            self.showTemplate = false;
-                        }, 1500);
-                    })
-                }, 2000);
+                if (this.timer2) {
+                    clearTimeout(this.timer2);
+                    this.timer2 = null
+                }
             }
         },
         watch: {
@@ -61,20 +49,29 @@
             },
             'opt.cut': function(cut) {
                 this.showTemplate = false;
+                if (!cut.width) return;
                 const bigAreaBox = this.$refs.bigAreaBox;
                 const bigAreaTemplate = this.$refs.bigAreaTemplate;
-                if (!cut.width) {
-                    bigAreaBox.style.cssText = '';
-                    bigAreaTemplate.style.cssText = 'visibility: hidden;';
-                    return;
-                }
                 const bigW = bigAreaBox.clientWidth
                 const bigH = bigAreaBox.clientHeight
                 const rateW = bigW / cut.width
                 const rateH = bigH / cut.height
-                bigAreaBox.style.cssText = `background-image: url(${this.opt.reg_img_path}); background-size: ${cut.sizeW * rateW}px ${cut.sizeH * rateH}px; background-position: -${cut.left * rateW}px -${cut.top * rateH}px;`
-                bigAreaTemplate.style.cssText = `background-size: ${cut.sizeW * rateW}px ${cut.sizeH * rateH}px; background-position: -${cut.left * rateW}px -${cut.top * rateH}px;`
-                this.showTemp();
+                Object.assign(bigAreaBox.style, {
+                    backgroundImage: `url(${this.opt.reg_img_path})`,
+                    backgroundSize: `${cut.sizeW * rateW}px ${cut.sizeH * rateH}px`,
+                    backgroundPosition: `-${cut.left * rateW}px -${cut.top * rateH}px`
+                })
+                Object.assign(bigAreaTemplate.style, {
+                    backgroundSize: `${cut.sizeW * rateW}px ${cut.sizeH * rateH}px`,
+                    backgroundPosition: `-${cut.left * rateW}px -${cut.top * rateH}px`
+                })
+                this.clearTimer();
+                this.timer = setTimeout(() => {
+                    this.showTemplate = true;
+                    this.timer2 = setTimeout(() => {
+                        this.showTemplate = false;
+                    }, 2000)
+                }, 2000);
             }
         }
     };
@@ -116,7 +113,7 @@
             position: absolute;
             bottom: 0;
             right: 0;
-            z-index: 101;
+            z-index: 200;
             padding: 10px;
             &.primary {
                 > i {
@@ -131,7 +128,7 @@
         }
         .big-area-template {
             background-image: url("/public/mock-img/template_img.jpg");
-            z-index: 10;
+            z-index: 110;
         }
         .visibility {
             visibility: hidden;
