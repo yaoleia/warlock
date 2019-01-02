@@ -26,7 +26,7 @@ rm -rf $targetDir
 mkdir -p $targetDir
 
 echo "build warlock..."
-npm run build &>/dev/null
+npm run build
 if [ "$?" != "0" ]; then
     echo "build warlock failed"
     exit -1
@@ -46,14 +46,15 @@ cp -r config $targetDir
 cp -r images $targetDir
 cp -r public $targetDir
 cp package.json $targetDir
+cp package-lock.json $targetDir
 cp prod.sh $targetDir
 echo $version > $targetDir/Version
 
 echo "npm i --production..."
 cd $buildDir/warlock/$targetDirName
-npm i --production &>/dev/null
+npm i --production
 if [ "$?" != "0" ]; then
-    echo "npm prod failed"
+    echo "easy build prod failed"
     exit -1
 fi
 
