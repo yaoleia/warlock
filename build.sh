@@ -20,6 +20,7 @@ targetDirName=warlock-$version
 targetDir=$buildDir/warlock/$targetDirName
 targetFile=warlock-$version.tar.gz
 
+npm run clean
 rm -rf run
 rm -rf $targetDir
 mkdir -p $targetDir
