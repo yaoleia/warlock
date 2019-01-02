@@ -198,3 +198,7 @@ $ tar -zcvf ../release.tar.gz .
 sudo node_modules/.bin/et -c ./app/web/asset/theme/theme.scss -w -o ./app/web/asset/theme/
 ```
 yarn upgrade --latest
+
+sudo chown -R $USER /usr/local
+
+sudo chmod -R 777 ./
