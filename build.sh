@@ -1,6 +1,7 @@
 #!/bin/bash
 
 now=`date +%Y%m%d%H%M%S`
+start=`date +%s`
 
 version=$1
 if [ "$1" == "" ]; then
@@ -68,3 +69,8 @@ rm -rf $buildDir/warlock/$targetDirName
 
 echo "build done"
 echo $version
+
+end=`date +%s` 
+dif=$[ end - start ] 
+
+echo "this shell script execution duration: $dif s"
