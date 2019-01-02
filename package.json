@@ -47,9 +47,10 @@
     "script-loader": "^0.7.2",
     "shortid": "^2.2.8",
     "url-parse": "^1.4.3",
-    "vue": "2.5.21",
+    "vue": "^2.5.21",
     "vue-iconfont": "^2.5.1",
     "vue-router": "^3.0.1",
+    "vue-server-renderer": "^2.5.21",
     "vuex": "^3.0.1",
     "vuex-router-sync": "^5.0.0",
     "xlsx": "^0.14.1"
