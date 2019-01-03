@@ -17,7 +17,7 @@ class WorkflowService extends Service {
 
   async deleteWorkflow(params) {
     try {
-      const resp = await this.ctx.http.delete(`${this.serverUrl}/api/workflow/${params._id}`);
+      const resp = await this.ctx.http.delete(`${this.serverUrl}/api/workflow/${params.id}`);
       return resp;
     } catch (error) {
       throw error;
@@ -26,7 +26,7 @@ class WorkflowService extends Service {
 
   async getWorkflow(params) {
     try {
-      const resp = await this.ctx.http.get(`${this.serverUrl}/api/workflow/${params._id}`);
+      const resp = await this.ctx.http.get(`${this.serverUrl}/api/workflow/${params.id}`);
       return resp;
     } catch (error) {
       throw error;
