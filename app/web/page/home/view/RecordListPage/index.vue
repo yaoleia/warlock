@@ -7,7 +7,7 @@
         </div>
         <el-table stripe :data="recordList" v-loading="loading" :height="innerHeight">
             <div slot="empty">
-                <p v-if='!loading'>No Content</p>
+                <img class="no-data" src="~asset/images/no-data.png" alt="">
             </div>
             <el-table-column type="index" width="55" :index="indexMethod">
             </el-table-column>

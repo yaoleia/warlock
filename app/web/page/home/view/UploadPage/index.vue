@@ -15,7 +15,7 @@
         </div>
         <el-table ref="multipleTable" stripe :data="pluginListFilter" v-loading="loading" v-if="innerHeight" :height="innerHeight">
             <div slot="empty">
-                <p v-if='!loading'>No Content</p>
+                <img class="no-data" src="~asset/images/no-data.png" alt="">
             </div>
             <el-table-column type="index" :index="indexMethod">
             </el-table-column>
