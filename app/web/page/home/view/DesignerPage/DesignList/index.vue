@@ -31,7 +31,7 @@
             </el-table-column>
             <el-table-column type="index" :index="indexMethod">
             </el-table-column>
-            <el-table-column prop="id" label="ID">
+            <el-table-column prop="_id" label="ID">
             </el-table-column>
             <el-table-column prop="name" label="流程名称">
             </el-table-column>
@@ -62,7 +62,7 @@
                             <el-button v-if='scope.row.active' title="外链" type="primary" @click="jumperHandle(scope.row.task_id)">
                                 <v-icon name='wailian'></v-icon>
                             </el-button>
-                            <router-link :to="{name: '新建流程',params: {id:scope.row.id,flow: scope.row}}">
+                            <router-link :to="{name: '新建流程',params: {_id:scope.row._id,flow: scope.row}}">
                                 <el-button title='修改' type="warning">
                                     <v-icon name='xiugaitupian'></v-icon> 修改
                                 </el-button>
@@ -84,7 +84,7 @@
             <el-checkbox :indeterminate="uploadOption.isIndeterminate" v-model="uploadOption.checkAll" :disabled="uploadOption.checkAllDisabled" @change="handleCheckAllChange">全选</el-checkbox>
             <div style="margin-bottom:20px"></div>
             <el-checkbox-group v-model="uploadOption.checkedList" @change="handleCheckedChange">
-                <el-checkbox v-for="item in uploadOption.uploadList" :label="item.id" :key="item.id" :disabled="item.disabled">{{item.name}}{{item.disabled?'(不可用)':''}}</el-checkbox>
+                <el-checkbox v-for="item in uploadOption.uploadList" :label="item._id" :key="item._id" :disabled="item.disabled">{{item.name}}{{item.disabled?'(不可用)':''}}</el-checkbox>
             </el-checkbox-group>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="uploadDesignList(uploadOption)">上传</el-button>
@@ -205,7 +205,7 @@
                     } else {
                         await this.deleteTask(item);
                     }
-                    await this.$request.workflow.patchWorkflow(item.id, item);
+                    await this.$request.workflow.patchWorkflow(item._id, item);
                 } catch (error) {
                     throw error;
                 } finally {
@@ -221,7 +221,7 @@
                     if (taskId) {
                         const creatTask = await this.$request.task.postTask({
                             task_id: taskId,
-                            workflow_id: item.id
+                            workflow_id: item._id
                         });
                         if (creatTask.data.indexOf('error') != -1) {
                             item.task_id = '';
@@ -249,7 +249,7 @@
             },
             gotoWatch(item) {
                 // 跳转到查看work-flow的displayer
-                this.$router.push({ name: '新建流程', params: { id: item.id, flow: item, read: true } });
+                this.$router.push({ name: '新建流程', params: { _id: item._id, flow: item, read: true } });
             },
             jumperHandle(taskId) {
                 window.open(`/?id=${taskId}`);
@@ -271,7 +271,7 @@
                 this.uploadOption.reset();
             },
             handleCheckAllChange(val) {
-                this.uploadOption.checkedList = val ? this.uploadOption.uploadList.map(li => li.id) : [];
+                this.uploadOption.checkedList = val ? this.uploadOption.uploadList.map(li => li._id) : [];
                 this.uploadOption.isIndeterminate = false;
             },
             handleCheckedChange(value) {
@@ -287,7 +287,7 @@
                 this.createDesign(files[0]);
             },
             async uploadDesignList(list) {
-                const addList = list.uploadList.filter(li => list.checkedList.includes(li.id));
+                const addList = list.uploadList.filter(li => list.checkedList.includes(li._id));
                 if (!addList.length) {
                     this.$message({
                         message: '没有可上传的流程',
@@ -327,7 +327,7 @@
                         }
                     })
                     this.uploadOption.uploadList = result;
-                    this.uploadOption.checkedList = this.uploadOption.uploadList.filter(li => !li.disabled).map(li => li.id);
+                    this.uploadOption.checkedList = this.uploadOption.uploadList.filter(li => !li.disabled).map(li => li._id);
                     this.uploadOption.showPop = true;
                 };
                 reader.readAsText(file);
@@ -342,7 +342,7 @@
                     return;
                 }
                 list.forEach(li => {
-                    delete li.id;
+                    delete li._id;
                     delete li.task_id;
                     li.active = false;
                 });
@@ -381,7 +381,7 @@
                     if (item.active) {
                         await this.deleteTask(item);
                     }
-                    const resp = await this.$request.workflow.deleteWorkflow(item.id);
+                    const resp = await this.$request.workflow.deleteWorkflow(item._id);
                     await this.getDesignList();
                 } catch (error) {
                     this.$message({
@@ -397,7 +397,7 @@
                 newItem.active = false;
                 newItem.ts = this.$moment().format();
                 newItem.cts = this.$moment().format();
-                delete newItem.id;
+                delete newItem._id;
                 delete newItem.task_id;
                 this.$prompt('请输入新克隆的流程名称', '提示', {
                     confirmButtonText: '确定',
@@ -442,7 +442,7 @@
                             if (!tasks.includes(d.task_id)) {
                                 d.task_id = '';
                                 d.active = false;
-                                await this.$request.workflow.patchWorkflow(d.id, d);
+                                await this.$request.workflow.patchWorkflow(d._id, d);
                             }
                         }
                     })
@@ -451,7 +451,7 @@
                 } catch (error) {
                     this.$message({
                         type: 'error',
-                        message: '获取流程流程列表失败！'
+                        message: '获取流程列表失败！'
                     })
                     throw error;
                 } finally {

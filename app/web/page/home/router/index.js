@@ -39,7 +39,7 @@ export const userRouterMap = {
       design: {
         icon: 'el-icon-circle-plus-outline',
         name: '新建流程',
-        path: '/design/designer/:id',
+        path: '/design/designer/:_id',
         component: Designer,
         meta: { role: ['admin'], noKeepAlive: true }
       }

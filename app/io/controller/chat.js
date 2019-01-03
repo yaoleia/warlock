@@ -42,14 +42,14 @@ module.exports = app => {
 };
 
 function ioClient(addr, socket, ak, serverUrl) {
-  let client = io(addr); // 实例detect_push的ws
+  let client = io(addr); // 实例pusher的ws
   client.on('connect', () => {
     console.log(`==== ${addr} ${socket.id} connect! ====`);
   });
 
   client.on('server_response', message => {
     console.log(message)
-    // 转发detect_push到warlock前端
+    // 转发pusher到warlock前端
     for (const attr in message.data) {
       if (attr.indexOf('_path') !== -1) {
         message.data[attr] = message.data[attr].replace('http://0.0.0.0:5001', serverUrl).replace('5000', '5001');
@@ -63,7 +63,7 @@ function ioClient(addr, socket, ak, serverUrl) {
   });
 
   client.on('connect_error', () => {
-    console.log('==== detect_push connect_error! ====');
+    console.log('==== pusher connect_error! ====');
   });
 
   socket.on('disconnect', () => {

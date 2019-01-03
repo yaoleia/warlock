@@ -54,7 +54,7 @@
                 flowData: {},
                 designItem: {
                     name: '',
-                    id: '',
+                    _id: '',
                     flowData: {},
                     cts: '',
                     ts: ''
@@ -172,7 +172,7 @@
                 })
             },
             async saveDesign() {
-                if (!this.designItem.id) {
+                if (!this.designItem._id) {
                     Object.assign(this.designItem, {
                         ts: this.$moment().format(),
                         cts: this.$moment().format(),
@@ -189,7 +189,7 @@
             async patchFlow() {
                 const loading = this.loadingUi();
                 try {
-                    const resp = await this.$request.workflow.patchWorkflow(this.designItem.id, this.designItem);
+                    const resp = await this.$request.workflow.patchWorkflow(this.designItem._id, this.designItem);
                     this.$nextTick(async () => {
                         await this.deleteTestTask()
                         this.$router.push({ path: '/design/designList', query: { reload: true } })
