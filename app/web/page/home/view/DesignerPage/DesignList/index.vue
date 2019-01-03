@@ -25,8 +25,8 @@
         </div>
         <el-table v-if='innerHeight' ref="multipleTable" stripe :data="designList" @row-contextmenu="contextmenuHandle" v-loading="loading" :height="innerHeight" @selection-change="handleSelectionChange">
             <div slot="empty">
-                <p v-if='!loading'>
-                    <img class="no-data" src="~asset/images/no-data.png" alt="">
+                <p v-if='!loading && editorLoaded.state() === "resolved"'>
+                    <img class="no-data" src="~asset/images/no-data.png">
                 </p>
             </div>
             <el-table-column type="selection">
