@@ -1,20 +1,17 @@
 FROM node:10.10.0
 
+WORKDIR /warlock
+
 RUN npm install pm2 yarn -g --registry=https://registry.npm.taobao.org
 RUN yarn config set registry https://registry.npm.taobao.org -g
 
-WORKDIR /warlock
-
-COPY package*.json ./
+COPY . .
 
 RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone 
 RUN yarn
-
-COPY . .
+RUN npm run build
 
 ENV SERVER_URL UNSET
-
-RUN yarn build
 
 EXPOSE 7501
 
