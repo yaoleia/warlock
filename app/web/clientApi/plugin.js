@@ -8,6 +8,6 @@ export function postPluginAction(serverUrl) {
     return '/api/proxyurl?url=' + serverUrl + '/api/plugin';
 }
 
-export function deletePlugin(plugin_key) {
-    return axios.delete(`/api/plugin/${plugin_key}`);
+export function deletePlugin(plugin_id) {
+    return axios.delete(`/api/plugin/${plugin_id}`);
 }

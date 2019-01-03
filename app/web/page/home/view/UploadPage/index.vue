@@ -232,7 +232,7 @@
             async deletePlugin(obj) {
                 const loading = this.loadingUi();
                 try {
-                    const resp = await this.$request.plugin.deletePlugin(obj.plugin_key);
+                    const resp = await this.$request.plugin.deletePlugin(obj.plugin_id);
                     this.setAlgorithm();
                 } catch (error) {
                     this.$message({

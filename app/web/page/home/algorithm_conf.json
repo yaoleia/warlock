@@ -35,7 +35,7 @@
       }
     },
     "module": "put_text",
-    "plugin_key": "062381ad5a6f10f1b06ba85a36befbb8",
+    "plugin_id": "062381ad5a6f10f1b06ba85a36befbb8",
     "super_type": "Algorithm",
     "type": "test_algorithm",
     "version": "1_0_0"
@@ -82,7 +82,7 @@
       }
     },
     "module": "inform_pusher",
-    "plugin_key": "216d90493116ecf0d8cb893631b4019b",
+    "plugin_id": "216d90493116ecf0d8cb893631b4019b",
     "super_type": "Other",
     "type": "Pusher",
     "version": "x"
@@ -104,7 +104,7 @@
       }
     },
     "module": "simulate_trigger",
-    "plugin_key": "258c5cd2445372409cdd9d093d615f48",
+    "plugin_id": "258c5cd2445372409cdd9d093d615f48",
     "super_type": "HardWare",
     "type": "trigger",
     "version": "x"
@@ -140,7 +140,7 @@
       }
     },
     "module": "get_rotation_matrix2d",
-    "plugin_key": "57f678706abaf4dfd7788fa6fa52ba68",
+    "plugin_id": "57f678706abaf4dfd7788fa6fa52ba68",
     "super_type": "Algorithm",
     "type": "test_algorithm",
     "version": "1_0_0"
@@ -176,7 +176,7 @@
       }
     },
     "module": "img_binary",
-    "plugin_key": "5b90bfe6ecfb09bbe81affcf3be22b10",
+    "plugin_id": "5b90bfe6ecfb09bbe81affcf3be22b10",
     "super_type": "Algorithm",
     "type": "test_algorithm",
     "version": "1_0_0"
@@ -212,7 +212,7 @@
       }
     },
     "module": "warpaffine",
-    "plugin_key": "75f937d5af573fb11796a52938185f3d",
+    "plugin_id": "75f937d5af573fb11796a52938185f3d",
     "super_type": "Algorithm",
     "type": "test_algorithm",
     "version": "1_0_0"
@@ -248,7 +248,7 @@
       }
     },
     "module": "bgr_gray",
-    "plugin_key": "acb0b6544d5ba772d907246fd12ddd40",
+    "plugin_id": "acb0b6544d5ba772d907246fd12ddd40",
     "super_type": "Algorithm",
     "type": "test_algorithm",
     "version": "1_0_0"
@@ -295,7 +295,7 @@
       }
     },
     "module": "logitech_camera",
-    "plugin_key": "b7acc31b7535b5265e296ee2fcef76d5",
+    "plugin_id": "b7acc31b7535b5265e296ee2fcef76d5",
     "super_type": "HardWare",
     "type": "Camera",
     "version": "0_0_1"
