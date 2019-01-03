@@ -429,6 +429,11 @@
                     await Promise.all([p1, p2]);
 
                     const promises = designList.map(async d => {
+                        // 异常
+                        if (!d.flowData) {
+                            d.flowData = { disabled: true };
+                            return
+                        }
                         d.flowData.disabled = false;
                         d.flowData.nodes.forEach(n => {
                             if (!this.algorithmModuleList.includes(n.shape)) {
