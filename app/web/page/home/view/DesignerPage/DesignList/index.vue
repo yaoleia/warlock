@@ -44,12 +44,12 @@
             </el-table-column>
             <el-table-column label="创建时间" width="180">
                 <template slot-scope="scope">
-                    <span v-text="$moment(scope.row.cts).format('YYYY-MM-DD HH:mm:ss')"></span>
+                    <span v-text="$dateFns.format(scope.row.cts,'YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
             </el-table-column>
             <el-table-column label="最后修改时间" width="180">
                 <template slot-scope="scope">
-                    <span v-text="$moment(scope.row.ts).format('YYYY-MM-DD HH:mm:ss')"></span>
+                    <span v-text="$dateFns.format(scope.row.ts,'YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
             </el-table-column>
             <el-table-column label="运行状态">
@@ -351,7 +351,7 @@
                 });
                 import('file-saver').then(FileSaver => {
                     const blob = new Blob([JSON.stringify(list)], { type: 'text/plain;charset=utf-8' });
-                    FileSaver.saveAs(blob, `design${this.$moment().format('YYYYMMDDHHmmss')}.json`);
+                    FileSaver.saveAs(blob, `design${this.$dateFns.format(scope.row.cts, 'YYYYMMDDHHmmss')}.json`);
                 })
             },
             handleDelete(item) {

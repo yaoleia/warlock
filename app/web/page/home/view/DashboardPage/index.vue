@@ -263,7 +263,7 @@
             <imgStream :alwaysTry="true" title="目标定位" class="msg-box" :url="curProduct.seg_img_path">
                 <div class="msg flicker" v-show="curProduct.detect_time">
                     <svg id="board-area" :width="svg.width" :height="svg.height"></svg>
-                    <p class="ts">{{$moment(curProduct.detect_time-0).format('YYYY-MM-DD HH:mm:ss')}}</p>
+                    <p class="ts">{{$dateFns.format(curProduct.detect_time-0,'YYYY-MM-DD HH:mm:ss')}}</p>
                     <div class="qa">
                         <span :class="ifOk(curProduct.defect_type) === 'OK'?'':'red'">{{ifOk(curProduct.defect_type)}}</span>
                         <span> {{defectType(curProduct.defect_type)}} </span><br>
@@ -302,7 +302,7 @@
                     <div class="list-complete-item" :class="p.act?'act':''" :key="p.dm_code" v-for="(p) in productList" @click="listItemClick(p)">
                         <div class="dm-img">
                             <p>PID: {{p.dm_code}}</p>
-                            <p class="ts">检测时间: {{$moment(p.detect_time-0).format('YYYY-MM-DD HH:mm:ss')}}</p>
+                            <p class="ts">检测时间: {{$dateFns.format(p.detect_time-0,'YYYY-MM-DD HH:mm:ss')}}</p>
                             <!-- <p class="defect" v-if='p.defect_type !== 0'>缺陷: <span class="red">{{defectType(p.defect_type)}}</span></p> -->
                             <span class="ng" v-if='p.defect_type !== 0'>NG</span>
                         </div>

@@ -37,7 +37,7 @@
             </el-table-column>
             <el-table-column prop="detect_time" label="时间">
                 <template slot-scope="props">
-                    <span v-text="$moment(props.row.detect_time-0).format('YYYY-MM-DD HH:mm:ss')"></span>
+                    <span v-text="this.$dateFns.format(props.row.detect_time-0,'YYYY-MM-DD HH:mm:ss')"></span>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="300">

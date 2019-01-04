@@ -1,6 +1,6 @@
 'use strict';
 import axios from 'framework/network/request';
-import moment from 'moment';
+import dateFns from 'date-fns'
 import clientApi from 'clientApi';
 
 export default {
@@ -13,8 +13,8 @@ export default {
       Vue.prototype.$request = clientApi;
     }
 
-    if (!Vue.prototype.hasOwnProperty('$moment')) {
-      Vue.prototype.$moment = moment;
+    if (!Vue.prototype.hasOwnProperty('$dateFns')) {
+      Vue.prototype.$dateFns = dateFns;
     }
   }
 };
