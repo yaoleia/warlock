@@ -145,7 +145,7 @@
             },
             startWsConnection() {
                 this.stopWsConnection()
-                const ws = io('/')
+                const ws = io('/?room=admin&userId=1')
 
                 ws.on('connect', () => {
                     console.log('websocket successfully connected !')

@@ -1,20 +1,22 @@
 const io = require('socket.io-client');
 module.exports = app => {
   return async function() {
-    const message = this.args[0];
-    const serverUrl = app.config.serverUrl;
+    const path = this.args[0];
     if (this.socket.ioClient) {
       this.socket.ioClient.close();
       this.socket.ioClient = null
     }
-    if (!message) return;
 
-    const wsServerUrl = `${serverUrl.replace('5000', '5002')}/${message}`;
+    if (!path) return;
+
+    const serverUrl = app.config.serverUrl;
+    const wsServerUrl = `${serverUrl.replace('5000', '5002')}`;
+
     if (!this.socket.ioClient) {
       this.socket.ioClient = ioClient(
         wsServerUrl,
-        this.socket,
-        'ak', serverUrl
+        { path },
+        this.socket
       );
       // this.socket.ioClient = setInterval(() => {
       //   let random = Math.random() * 10
@@ -37,12 +39,12 @@ module.exports = app => {
       // }, 5000);
     }
 
-    this.socket.emit('res', `Hi! I've got your message: ${message}`);
+    this.socket.emit('res', `Hi! I've got your message: ${path}`);
   };
 };
 
-function ioClient(addr, socket, ak, serverUrl) {
-  let client = io(addr); // 实例pusher的ws
+function ioClient(addr, option, socket) {
+  let client = io(addr, option); // 实例pusher的ws
   client.on('connect', () => {
     console.log(`==== ${addr} ${socket.id} connect! ====`);
   });
@@ -50,11 +52,6 @@ function ioClient(addr, socket, ak, serverUrl) {
   client.on('server_response', message => {
     console.log(message)
     // 转发pusher到warlock前端
-    for (const attr in message.data) {
-      if (attr.indexOf('_path') !== -1) {
-        message.data[attr] = message.data[attr].replace('http://0.0.0.0:5001', serverUrl).replace('5000', '5001');
-      }
-    }
     socket.emit('msg', message.data);
   });
 
@@ -67,13 +64,9 @@ function ioClient(addr, socket, ak, serverUrl) {
   });
 
   socket.on('disconnect', () => {
-    // warlock断开连接 从此ak的房间移除
     console.log(`==== ${socket.id} disconnected ====`);
     client.close();
     client = null;
-    socket.leave(ak, () => {
-      // console.log(`${socket.id} client leaves ${ak} room`);
-    });
   });
   return client;
 }

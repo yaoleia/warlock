@@ -79,7 +79,22 @@
                 }
             }
         },
+        mounted() {
+            $(window).on(`resize.${this._uid}`, this.onResize)
+        },
+        beforeDestroy() {
+            $(window).off(`resize.${this._uid}`)
+        },
         methods: {
+            onResize() {
+                const $el = $(this.$el);
+                let height = this.$el.clientHeight;
+                const parentHeight = this.$parent.$el.clientHeight - 50;
+                if (parentHeight < height) {
+                    height = parentHeight
+                }
+                $el.css({ height });
+            },
             runClick() {
                 if (this.componentIs === 'run') {
                     if (this.runDesign) {
