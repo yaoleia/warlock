@@ -90,9 +90,8 @@
                 const $el = $(this.$el);
                 let height = this.$el.clientHeight;
                 const parentHeight = this.$parent.$el.clientHeight - 50;
-                if (parentHeight < height) {
-                    height = parentHeight
-                }
+                if (parentHeight >= height) return;
+                height = parentHeight;
                 $el.css({ height });
             },
             runClick() {
