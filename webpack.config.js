@@ -29,7 +29,7 @@ module.exports = {
     fs: 'empty'
   },
   plugins: {
-    analyzer: true,
+    // analyzer: true,
     provide: {
       $: 'jquery',
       jQuery: 'jquery',
