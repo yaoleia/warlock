@@ -26,7 +26,7 @@
         props: ['_key', 'value', 'showTerminal'],
         template: `<li class='msg-item'>
                         <div v-if='_key === "ts"'>
-                            <p>{{_key}}: {{$moment(value).format()}}</p>
+                            <p>{{_key}}: {{$moment(value).format('YYYY-MM-DD HH:mm:ss')}}</p>
                         </div>
                         <div v-else-if='_key === "status"'>
                             <p>{{_key}}: <span class="status" :class="value?'ok':'ng'">{{value?"OK":"NG"}}</span></p>

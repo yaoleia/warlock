@@ -1,5 +1,5 @@
 'use strict';
-
+import _ from 'lodash';
 export default {
     algorithmModuleList: state => Object.values(state.algorithmMap).map(item => item.module),
     algorithmTree: state => {

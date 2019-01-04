@@ -5,6 +5,7 @@
 </style>
 <script type="babel">
     import { SET_ALGORITHM_MAP } from '../../store/app/mutation-type'
+    import _ from 'lodash';
     export default {
         components: {},
         data() {

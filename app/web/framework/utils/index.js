@@ -1,4 +1,4 @@
-const _ = require('lodash');
+import _ from 'lodash';
 export default {
   ifOk(type) {
     if (type === 0) {

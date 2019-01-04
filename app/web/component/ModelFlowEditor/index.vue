@@ -174,15 +174,15 @@
             async saveDesign() {
                 if (!this.designItem._id) {
                     Object.assign(this.designItem, {
-                        ts: this.$moment().format(),
-                        cts: this.$moment().format(),
+                        ts: new Date().getTime(),
+                        cts: new Date().getTime(),
                         name: this.name,
                         flowData: this.flow.save(),
                         active: false
                     })
                     await this.creatFlow();
                 } else {
-                    Object.assign(this.designItem, { name: this.name, flowData: this.flow.save(), ts: this.$moment().format() })
+                    Object.assign(this.designItem, { name: this.name, flowData: this.flow.save(), ts: new Date().getTime() })
                     await this.patchFlow();
                 }
             },

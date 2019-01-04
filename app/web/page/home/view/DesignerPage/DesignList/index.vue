@@ -108,6 +108,7 @@
 </template>
 <script type="babel">
     import FlowDisplayer from 'component/ModelFlowEditor/displayer'
+    import _ from 'lodash';
     export default {
         data() {
             return {
@@ -300,7 +301,7 @@
                 const loading = this.loadingUi();
                 try {
                     const promises = addList.map(async r => {
-                        r.ts = this.$moment().format();
+                        r.ts = new Date().getTime();
                         await this.creatWorkflow(r);
                     })
                     await Promise.all(promises);
@@ -397,14 +398,14 @@
             async handleCopy(item) {
                 const newItem = _.cloneDeep(item);
                 newItem.active = false;
-                newItem.ts = this.$moment().format();
-                newItem.cts = this.$moment().format();
+                newItem.ts = new Date().getTime();
+                newItem.cts = new Date().getTime();
                 delete newItem._id;
                 delete newItem.task_id;
                 this.$prompt('请输入新克隆的流程名称', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
-                    inputValue: `${newItem.name}_copy_${this.$moment().valueOf()}`
+                    inputValue: `${newItem.name}_copy_${new Date().getTime()}`
                 }).then(async ({ value }) => {
                     newItem.name = value;
                     await this.creatWorkflow(newItem);
@@ -454,7 +455,7 @@
                         }
                     })
                     await Promise.all(promises);
-                    this.designList = designList.sort((a, b) => this.$moment(b.ts).valueOf() - this.$moment(a.ts).valueOf());
+                    this.designList = designList.sort((a, b) => b.ts - a.ts);
                 } catch (error) {
                     this.$message({
                         type: 'error',

@@ -41,6 +41,7 @@
         "transform-object-rest-spread",
         "syntax-dynamic-import",
         "transform-object-assign",
+        "lodash",
         [
           "transform-runtime",
           {

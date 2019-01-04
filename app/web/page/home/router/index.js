@@ -11,6 +11,7 @@ import DesignList from '../view/DesignerPage/DesignList'
 import NotFound from '../view/NotFoundPage.vue'
 import Login from '../view/LoginPage'
 import UploadPage from '../view/UploadPage'
+import _ from 'lodash';
 
 Vue.use(VueRouter);
 

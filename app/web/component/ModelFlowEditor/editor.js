@@ -2,6 +2,8 @@
 import G6Editor from '@antv/g6-editor'
 import CircularJSON from 'circular-json'
 import G6Plugins from '@antv/g6/build/plugins'
+import _ from 'lodash';
+
 G6Editor.track(false)
 export default {
     data() {
@@ -260,7 +262,7 @@ export default {
                 msg = this.modelFilter(msg);
             }
             this._pushMsg({
-                ts: this.$moment().valueOf() + '#' + Math.floor(Math.random() * 1000),
+                ts: new Date().getTime() + '#' + Math.floor(Math.random() * 1000),
                 msg
             }, action);
         },
