@@ -4,11 +4,11 @@
             <!-- taskId: {{taskId}} -->
         </div>
         <ul class="active" v-if="active">
-            <msg-item :item='active' :showTerminal='showTerminal'></msg-item>
+            <msg-item v-for='(value,key) in active' :key='key' :_key='key' :value='value' :showTerminal='showTerminal'></msg-item>
         </ul>
         <transition-group name="list-complete" tag="div" class="msg-list" ref="runMsgList" @mousemove.native.prevent="onHover=true" @mouseleave.native.prevent="onHover=false">
-            <ul class="list-complete-item" v-for='item in runMsgList' :key="item.ts" @click="msgClick(item)">
-                <msg-item :item='item' :showTerminal='showTerminal'></msg-item>
+            <ul class="list-complete-item" :class="item._act?'ac':''" v-for='item in runMsgList' :key="item.ts" @click="msgClick(item)">
+                <msg-item v-for='(value,key) in item' :key='key' :_key='key' :value='value' :showTerminal='showTerminal'></msg-item>
             </ul>
         </transition-group>
     </div>
@@ -23,19 +23,19 @@
             }
         },
         components: { FeatureImg },
-        props: ['item', 'showTerminal'],
-        template: `<li v-for='(value,key) in item' :key='key'>
-                        <div v-if='key === "ts"'>
-                            <p>{{key}}: {{$moment(value).format()}}</p>
+        props: ['_key', 'value', 'showTerminal'],
+        template: `<li class='msg-item'>
+                        <div v-if='_key === "ts"'>
+                            <p>{{_key}}: {{$moment(value).format()}}</p>
                         </div>
-                        <div v-else-if='key == "status"'>
-                            <p>{{key}}: <span class="status" :class="value?'ok':'ng'">{{value?"OK":"NG"}}</span></p>
+                        <div v-else-if='_key === "status"'>
+                            <p>{{_key}}: <span class="status" :class="value?'ok':'ng'">{{value?"OK":"NG"}}</span></p>
                         </div>
                         <div v-else-if='checkURL(value)'>
-                            <p>{{key}}: </p>
+                            <p>{{_key}}: </p>
                             <feature-img :src='value' ref='featureImg'></feature-img>
                         </div>
-                        <div v-else>{{key}}: {{value}}</div>
+                        <div v-else-if='_key!=="_act"'>{{_key}}: {{value}}</div>
                     </li>`,
         methods: {
             checkURL(URL) {
@@ -57,13 +57,9 @@
         watch: {
             showTerminal(bol) {
                 const imgs = this.$refs.featureImg;
-                console.log(imgs)
                 if (!bol || !imgs) return;
-                imgs.forEach(i => {
-                    const $imgWrap = i.$refs.imgWrap;
-                    if ($imgWrap.clientHeight) return;
-                    i.onImgLoad();
-                })
+                const $imgWrap = imgs.$refs.imgWrap;
+                imgs.onImgLoad();
             }
         }
     }
@@ -89,8 +85,14 @@
             }
         },
         watch: {
+            active(obj) {
+                this.runMsgList.forEach(l => {
+                    l._act = l.ts === obj.ts;
+                })
+            },
             taskId(id) {
                 window.ws.off('msg').emit('chat', id).on('msg', m => {
+                    m._act = false;
                     this.runMsgList.push(m)
                     if (this.onHover) return;
                     this.active = m;
@@ -150,7 +152,10 @@
                 border-bottom: 1px solid #222;
                 transition: 0.1 all;
                 > li {
-                    margin-right: 20px;
+                    margin: 0;
+                }
+                &.ac {
+                    background: #666;
                 }
                 &:hover {
                     background: #666;

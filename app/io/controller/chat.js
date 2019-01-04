@@ -10,12 +10,11 @@ module.exports = app => {
     if (!path) return;
 
     const serverUrl = app.config.serverUrl;
-    const wsServerUrl = `${serverUrl.replace('5000', '5002')}`;
+    const wsServerUrl = `${serverUrl.replace('5000', '5002')}/${path}`;
 
     if (!this.socket.ioClient) {
       this.socket.ioClient = ioClient(
         wsServerUrl,
-        { path },
         this.socket
       );
       // this.socket.ioClient = setInterval(() => {
@@ -43,8 +42,8 @@ module.exports = app => {
   };
 };
 
-function ioClient(addr, option, socket) {
-  let client = io(addr, option); // 实例pusher的ws
+function ioClient(addr, socket) {
+  let client = io(addr); // 实例pusher的ws
   client.on('connect', () => {
     console.log(`==== ${addr} ${socket.id} connect! ====`);
   });
