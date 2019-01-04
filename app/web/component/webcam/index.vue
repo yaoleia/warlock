@@ -73,7 +73,7 @@
                     if (!this.ready) {
                         reject()
                     }
-                    const timestamp = moment().valueOf()
+                    const timestamp = this.$moment().valueOf()
                     Webcam.snap(uri => {
                         resolve({ uri, timestamp })
                     })
