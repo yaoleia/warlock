@@ -1,4 +1,5 @@
 'use strict';
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 module.exports = {
   egg: true,
   framework: 'vue',
@@ -39,7 +40,12 @@ module.exports = {
         'window.jQuery': 'jquery',
         'window.$': 'jquery'
       }
-    }
+    },
+    new LodashModuleReplacementPlugin({
+      shorthands: true,
+      path: true,
+      flattening: true
+    })
   ],
   done() {
     console.log('如果启动成功后, Chrome控制台浏览器脚本报错, 可以尝试执行 npm run clean 清除缓存解决');
