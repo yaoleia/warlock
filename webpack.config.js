@@ -31,7 +31,7 @@ module.exports = {
   },
   plugins: [
     {
-      analyzer: true
+      analyzer: false
     },
     {
       provide: {
