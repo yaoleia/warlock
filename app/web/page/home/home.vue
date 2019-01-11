@@ -48,12 +48,16 @@
     router.beforeEach((to, from, next) => {
         if (!EASY_ENV_IS_BROWSER) return;
         const taskId = window.sessionStorage.taskId;
+        const flowId = window.sessionStorage.flowId;
         if (taskId && !to.query.id) {
             to.query.id = taskId;
+            to.query.flow = window.sessionStorage.flowId;
         }
         const id = to.query.id;
+        const flow = to.query.flow;
         if (to.path === '/login') {
             window.sessionStorage.taskId = '';
+            window.sessionStorage.flowId = '';
             store.state.username = '';
             to.query.id = ''
             next();
@@ -64,6 +68,7 @@
             if (!routered) {
                 routered = true;
                 window.sessionStorage.taskId = id;
+                window.sessionStorage.flowId = flow;
                 router.addRoutes(getRouer(visitorRouterMap)) // 动态添加可访问路由表
                 next({ path: '/', query: to.query })
                 return;
@@ -98,7 +103,8 @@
             return {
                 globalWebsocket: null,
                 menu: null,
-                taskId: null
+                taskId: null,
+                workflow: {}
             }
         },
         components: {
@@ -124,7 +130,7 @@
             }
         },
         methods: {
-            checkMode() {
+            async checkMode() {
                 const query = this.$route.query;
                 if (query.id) {
                     this.taskId = query.id;
@@ -133,6 +139,9 @@
                         this.menu = { ...userRouterMap, ...constantRouterMap }
                     }
                 }
+                if (!query.flow) return;
+                const resp = await this.$request.workflow.getWorkflowById(query.flow);
+                this.workflow = resp.data;
             },
             setWebsocket(w) {
                 this.globalWebsocket = w

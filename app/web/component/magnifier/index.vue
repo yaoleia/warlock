@@ -1,16 +1,36 @@
 <script type="text/babel">
+    import imgStream from 'component/imgStream'
+    import bigArea from 'component/magnifier/bigArea'
     export default {
+        name: 'magnifier',
         data() {
             return {
                 mouse: {},
                 canMove: false,
                 canI: false,
                 timer: null,
-                timerCut: null
+                timerCut: null,
+                cutObj: {
+                    cut: {},
+                    cutBase64: ''
+                }
             }
         },
+        components: {
+            imgStream,
+            bigArea
+        },
         props: {
-            imgMagnifier: {
+            mask_img_path: {
+                required: false
+            },
+            reg_img_path: {
+                required: false
+            },
+            template_img: {
+                required: false
+            },
+            switchCraft: {
                 required: false
             }
         },
@@ -24,12 +44,12 @@
                 this.canMove = false;
                 this.canI = false;
                 setTimeout(() => {
-                    this.imgMagnifier.cutBase64 = '';
-                    this.imgMagnifier.cut = {};
+                    this.cutObj.cutBase64 = '';
+                    this.cutObj.cut = {};
                 }, 13)
             },
             mousedown(e) {
-                if (!this.imgMagnifier.reg_img_path) return;
+                if (!this.reg_img_path) return;
                 const $el = this.$el
                 const $area = this.$refs.area
                 const $areaw = $area.clientWidth
@@ -46,7 +66,7 @@
                         backgroundSize: `${$elw}px ${$elh}px`
                     })
                 $('.img', this.$el).addClass('filter')
-                this.imgMagnifier.cut = { ...this.imgMagnifier.cut, sizeW: $elw, sizeH: $elh }
+                this.cutObj.cut = { ...this.cutObj.cut, sizeW: $elw, sizeH: $elh }
                 this.move()
             },
             mousemove(e) {
@@ -85,8 +105,8 @@
                 const width = $area.clientWidth
                 const height = $area.clientHeight
                 const cut = { left, top, width, height }
-                this.imgMagnifier.cut = { ...this.imgMagnifier.cut, ...cut }
-                this.imgMagnifier.cutBase64 = ''
+                this.cutObj.cut = { ...this.cutObj.cut, ...cut }
+                this.cutObj.cutBase64 = ''
                 // if (this.timerCut) {
                 //     clearTimeout(this.timerCut)
                 //     this.timerCut = null
@@ -109,7 +129,7 @@
                         opt.width * scaleX,
                         opt.height * scaleY
                     )
-                    this.imgMagnifier.cutBase64 = base64
+                    this.cutObj.cutBase64 = base64
                     img = null;
                 }
                 img.onerror = e => {
@@ -171,7 +191,7 @@
             },
             imousemove(e) {
                 const down = this.mouse
-                const cut = this.imgMagnifier.cut;
+                const cut = this.cutObj.cut;
                 const X = e.clientY - down.$eltop - cut.top - cut.height
                 const Y = e.clientX - down.$elleft - cut.left - cut.width
                 const value = Math.max(X, Y)
@@ -194,12 +214,12 @@
                 }
 
                 $(this.$refs.area).css({ width: wh, height: wh })
-                this.imgMagnifier.cut = { ...this.imgMagnifier.cut, width: wh, height: wh }
+                this.cutObj.cut = { ...this.cutObj.cut, width: wh, height: wh }
                 this.mouse = { ...this.mouse, $areah: wh, $areaw: wh }
             },
             showAnimateSetBackground() {
-                if (this.imgMagnifier) {
-                    const path = this.imgMagnifier.mask_img_path
+                if (this.mask_img_path) {
+                    const path = this.mask_img_path
                     if (path) {
                         this.$refs.area.style.backgroundImage = `url(${path})`
                         const $imgMagnifier = $('.img-stream:not(.img-big)', this.$el)
@@ -222,20 +242,30 @@
                     this.timer = null
                 }, 13)
             },
-            imgMagnifier() {
-                this.imgMagnifier.cutBase64 = ''
+            mask_img_path() {
+                this.close();
+                this.cutObj.cutBase64 = ''
                 this.showAnimateSetBackground()
-            }
+            },
+            'cutObj.cut': function(c) {
+                if (c.width) {
+                    this.$emit('update:switchCraft', false)
+                }
+            },
         }
     }
 </script>
 <template>
     <div class="magnifier" @mousedown.prevent="mousedown" @mousemove.prevent="mousemove" @mouseup="canMove=false" @mouseleave="canMove=false">
-        <slot></slot>
+        <imgStream :alwaysTry="true" class="img-big" v-if="reg_img_path" :url="reg_img_path"></imgStream>
+        <imgStream :alwaysTry="true" :url="mask_img_path"></imgStream>
         <div class="area visibilityh" ref="area">
             <div class="close el-icon-close" @mousedown.stop @click.stop="close(true)"></div>
             <i @mousedown.prevent.stop="imousedown"></i>
         </div>
+        <transition name="el-fade-in-linear">
+            <big-area v-show="cutObj.cut.width" class="result" :template_img='template_img' :opt="cutObj" v-bind='$props' @mousedown.native.stop.prevent></big-area>
+        </transition>
     </div>
 </template>
 <style lang='scss'>

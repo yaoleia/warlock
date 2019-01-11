@@ -30,13 +30,26 @@
 </style>
 <script type="text/babel">
     export default {
+        name: 'imgStream',
         data() {
             return {
                 show: false,
                 try: 2
             };
         },
-        props: ['url', 'title', 'alwaysTry'],
+        props: {
+            url: {
+                type: String,
+                required: false
+            },
+            title: {
+                type: String,
+                required: false
+            },
+            alwaysTry: {
+                required: false
+            }
+        },
         components: {},
         mounted() { },
         methods: {

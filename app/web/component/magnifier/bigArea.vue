@@ -13,6 +13,7 @@
 </template>
 <script type="text/babel">
     export default {
+        name: 'bigArea',
         data() {
             return {
                 timer: null,
@@ -22,8 +23,26 @@
                 primaryBtn: ''
             };
         },
-        props: ['opt', 'title'],
-        mounted() { },
+        props: {
+            opt: {
+                required: false
+            },
+            title: {
+                required: false
+            },
+            mask_img_path: {
+                required: false
+            },
+            reg_img_path: {
+                required: false
+            },
+            template_img: {
+                required: false
+            }
+        },
+        mounted() {
+            $('.big-area-template', this.$el).css('backgroundImage', `url(${this.template_img})`)
+        },
         methods: {
             loaded() {
                 this.show = true
@@ -44,6 +63,9 @@
             }
         },
         watch: {
+            template_img(img) {
+                $('.big-area-template', this.$el).css('backgroundImage', `url(${img})`)
+            },
             showTemplate(t) {
                 this.primaryBtn = t ? 'primary' : '';
             },
@@ -57,7 +79,7 @@
                 const rateW = bigW / cut.width
                 const rateH = bigH / cut.height
                 Object.assign(bigAreaBox.style, {
-                    backgroundImage: `url(${this.opt.reg_img_path})`,
+                    backgroundImage: `url(${this.reg_img_path})`,
                     backgroundSize: `${cut.sizeW * rateW}px ${cut.sizeH * rateH}px`,
                     backgroundPosition: `-${cut.left * rateW}px -${cut.top * rateH}px`
                 })
@@ -78,10 +100,16 @@
 </script>
 <style lang="scss">
     .big-area {
-        box-sizing: border-box;
-        position: relative;
-        width: 100%;
-        height: 100%;
+        position: absolute;
+        right: 100%;
+        top: 0;
+        width: 500px;
+        height: 500px;
+        box-shadow: 10px 10px 8px 0 #000;
+        background-color: rgba($color: #373737, $alpha: 0.6);
+        padding: 5px;
+        z-index: 100;
+        border-radius: 14px;
         &.el-card {
             border: none;
             overflow: initial;
@@ -127,7 +155,6 @@
             }
         }
         .big-area-template {
-            background-image: url("/public/mock-img/template_img.jpg");
             z-index: 110;
         }
         .visibility {

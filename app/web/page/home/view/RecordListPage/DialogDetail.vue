@@ -1,11 +1,10 @@
 <template>
     <div class="dialog-detail">
-        <magnifier :imgMagnifier="cur" ref="magnifier">
+        <magnifier :mask_img_path="cur.mask_img_path" :reg_img_path='cur.reg_img_path' ref="magnifier">
             <imgStream class="img-big" :url="cur.reg_img_path"></imgStream>
             <imgStream :url="cur.mask_img_path"></imgStream>
         </magnifier>
         <div class="right">
-            <big-area class="result" title="局部放大" :opt="cur"></big-area>
             <!-- <imgStream title="目标定位" :url="cur.seg_img_path"></imgStream> -->
             <el-card class="msg">
                 <p class="title">检测结果详情</p>
@@ -54,7 +53,6 @@
             }
         }
         .result {
-            height: 600px;
             p {
                 position: absolute;
                 line-height: 600px;
@@ -73,6 +71,10 @@
         .magnifier {
             width: 430px;
             height: 860px;
+            .big-area {
+                left: 100%;
+                right: auto;
+            }
         }
     }
     @media screen and (max-width: 1920px) {
@@ -84,7 +86,6 @@
             .right {
                 width: 500px;
                 .result {
-                    height: 500px;
                     p {
                         line-height: 500px;
                     }
@@ -99,7 +100,6 @@
 <script type="text/babel">
     import imgStream from 'component/imgStream'
     import magnifier from 'component/magnifier'
-    import bigArea from 'component/magnifier/bigArea'
     import utils from 'framework/utils'
     export default {
         props: {
@@ -110,8 +110,7 @@
         },
         components: {
             imgStream,
-            magnifier,
-            bigArea
+            magnifier
         },
         methods: {
             ifOk(type) {

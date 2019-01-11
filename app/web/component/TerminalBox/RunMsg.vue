@@ -7,7 +7,7 @@
             <msg-item v-for='(value,key) in active' :key='key' :_key='key' :value='value' :showTerminal='showTerminal'></msg-item>
         </ul>
         <transition-group name="list-complete" tag="div" class="msg-list" ref="runMsgList" @mousemove.native.prevent="onHover=true" @mouseleave.native.prevent="onHover=false">
-            <ul class="list-complete-item" :class="item._act?'ac':''" v-for='item in runMsgList' :key="item.ts" @click="msgClick(item)">
+            <ul class="list-complete-item" :class="item.act?'ac':''" v-for='item in runMsgList' :key="item.ts" @click="msgClick(item)">
                 <msg-item v-for='(value,key) in item' :key='key' :_key='key' :value='value' :showTerminal='showTerminal'></msg-item>
             </ul>
         </transition-group>
@@ -15,55 +15,7 @@
 </template>
 
 <script>
-    import FeatureImg from 'component/FeatureImg'
-
-    const msgItem = {
-        data() {
-            return {
-            }
-        },
-        components: { FeatureImg },
-        props: ['_key', 'value', 'showTerminal'],
-        template: `<li class='msg-item'>
-                        <div v-if='_key === "ts"'>
-                            <p>{{_key}}: {{$dateFns.format(value,'YYYY-MM-DD HH:mm:ss')}}</p>
-                        </div>
-                        <div v-else-if='_key === "status"'>
-                            <p>{{_key}}: <span class="status" :class="value?'ok':'ng'">{{value?"OK":"NG"}}</span></p>
-                        </div>
-                        <div v-else-if='checkURL(value)'>
-                            <p>{{_key}}: </p>
-                            <feature-img :src='value' ref='featureImg'></feature-img>
-                        </div>
-                        <div v-else-if='_key!=="_act"'>{{_key}}: {{value}}</div>
-                    </li>`,
-        methods: {
-            checkURL(URL) {
-                if (typeof URL !== 'string') {
-                    return false;
-                }
-                const str = URL;
-                // 判断URL地址的正则表达式为:http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?
-                // 下面的代码中应用了转义字符"\"输出一个字符"/"
-                const Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
-                const objExp = new RegExp(Expression);
-                if (objExp.test(str) == true) {
-                    return true;
-                } else {
-                    return false;
-                }
-            },
-        },
-        watch: {
-            showTerminal(bol) {
-                const imgs = this.$refs.featureImg;
-                if (!bol || !imgs) return;
-                const $imgWrap = imgs.$refs.imgWrap;
-                imgs.onImgLoad();
-            }
-        }
-    }
-
+    import msgItem from 'component/TerminalBox/msgItem'
     export default {
         data() {
             return {
@@ -71,8 +23,8 @@
                 active: null
             };
         },
-        components: { msgItem },
         props: ['showTerminal', 'runDesign', 'taskId', 'runMsgList'],
+        components: { msgItem },
         methods: {
             scrollTobottom() {
                 this.$nextTick(() => {
@@ -87,12 +39,12 @@
         watch: {
             active(obj) {
                 this.runMsgList.forEach(l => {
-                    l._act = l.ts === obj.ts;
+                    l.act = l.ts === obj.ts;
                 })
             },
             taskId(id) {
                 window.ws.off('msg').emit('chat', id).on('msg', m => {
-                    m._act = false;
+                    m.act = false;
                     this.runMsgList.push(m)
                     if (this.onHover) return;
                     this.active = m;

@@ -54,6 +54,7 @@
     "vue-iconfont": "^2.5.1",
     "vue-router": "^3.0.1",
     "vue-server-renderer": "^2.5.21",
+    "vuedraggable": "^2.17.0",
     "vuex": "^3.0.1",
     "vuex-router-sync": "^5.0.0",
     "xlsx": "^0.14.1"

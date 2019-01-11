@@ -5,11 +5,8 @@
 </template>
 <script type="babel">
     export default {
-        components: {
-        },
         data() {
             return {
-
             };
         },
         beforeMount() {

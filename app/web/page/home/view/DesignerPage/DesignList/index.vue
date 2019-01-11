@@ -6,22 +6,7 @@
                 </el-date-picker>
                 <el-button class="search-button" type="text" @click="q.pageIndex = 1;getDesignList()">查询</el-button> -->
             </div>
-            <div class="search-right">
-                <div class="export-wrap">
-                    <el-button type="text" @click='handleDownload(exportOption.checkedMode?exportOption.multipleSelection:designList)'><i class="el-icon-download"></i> 导出</el-button>
-                    <el-select v-model="exportOption.checkedMode" class="export-mode">
-                        <el-option v-for="item in exportOption.options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
-                        </el-option>
-                    </el-select>
-                </div>
-                <form ref="optionForm" class="option-form">
-                    <input type="file" accept="application/json" ref='option' @change="onFileAdd" v-show="false">
-                    <el-button type="text" @click="$refs.option.click()"><i class="el-icon-upload2"></i> 导入流程</el-button>
-                </form>
-                <router-link to='/design/designer/0'>
-                    <el-button class="search-button" type="text"><i class="el-icon-circle-plus-outline"></i> 新建流程</el-button>
-                </router-link>
-            </div>
+            <right-nav ref="rightNav" :handleDownload='handleDownload' :exportOption='exportOption' :onFileAdd='onFileAdd' :designList='designList'></right-nav>
         </div>
         <el-table v-if='innerHeight' ref="multipleTable" stripe :data="designList" @row-contextmenu="contextmenuHandle" v-loading="loading" :height="innerHeight" @selection-change="handleSelectionChange">
             <div slot="empty">
@@ -61,7 +46,7 @@
                 <template slot-scope="scope">
                     <div class="opration">
                         <div class="top-btn">
-                            <el-button v-if='scope.row.active' title="外链" type="primary" @click="jumperHandle(scope.row.task_id)">
+                            <el-button v-if='scope.row.active' title="外链" type="primary" @click="jumperHandle(scope.row)">
                                 <v-icon name='wailian'></v-icon>
                             </el-button>
                             <router-link :to="{name: '新建流程',params: {_id:scope.row._id,flow: scope.row}}">
@@ -82,31 +67,15 @@
         </el-table>
         <!-- <el-pagination background class="pager" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="q.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="q.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
         </el-pagination> -->
-        <el-dialog title="上传流程" :visible.sync="uploadOption.showPop" custom-class="upload-pop-dialog">
-            <el-checkbox :indeterminate="uploadOption.isIndeterminate" v-model="uploadOption.checkAll" :disabled="uploadOption.checkAllDisabled" @change="handleCheckAllChange">全选</el-checkbox>
-            <div style="margin-bottom:20px"></div>
-            <el-checkbox-group v-model="uploadOption.checkedList" @change="handleCheckedChange">
-                <el-checkbox v-for="item in uploadOption.uploadList" :label="item._id" :key="item._id" :disabled="item.disabled">{{item.name}}{{item.disabled?'(不可用)':''}}</el-checkbox>
-            </el-checkbox-group>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="uploadDesignList(uploadOption)">上传</el-button>
-                <el-button @click="uploadCancel">取消</el-button>
-            </div>
-        </el-dialog>
-        <div class="context-menu" v-if='active' ref="contextMenu" @contextmenu.stop.prevent>
-            <el-button type="text" @click="handleCopy(active)">
-                <v-icon name='s-clonekelong'></v-icon> 克隆
-            </el-button>
-            <el-button type="text" @click="handleDelete(active)">
-                <v-icon name='shanchu'></v-icon> 删除
-            </el-button>
-            <el-button type="text" @click='handleDownload([active])'>
-                <v-icon name='xiazai'></v-icon> 导出
-            </el-button>
-        </div>
+        <upload-dialog :uploadOption='uploadOption' :uploadCancel='uploadCancel' :uploadDesignList='uploadDesignList'></upload-dialog>
+        <context-menu v-show='active' ref="contextMenu" :handleCopy='handleCopy' :handleDelete='handleDelete' :handleDownload='handleDownload' :active='active'></context-menu>
     </div>
 </template>
 <script type="babel">
+    import { export2Json } from '@/vendor/Export2Json'
+    import rightNav from './rightNav'
+    import uploadDialog from './uploadDialog'
+    import contextMenu from './contextmenu'
     import FlowDisplayer from 'component/ModelFlowEditor/displayer'
     import _ from 'lodash';
     export default {
@@ -188,7 +157,10 @@
         },
         props: ['editorLoaded'],
         components: {
-            FlowDisplayer
+            FlowDisplayer,
+            contextMenu,
+            uploadDialog,
+            rightNav
         },
         methods: {
             loadingUi() {
@@ -254,13 +226,13 @@
                 // 跳转到查看work-flow的displayer
                 this.$router.push({ name: '新建流程', params: { _id: item._id, flow: item, read: true } });
             },
-            jumperHandle(taskId) {
-                window.open(`/?id=${taskId}`);
+            jumperHandle(flow) {
+                window.open(`/?id=${flow.task_id}&flow=${flow._id}`);
             },
             contextmenuHandle(row, e) {
                 this.active = row;
                 this.$nextTick(() => {
-                    const contextMenu = this.$refs.contextMenu;
+                    const contextMenu = this.$refs.contextMenu.$el;
                     $(contextMenu).css({ top: e.clientY, left: e.clientX })
                 })
                 e.stopPropagation();
@@ -270,18 +242,8 @@
                 this.exportOption.multipleSelection = val;
             },
             uploadCancel() {
-                this.$refs.optionForm.reset();
+                this.$refs.rightNav.formReset();
                 this.uploadOption.reset();
-            },
-            handleCheckAllChange(val) {
-                this.uploadOption.checkedList = val ? this.uploadOption.uploadList.map(li => li._id) : [];
-                this.uploadOption.isIndeterminate = false;
-            },
-            handleCheckedChange(value) {
-                const checkedCount = value.length;
-                const uploadCount = this.uploadOption.uploadList.length;
-                this.uploadOption.checkAll = checkedCount === uploadCount;
-                this.uploadOption.isIndeterminate = checkedCount > 0 && checkedCount < uploadCount;
             },
             onFileAdd(e) {
                 // input的file change事件
@@ -349,10 +311,7 @@
                     delete li.task_id;
                     li.active = false;
                 });
-                import('file-saver').then(FileSaver => {
-                    const blob = new Blob([JSON.stringify(list)], { type: 'text/plain;charset=utf-8' });
-                    FileSaver.saveAs(blob, `design${this.$dateFns.format(scope.row.cts, 'YYYYMMDDHHmmss')}.json`);
-                })
+                export2Json(list);
             },
             handleDelete(item) {
                 let msg = '此操作将删除该流程, 是否继续?';
@@ -523,27 +482,6 @@
 <style lang="scss">
     .design-list {
         min-height: 500px;
-        .upload-pop-dialog {
-            width: 500px;
-        }
-        .context-menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: auto;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            background: #444;
-            border-radius: 5px;
-            padding: 5px 0;
-            box-shadow: 1px 0 5px 0 rgba($color: #000, $alpha: 0.8);
-            .el-button--text {
-                cursor: pointer;
-                margin: 0;
-                padding: 10px 15px;
-            }
-        }
         .el-table {
             height: 890px;
             .cell .red {
@@ -589,18 +527,6 @@
             height: 40px;
             display: flex;
             justify-content: space-between;
-            .export-mode {
-                .el-input__inner {
-                    padding: 0 8px;
-                    width: 50px;
-                }
-                .el-select__caret {
-                    display: none;
-                }
-            }
-            .search-right {
-                display: flex;
-            }
             .el-range-editor {
                 border: none;
             }
@@ -615,13 +541,6 @@
             }
             .el-date-editor .el-range-separator {
                 color: #aaa;
-            }
-            .export-wrap {
-                display: flex;
-                align-items: center;
-            }
-            .option-form {
-                margin: 0 30px;
             }
         }
     }

@@ -63,15 +63,14 @@
                 showContextMenu: false,
                 canMove: false,
                 mouse: {},
-                componentIs: 'output',
-                runMsgList: []
+                componentIs: 'output'
             };
         },
         components: {
             outputMsg,
             runMsg
         },
-        props: ['showTerminal', 'msgList', 'terminalIs', 'runDesign', 'taskId'],
+        props: ['showTerminal', 'msgList', 'terminalIs', 'runDesign', 'taskId', 'runMsgList'],
         watch: {
             terminalIs(s) {
                 if (s) {
@@ -114,7 +113,7 @@
                 if (this.componentIs === 'output') {
                     this.$emit('update:msgList', [])
                 } else {
-                    this.runMsgList = [];
+                    this.runMsgList.splice(0, this.runMsgList.length);
                 }
             },
             mousemove(e) {

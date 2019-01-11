@@ -19,6 +19,12 @@
                 default() {
                     return 'webcam_' + this._uid
                 }
+            },
+            width: {
+                required: false
+            },
+            height: {
+                required: false
             }
         },
         computed: {
@@ -26,8 +32,8 @@
                 const defaultOpts = {
                     width: 600,
                     height: 400,
-                    dest_width: 420,
-                    dest_height: 315,
+                    dest_width: 400,
+                    dest_height: 300,
                     crop_width: 600,
                     crop_height: 450,
                     image_format: 'jpeg',
@@ -35,7 +41,21 @@
                     flip_horiz: false,
                     swfURL: './public/webcam/webcam.swf'
                 }
-                return { ...defaultOpts, ...this.opts }
+                const o = { ...defaultOpts, ...this.opts };
+                if (!this.width) {
+                    return o;
+                }
+                const rate = this.width / this.height;
+                o.width = this.width;
+                o.height = this.height;
+                if (rate > 420 / 315) {
+                    o.crop_width = this.width;
+                    o.crop_height = this.width * 315 / 420;
+                } else {
+                    o.crop_height = this.height;
+                    o.crop_width = this.height * 420 / 315;
+                }
+                return o;
             }
         },
         mounted() {
@@ -98,7 +118,6 @@
             position: absolute;
             top: 0;
             left: 0;
-            z-index: 1;
         }
         .cam-error-text {
             width: 100%;
