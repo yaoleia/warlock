@@ -18,6 +18,10 @@
                 svg: {
                     width: 600,
                     height: 400
+                },
+                sizeRate: {
+                    width: 1,
+                    height: 1
                 }
             }
         },
@@ -58,6 +62,11 @@
                     }
                 } else {
                     this.opts = {}
+                }
+                const leftWrap = this.$refs.leftWrap;
+                this.sizeRate = {
+                    width: leftWrap.clientWidth / 1380,
+                    height: leftWrap.clientHeight / 1082
                 }
             },
             close() {
@@ -235,8 +244,8 @@
 </script>
 <template>
     <div class="dashboard">
-        <div class='left-wrap col'>
-            <div :class='element.name' v-for="element in $root.workflow.layout" :key="element.id" :style="{top:element.top+'px',left:element.left+'px',width:element.width+'px',height:element.height+'px'}">
+        <div class='left-wrap col' ref='leftWrap'>
+            <div :class='element.name' v-for="element in $root.workflow.layout" :key="element.id" :style="{top:element.top*sizeRate.height+'px',left:element.left*sizeRate.width+'px',width:element.width*sizeRate.width+'px',height:element.height*sizeRate.height+'px'}">
                 <ul>
                     <li class="component-body" @mousedown='switchCraft=false'>
                         <component @close='close' ref='component' :is='element.name' v-bind="getProps(element.props,element.editProps)" :width='element.width' :height='element.height'></component>
