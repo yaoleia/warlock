@@ -39,7 +39,8 @@
             }
         },
         methods: {
-            onImgLoad() {
+            onImgLoad(e) {
+                this.$emit('loaded', e);
                 this.imgClass = '';
                 const container = this.$el;
                 const $imgWrap = $(this.$refs.imgWrap);
@@ -96,7 +97,8 @@
                     // console.log(this.src);
                 }
             },
-            onError() {
+            onError(e) {
+                this.$emit('error', e);
                 this.imgClass = 'el-icon-error';
             },
             altClick(e) {

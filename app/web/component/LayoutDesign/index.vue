@@ -39,6 +39,7 @@
                     </li>
                     <li class="component-body">
                         <component :is='element.name' v-bind="getProps(element.props,element.editProps)" :width='element.width' :height='element.height'></component>
+                        <div class="change-size" @mousedown.prevent.stop="sizeMousedown($event,element)"></div>
                     </li>
                 </ul>
             </div>
@@ -70,6 +71,7 @@
                     { name: 'magnifier', props: magnifier.props },
                     { name: 'webcam' }
                 ],
+                canI: false,
                 wsDate: {},
                 defaultConfig: { testUrl: 'https://static.jsbin.com/images/dave.min.svg', title: 'wade' },
                 leftMouse: {
@@ -111,6 +113,30 @@
             }
         },
         methods: {
+            sizeMousedown(e, element) {
+                let downObj = {}
+                downObj.e = e;
+                downObj.width = element.width;
+                downObj.height = element.height;
+                this.canI = true;
+                document.onmousemove = ev => {
+                    if (!this.canI) return;
+                    this.sizeMousemove(ev, element, downObj)
+                    ev.preventDefault()
+                }
+                document.onmouseup = () => {
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                    this.canI = false;
+                    downObj = null;
+                }
+            },
+            sizeMousemove(e, element, downObj) {
+                const X = e.clientX - downObj.e.clientX
+                const Y = e.clientY - downObj.e.clientY
+                element.width = downObj.width + X
+                element.height = downObj.height + Y;
+            },
             querySearch(queryString, cb) {
                 const result = Object.keys(this.wsDate).map(k => ({ value: k }))
                 cb(result)
@@ -260,12 +286,20 @@
             }
             .component-body {
                 border-radius: 10px;
-                overflow: hidden;
                 background: rgba(255, 255, 255, 0.06);
                 height: 100%;
+                position: relative;
                 > div,
                 .img-stream {
                     background: none;
+                }
+                .change-size {
+                    position: absolute;
+                    right: -10px;
+                    bottom: -10px;
+                    width: 24px;
+                    height: 24px;
+                    cursor: nwse-resize;
                 }
             }
             > div {

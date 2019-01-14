@@ -1,7 +1,7 @@
 <template>
     <el-card class="img-stream">
         <p class="title" v-if="title">{{title}}</p>
-        <img :src="url" class="img" @load="loaded" v-if="url" @error="error" :class="{visibility:!show}">
+        <feature-img :src="url" @loaded="loaded" @error="error"></feature-img>
         <slot></slot>
     </el-card>
 </template>
@@ -18,22 +18,18 @@
             padding: 0;
             height: 100%;
         }
-        .img {
+        .feature-img-container {
             width: 100%;
             height: 100%;
-            vertical-align: top;
-        }
-        .visibility {
-            visibility: hidden;
         }
     }
 </style>
 <script type="text/babel">
+    import FeatureImg from 'component/FeatureImg'
     export default {
         name: 'imgStream',
         data() {
             return {
-                show: false,
                 try: 2
             };
         },
@@ -50,11 +46,12 @@
                 required: false
             }
         },
-        components: {},
+        components: {
+            FeatureImg
+        },
         mounted() { },
         methods: {
             loaded() {
-                this.show = true
                 this.$emit('loaded');
             },
             error(e) {

@@ -294,17 +294,17 @@
             .component-body {
                 height: 100%;
                 border-radius: 10px;
-                overflow: hidden;
                 background: rgba(255, 255, 255, 0.06);
             }
             .webcam {
+                border-radius: 10px;
+                overflow: hidden;
                 > ul {
                     width: 100%;
                     height: 100%;
                     .component-body {
                         width: 100%;
                         height: 100%;
-                        overflow: hidden;
                     }
                 }
             }
@@ -316,6 +316,7 @@
                 position: absolute;
                 left: 30px;
                 top: 0;
+                z-index: 5;
                 color: #9c9c9c;
                 .ts {
                     font-size: 14px;
