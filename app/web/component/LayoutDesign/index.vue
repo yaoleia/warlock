@@ -9,47 +9,34 @@
                     </li>
                 </ul>
             </div>
-            <!-- {{layout}} -->
         </draggable>
         <draggable v-model="layout" class="layout" :options="layoutOptions" @mousemove.native.prevent="mousemove" @mouseleave.native.prevent="leftMouse.getEvt=false">
             <div :class='element.name' v-for="(element,index) in layout" :key="element.id" :style="{top:element.top+'px',left:element.left+'px',width:element.width+'px',height:element.height+'px'}">
                 <ul>
                     <li class="name" @mousedown.prevent.stop="imousedown($event, element)">
                         <span>{{element.name}}</span>
-                        <div class="close el-icon-close" @mousedown.stop @click.stop="close(index)"></div>
-                    </li>
-                    <li class="props">
-                        <div v-for="(value,key) in element.editProps" :key='key'>
-                            {{key}}:
-                            <el-select v-if='!element.editProps[key].switch' v-model="element.editProps[key].bind" placeholder="请选择" clearable>
-                                <el-option v-for="(item,key) in wsDate" :key="key" :label="key" :value="key">
-                                </el-option>
-                            </el-select>
-                            <el-autocomplete v-else class="inline-input" v-model="element.editProps[key].bind" :fetch-suggestions="querySearch" placeholder="请输入内容"></el-autocomplete>
-                            <el-switch v-model="element.editProps[key].switch"></el-switch>
-                        </div>
-                        <div class="block">
-                            <span>width:</span>
-                            <el-slider v-model="element.width" show-input :max='1000' :min="100"></el-slider>
-                        </div>
-                        <div class="block">
-                            <span>height:</span>
-                            <el-slider v-model="element.height" show-input :max='1000' :min="100"></el-slider>
+                        <div class="btns">
+                            <v-icon class="edit-props" name='xiugaitupian' @click.prevent.stop="showProps(element)"></v-icon>
+                            <div class="close el-icon-close" @mousedown.stop @click.stop="close(index)"></div>
                         </div>
                     </li>
                     <li class="component-body">
                         <component :is='element.name' v-bind="getProps(element.props,element.editProps)" :width='element.width' :height='element.height'></component>
-                        <div class="change-size" @mousedown.prevent.stop="sizeMousedown($event,element)"></div>
+                        <div class="change-size" @mousedown.prevent.stop="sizeMousedown($event,element)" @mouseenter.prevent.stop></div>
                     </li>
                 </ul>
             </div>
         </draggable>
+        <el-dialog title='组件参数' custom-class='dialog-props' :visible.sync="dialogPropsVisible" :append-to-body='true' :modal='false' width="500px">
+            <dialog-props v-if='curElement' :curElement='curElement' :wsDate='wsDate'></dialog-props>
+        </el-dialog>
     </div>
 </template>
 <script type="babel">
     import draggable from 'vuedraggable'
     import imgStream from 'component/imgStream'
     import magnifier from 'component/magnifier'
+    import dialogProps from './dialogProps'
     import shortid from 'shortid'
     import _ from 'lodash';
 
@@ -57,7 +44,8 @@
         components: {
             draggable,
             imgStream,
-            magnifier
+            magnifier,
+            dialogProps
         },
         props: ['runMsgList', 'layout'],
         beforeMount() {
@@ -66,6 +54,8 @@
         },
         data() {
             return {
+                curElement: null,
+                dialogPropsVisible: false,
                 components: [
                     { name: 'imgStream', props: imgStream.props },
                     { name: 'magnifier', props: magnifier.props },
@@ -113,7 +103,12 @@
             }
         },
         methods: {
+            showProps(element) {
+                this.curElement = element;
+                this.dialogPropsVisible = true;
+            },
             sizeMousedown(e, element) {
+                if (e.button !== 0) return;
                 let downObj = {}
                 downObj.e = e;
                 downObj.width = element.width;
@@ -137,14 +132,11 @@
                 element.width = downObj.width + X
                 element.height = downObj.height + Y;
             },
-            querySearch(queryString, cb) {
-                const result = Object.keys(this.wsDate).map(k => ({ value: k }))
-                cb(result)
-            },
             close(index) {
                 this.$delete(this.layout, index)
             },
             imousedown(e, element) {
+                if (e.button !== 0) return;
                 const target = e.target;
                 const targetOffset = $(target).offset();
                 const top = e.clientY - targetOffset.top;
@@ -198,6 +190,7 @@
                 this.layout.push(item)
             },
             mousedown(e) {
+                if (e.button !== 0) return;
                 const target = e.target;
                 const targetOffset = $(target).offset();
                 const top = e.clientY - targetOffset.top;
@@ -237,6 +230,7 @@
                 position: absolute;
                 left: 30px;
                 top: 0;
+                z-index: 5;
                 color: #9c9c9c;
             }
         }
@@ -252,6 +246,7 @@
                 background: rgba(255, 255, 255, 0.06);
             }
             .handle {
+                cursor: move;
                 background: #333;
                 color: #ccc;
                 padding-left: 10px;
@@ -325,28 +320,12 @@
                         font-size: initial;
                         color: inherit;
                         opacity: inherit;
+                        position: relative;
+                    }
+                    .edit-props {
+                        cursor: pointer;
                     }
                 }
-                &:hover {
-                    .props {
-                        opacity: 1;
-                    }
-                }
-                .props {
-                    transition: 0.3s all;
-                    opacity: 0;
-                    position: absolute;
-                    width: 300px;
-                    padding: 10px;
-                    left: 0;
-                    top: 0;
-                    z-index: 10;
-                    color: #eee;
-                    background: rgba($color: #000000, $alpha: 0.7);
-                }
-            }
-            .sortable-chosen {
-                // display: none;
             }
         }
     }

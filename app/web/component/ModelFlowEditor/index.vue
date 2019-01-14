@@ -21,7 +21,7 @@
             <terminal-box :runDesign.sync='runDesign' @stop='deleteTestTask' @start='creatTestTask' :taskId='taskId' :msgList.sync='msgList' :showTerminal.sync='showTerminal' :terminalIs='terminalIs' :runMsgList='runMsgList'></terminal-box>
             <context-menu ref="contextmenu" v-show="!readMode" @terminalFor='terminalFor' />
         </div>
-        <el-dialog title="页面布局" :visible.sync="showLayout" custom-class="layout-pop-dialog" :fullscreen='true'>
+        <el-dialog title="页面布局" :visible.sync="showLayout" custom-class="layout-pop-dialog" :fullscreen='true' :close-on-press-escape='false'>
             <layout-design :runMsgList='runMsgList' :layout='layout' />
         </el-dialog>
     </div>
