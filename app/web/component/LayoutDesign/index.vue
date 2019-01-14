@@ -1,18 +1,18 @@
 <template>
     <div class="layout-design">
         <draggable class="component-list" :list="components" :options='componentOptions' @end="end">
-            <div v-for="component in components" :key="component.name" @mousedown.prevent="mousedown">
+            <div :class='component.name+"-component"' v-for="component in components" :key="component.name" @mousedown.prevent="mousedown">
                 <ul>
                     <li class="handle">{{component.name}}</li>
-                    <li>
+                    <li class="component-wrap">
                         <component :is='component.name' v-bind="getProps(component.props)"></component>
                     </li>
                 </ul>
             </div>
-            {{layout}}
+            <!-- {{layout}} -->
         </draggable>
         <draggable v-model="layout" class="layout" :options="layoutOptions" @mousemove.native.prevent="mousemove" @mouseleave.native.prevent="leftMouse.getEvt=false">
-            <div v-for="(element,index) in layout" :key="element.id" :style="{top:element.top+'px',left:element.left+'px',width:element.width+'px',height:element.height+'px'}">
+            <div :class='element.name' v-for="(element,index) in layout" :key="element.id" :style="{top:element.top+'px',left:element.left+'px',width:element.width+'px',height:element.height+'px'}">
                 <ul>
                     <li class="name" @mousedown.prevent.stop="imousedown($event, element)">
                         <span>{{element.name}}</span>
@@ -189,8 +189,12 @@
 </script>
 <style lang="scss">
     .layout-pop-dialog {
+        background-image: linear-gradient(to bottom, #2d2d2d, #252121);
         .el-dialog__body {
             height: calc(100% - 54px);
+        }
+        .el-dialog__title {
+            color: #ddd;
         }
     }
     .layout-design {
@@ -199,31 +203,77 @@
         ul {
             list-style: none;
         }
+        .img-stream {
+            background: none;
+            p.title {
+                font-size: 20px;
+                line-height: 66px;
+                position: absolute;
+                left: 30px;
+                top: 0;
+                color: #9c9c9c;
+            }
+        }
         .component-list {
             overflow: auto;
+            overflow-x: hidden;
             width: 350px;
             height: 100%;
+            padding: 0 10px;
             > div {
-                // display: inline-block;
+                margin-bottom: 15px;
+                background: rgba(255, 255, 255, 0.06);
             }
             .handle {
-                background: red;
+                background: #333;
+                color: #ccc;
+                padding-left: 10px;
+            }
+            ul {
+                height: 100%;
+            }
+            .webcam-component {
+                height: 200px;
+            }
+            .component-wrap {
+                height: 100%;
+                overflow: hidden;
             }
         }
         .layout {
             position: relative;
             margin: 0 50px;
-            width: 1380px;
+            width: 1340px;
             height: 1082px;
             border-radius: 20px;
-            background: #bbb;
+            background: rgba(255, 255, 255, 0.06);
+            .webcam {
+                > ul {
+                    width: 100%;
+                    height: 100%;
+                    .component-body {
+                        width: 100%;
+                        height: 100%;
+                        overflow: hidden;
+                    }
+                }
+            }
+            .component-body {
+                border-radius: 10px;
+                overflow: hidden;
+                background: rgba(255, 255, 255, 0.06);
+                height: 100%;
+                > div,
+                .img-stream {
+                    background: none;
+                }
+            }
             > div {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 300px;
                 height: 300px;
-                background: #ccc;
                 ul {
                     height: 100%;
                 }
@@ -235,8 +285,11 @@
                     cursor: move;
                     display: flex;
                     justify-content: space-between;
-                    .close {
+                    .el-icon-close {
                         cursor: pointer;
+                        font-size: initial;
+                        color: inherit;
+                        opacity: inherit;
                     }
                 }
                 &:hover {

@@ -65,7 +65,7 @@
                 }
                 const leftWrap = this.$refs.leftWrap;
                 this.sizeRate = {
-                    width: leftWrap.clientWidth / 1380,
+                    width: leftWrap.clientWidth / 1340,
                     height: leftWrap.clientHeight / 1082
                 }
             },
@@ -276,13 +276,26 @@
         display: flex;
         justify-content: space-between;
         .left-wrap {
+            border-radius: 18px;
+            margin-right: 40px;
+            background: rgba(255, 255, 255, 0.06);
             flex: 1;
             position: relative;
             > div {
                 position: absolute;
             }
+            .img-stream {
+                background: none;
+            }
             ul {
                 list-style: none;
+                height: 100%;
+            }
+            .component-body {
+                height: 100%;
+                border-radius: 10px;
+                overflow: hidden;
+                background: rgba(255, 255, 255, 0.06);
             }
             .webcam {
                 > ul {
@@ -298,10 +311,10 @@
         }
         .col {
             p.title {
-                font-size: 24px;
+                font-size: 20px;
                 line-height: 66px;
                 position: absolute;
-                left: 60px;
+                left: 30px;
                 top: 0;
                 color: #9c9c9c;
                 .ts {
