@@ -15,9 +15,9 @@
                 <ul>
                     <li class="name" @mousedown.prevent.stop="imousedown($event, element)">
                         <span>{{element.name}}</span>
-                        <div class="btns">
-                            <v-icon class="edit-props" name='xiugaitupian' @click.prevent.stop="showProps(element)"></v-icon>
-                            <div class="close el-icon-close" @mousedown.stop @click.stop="close(index)"></div>
+                        <div class="btns" @mousedown.stop>
+                            <v-icon class="edit-props" name='xiugaitupian' @click.stop="showProps($event,element)"></v-icon>
+                            <div class="close el-icon-close" @click.stop="close(index)"></div>
                         </div>
                     </li>
                     <li class="component-body">
@@ -103,7 +103,7 @@
             }
         },
         methods: {
-            showProps(element) {
+            showProps(e, element) {
                 this.curElement = element;
                 this.dialogPropsVisible = true;
             },
