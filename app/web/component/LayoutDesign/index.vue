@@ -247,6 +247,7 @@
             height: 100%;
             padding: 0 10px;
             > div {
+                height: 300px;
                 margin-bottom: 15px;
                 background: rgba(255, 255, 255, 0.06);
             }
