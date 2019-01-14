@@ -244,6 +244,7 @@
             height: 100%;
             padding: 30px 10px 0;
             > div {
+                width: 300px;
                 height: 300px;
                 margin-bottom: 40px;
                 position: relative;
