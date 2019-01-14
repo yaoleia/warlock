@@ -3,7 +3,10 @@
         <draggable class="component-list" :list="components" :options='componentOptions' @end="end">
             <div :class='component.name+"-component"' v-for="component in components" :key="component.name" @mousedown.prevent="mousedown">
                 <ul>
-                    <li class="handle">{{component.name}}</li>
+                    <li class="handle">
+                        <span>{{component.name}}</span>
+                        <v-icon name='move'></v-icon>
+                    </li>
                     <li class="component-wrap">
                         <component :is='component.name' v-bind="getProps(component.props)"></component>
                     </li>
@@ -154,7 +157,7 @@
             },
             imousemove(ev, element) {
                 const layoutOffset = $('.layout', this.$el).offset();
-                const top = ev.clientY - layoutOffset.top + 20 - this.rightMouse.downTL.top;
+                const top = ev.clientY - layoutOffset.top + 30 - this.rightMouse.downTL.top;
                 const left = ev.clientX - layoutOffset.left - this.rightMouse.downTL.left;
                 element.top = top;
                 element.left = left;
@@ -185,7 +188,7 @@
                 const left = this.leftMouse.evt.clientX - layoutOffset.left;
                 const cloneItem = _.cloneDeep(this.components[e.oldIndex])
                 const editProps = _.cloneDeep(cloneItem.props)
-                const item = { ...cloneItem, top: top - this.leftMouse.downTL.top, left: left - this.leftMouse.downTL.left, editProps, width: 300, height: 300 }
+                const item = { ...cloneItem, top: top - this.leftMouse.downTL.top + 30, left: left - this.leftMouse.downTL.left, editProps, width: 300, height: 300 }
                 item.id = shortid.generate();
                 this.layout.push(item)
             },
@@ -239,17 +242,22 @@
             overflow-x: hidden;
             width: 350px;
             height: 100%;
-            padding: 0 10px;
+            padding: 30px 10px 0;
             > div {
                 height: 300px;
-                margin-bottom: 15px;
-                background: rgba(255, 255, 255, 0.06);
+                margin-bottom: 40px;
+                position: relative;
             }
             .handle {
+                position: absolute;
+                top: -30px;
                 cursor: move;
-                background: #333;
-                color: #ccc;
+                color: #999;
                 padding-left: 10px;
+                width: 100%;
+                line-height: 30px;
+                display: flex;
+                justify-content: space-between;
             }
             ul {
                 height: 100%;
@@ -260,6 +268,8 @@
             .component-wrap {
                 height: 100%;
                 overflow: hidden;
+                background: rgba(255, 255, 255, 0.06);
+                border-radius: 10px;
             }
         }
         .layout {
@@ -309,9 +319,11 @@
                 }
                 li.name {
                     position: absolute;
-                    top: -20px;
+                    top: -30px;
                     left: 0;
                     width: 100%;
+                    padding-left: 10px;
+                    line-height: 30px;
                     cursor: move;
                     display: flex;
                     justify-content: space-between;
