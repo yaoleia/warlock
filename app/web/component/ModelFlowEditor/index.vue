@@ -6,7 +6,7 @@
             <el-input class='name-input' v-model="name" placeholder="未命名" :disabled="readMode"></el-input>
             <el-button v-if="readMode" type="text" icon="el-icon-back" @click="goBack(true)">返回</el-button>
             <div v-else class="btns">
-                <el-button type="success" size="mini" @click="showLayout=true">layout</el-button>
+                <el-button type="success" size="mini" @click="showLayout=true" v-if='output.length'>layout</el-button>
                 <el-button type="primary" size="mini" @click="saveData">保存</el-button>
                 <el-button type="text" icon="el-icon-back" @click="goBack(false)">返回</el-button>
             </div>
@@ -21,8 +21,8 @@
             <terminal-box :runDesign.sync='runDesign' @stop='deleteTestTask' @start='creatTestTask' :taskId='taskId' :msgList.sync='msgList' :showTerminal.sync='showTerminal' :terminalIs='terminalIs' :runMsgList='runMsgList'></terminal-box>
             <context-menu ref="contextmenu" v-show="!readMode" @terminalFor='terminalFor' />
         </div>
-        <el-dialog title="页面布局" :visible.sync="showLayout" custom-class="layout-pop-dialog" :fullscreen='true' :close-on-press-escape='false'>
-            <layout-design :runMsgList='runMsgList' :layout='layout' />
+        <el-dialog title="页面布局" :visible.sync="showLayout" @opened='dialogOpened = true' @closed='dialogOpened = false' custom-class="layout-pop-dialog" :fullscreen='true' :close-on-press-escape='false'>
+            <layout-design :runMsgList='runMsgList' :dialogOpened='dialogOpened' :layout='layout' :output='output' />
         </el-dialog>
     </div>
 </template>
@@ -52,12 +52,14 @@
         extends: Editor,
         data() {
             return {
+                dialogOpened: false,
                 showLayout: false,
                 taskId: '',
                 runDesign: false,
                 msgList: [],
                 runMsgList: [],
                 layout: [],
+                output: [],
                 showTerminal: false,
                 name: '',
                 flowData: {},
@@ -97,6 +99,12 @@
                 this.readData();
                 if (params.flow.layout) {
                     this.layout = JSON.parse(JSON.stringify(params.flow.layout));
+                }
+                if (params.flow.output) {
+                    this.output = JSON.parse(JSON.stringify(params.flow.output));
+                }
+                if (params.flow.task_id) {
+                    this.taskId = params.flow.task_id;
                 }
             }
 
@@ -158,10 +166,10 @@
             },
             isEdited() {
                 if (!this.flow) return false;
-                const editData = JSON.stringify({ flowData: this.flow.save(), name: this.name, layout: this.layout });
+                const editData = JSON.stringify({ flowData: this.flow.save(), name: this.name, layout: this.layout, output: this.output });
                 const cacheFlowData = { ...this.designItem.flowData };
                 delete cacheFlowData.disabled;
-                const cacheData = JSON.stringify({ flowData: cacheFlowData, name: this.designItem.name, layout: this.designItem.layout });
+                const cacheData = JSON.stringify({ flowData: cacheFlowData, name: this.designItem.name, layout: this.designItem.layout, output: this.designItem.output });
                 if (editData === cacheData) {
                     return false;
                 }
@@ -194,7 +202,7 @@
                     })
                     await this.creatFlow();
                 } else {
-                    Object.assign(this.designItem, { name: this.name, flowData: this.flow.save(), ts: new Date().getTime(), layout: this.layout })
+                    Object.assign(this.designItem, { name: this.name, flowData: this.flow.save(), ts: new Date().getTime(), layout: this.layout, output: this.output })
                     await this.patchFlow();
                 }
             },
@@ -275,6 +283,7 @@
             },
             async deleteTestTask() {
                 if (!this.taskId) return;
+                if (this.taskId === this.designItem.task_id) return;
                 const loading = this.loadingUi();
                 try {
                     const deleteTask = await this.$request.task.deleteTask(this.taskId);
@@ -292,6 +301,13 @@
                 if (p.flow) {
                     this.data = p.flow.flowData;
                     this.readData();
+                }
+            },
+            runMsgList(list) {
+                if (list.length) {
+                    const wsDate = list.slice(-1)[0];
+                    delete wsDate.act;
+                    this.output = Object.keys(wsDate);
                 }
             }
         }

@@ -3,7 +3,7 @@
         <div v-for="(value,key) in curElement.editProps" :key='key'>
             <div>{{key}}:</div>
             <el-select v-if='!curElement.editProps[key].switch' v-model="curElement.editProps[key].bind" placeholder="请选择" clearable>
-                <el-option v-for="(item,key) in wsDate" :key="key" :label="key" :value="key">
+                <el-option v-for="item in output" :key="item" :label="item" :value="item">
                 </el-option>
             </el-select>
             <el-autocomplete v-else class="inline-input" v-model="curElement.editProps[key].bind" :fetch-suggestions="querySearch" placeholder="请输入内容"></el-autocomplete>
@@ -64,8 +64,8 @@
                 type: Object,
                 required: false
             },
-            wsDate: {
-                type: Object,
+            output: {
+                type: Array,
                 required: false
             }
         },
@@ -74,7 +74,7 @@
         mounted() { },
         methods: {
             querySearch(queryString, cb) {
-                const result = Object.keys(this.wsDate).map(k => ({ value: k }))
+                const result = this.output.map(k => ({ value: k }))
                 cb(result)
             },
         }

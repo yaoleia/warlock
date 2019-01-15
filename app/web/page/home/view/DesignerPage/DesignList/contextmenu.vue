@@ -1,5 +1,5 @@
 <template>
-    <div class="context-menu" @contextmenu.stop.prevent>
+    <div class="list-context-menu" @contextmenu.stop.prevent>
         <el-button type="text" @click="handleCopy(active)">
             <v-icon name='s-clonekelong'></v-icon> 克隆
         </el-button>
@@ -29,7 +29,7 @@
     };
 </script>
 <style lang="scss">
-    .context-menu {
+    .list-context-menu {
         position: fixed;
         top: 0;
         left: 0;

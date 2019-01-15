@@ -42,17 +42,21 @@
                     l.act = l.ts === obj.ts;
                 })
             },
-            taskId(id) {
-                window.ws.off('msg').emit('chat', id).on('msg', m => {
-                    m.act = false;
-                    this.runMsgList.push(m)
-                    if (this.onHover) return;
-                    this.active = m;
-                })
-                this.$message({
-                    type: 'success',
-                    message: id ? '启动成功！' : '关闭成功！'
-                })
+            taskId: {
+                handler(id, oldId) {
+                    if (!oldId && !id) return;
+                    window.ws.off('msg').emit('chat', id).on('msg', m => {
+                        m.act = false;
+                        this.runMsgList.push(m)
+                        if (this.onHover) return;
+                        this.active = m;
+                    })
+                    this.$message({
+                        type: 'success',
+                        message: id ? '启动成功！' : '关闭成功！'
+                    })
+                },
+                immediate: true
             },
             runDesign(bol) {
                 this.scrollTobottom();

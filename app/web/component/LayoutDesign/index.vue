@@ -8,7 +8,7 @@
                         <v-icon name='move'></v-icon>
                     </li>
                     <li class="component-wrap">
-                        <component :is='component.name' v-bind="getProps(component.props)"></component>
+                        <component v-if='dialogOpened' :is='component.name' v-bind="getProps(component.props)"></component>
                     </li>
                 </ul>
             </div>
@@ -24,14 +24,14 @@
                         </div>
                     </li>
                     <li class="component-body">
-                        <component :is='element.name' v-bind="getProps(element.props,element.editProps)" :width='element.width' :height='element.height'></component>
+                        <component v-if='dialogOpened' :is='element.name' v-bind="getProps(element.props,element.editProps)" :width='element.width' :height='element.height'></component>
                         <div class="change-size" @mousedown.prevent.stop="sizeMousedown($event,element)" @mouseenter.prevent.stop></div>
                     </li>
                 </ul>
             </div>
         </draggable>
         <el-dialog title='组件参数' custom-class='dialog-props' :visible.sync="dialogPropsVisible" :append-to-body='true' :modal='false' width="500px">
-            <dialog-props v-if='curElement' :curElement='curElement' :wsDate='wsDate'></dialog-props>
+            <dialog-props v-if='curElement' :curElement='curElement' :output='output'></dialog-props>
         </el-dialog>
     </div>
 </template>
@@ -50,7 +50,7 @@
             magnifier,
             dialogProps
         },
-        props: ['runMsgList', 'layout'],
+        props: ['runMsgList', 'layout', 'dialogOpened', 'output'],
         beforeMount() {
             // 只会在浏览器执行
             this.$options.components.webcam = () => import('component/webcam')
@@ -206,6 +206,9 @@
             }
         },
         mounted() {
+            if (this.runMsgList.length) {
+                this.wsDate = this.runMsgList.slice(-1)[0];
+            }
         }
     };
 </script>
@@ -220,7 +223,6 @@
         }
     }
     .layout-design {
-        height: 100%;
         display: flex;
         ul {
             list-style: none;
@@ -240,9 +242,11 @@
         .component-list {
             overflow: auto;
             overflow-x: hidden;
-            width: 350px;
+            width: 330px;
             height: 100%;
+            max-height: 1082px;
             padding: 30px 10px 0;
+            flex-shrink: 0;
             > div {
                 width: 300px;
                 height: 300px;
@@ -263,9 +267,6 @@
             ul {
                 height: 100%;
             }
-            .webcam-component {
-                height: 200px;
-            }
             .component-wrap {
                 height: 100%;
                 overflow: hidden;
@@ -274,6 +275,7 @@
             }
         }
         .layout {
+            flex-shrink: 0;
             position: relative;
             margin: 0 50px;
             width: 1340px;
@@ -319,6 +321,9 @@
                     height: 100%;
                 }
                 li.name {
+                    transition: all 0.2s;
+                    opacity: 0.3;
+                    color: #999;
                     position: absolute;
                     top: -30px;
                     left: 0;
@@ -337,6 +342,19 @@
                     }
                     .edit-props {
                         cursor: pointer;
+                    }
+                    &:hover {
+                        opacity: 1;
+                    }
+                    .btns {
+                        > * {
+                            transition: all 0.2s;
+                            padding: 5px;
+                            margin: -5px -3px;
+                        }
+                        > *:hover {
+                            color: #ff8800;
+                        }
                     }
                 }
             }
