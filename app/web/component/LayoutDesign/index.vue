@@ -13,7 +13,7 @@
                 </ul>
             </div>
         </draggable>
-        <draggable v-model="layout" class="layout" :options="layoutOptions" @mousemove.native.prevent="mousemove" @mouseleave.native.prevent="leftMouse.getEvt=false">
+        <draggable class="layout" :options="layoutOptions" @mousemove.native.prevent="mousemove">
             <div :class='element.name' v-for="(element,index) in layout" :key="element.id" :style="{top:element.top+'px',left:element.left+'px',width:element.width+'px',height:element.height+'px'}">
                 <ul>
                     <li class="name" @mousedown.prevent.stop="imousedown($event, element)">
@@ -64,17 +64,17 @@
                     { name: 'magnifier', props: magnifier.props },
                     { name: 'webcam' }
                 ],
-                canI: false,
                 wsDate: {},
                 defaultConfig: { testUrl: 'https://static.jsbin.com/images/dave.min.svg', title: 'wade' },
                 leftMouse: {
                     getEvt: false,
                     evt: null,
-                    downTL: null
-                },
-                rightMouse: {
-                    evt: null,
-                    downTL: null
+                    downTL: null,
+                    reset() {
+                        this.getEvt = false;
+                        this.evt = null;
+                        this.downTL = null;
+                    }
                 },
                 componentOptions: {
                     group: {
@@ -84,7 +84,6 @@
                     },
                     forceFallback: true,
                     handle: '.handle',
-                    animation: 300,
                     sort: false
                 },
                 layoutOptions: {
@@ -116,49 +115,69 @@
                 downObj.e = e;
                 downObj.width = element.width;
                 downObj.height = element.height;
-                this.canI = true;
                 document.onmousemove = ev => {
-                    if (!this.canI) return;
                     this.sizeMousemove(ev, element, downObj)
                     ev.preventDefault()
                 }
                 document.onmouseup = () => {
                     document.onmousemove = null;
                     document.onmouseup = null;
-                    this.canI = false;
                     downObj = null;
                 }
             },
             sizeMousemove(e, element, downObj) {
                 const X = e.clientX - downObj.e.clientX
                 const Y = e.clientY - downObj.e.clientY
-                element.width = downObj.width + X
-                element.height = downObj.height + Y;
+                const width = downObj.width + X;
+                const height = downObj.height + Y;
+                element.width = width > 150 ? width : 150;
+                element.height = height > 150 ? height : 150;
             },
             close(index) {
                 this.$delete(this.layout, index)
             },
             imousedown(e, element) {
+                // 对已经添加的mousedown
                 if (e.button !== 0) return;
-                const target = e.target;
-                const targetOffset = $(target).offset();
-                const top = e.clientY - targetOffset.top;
-                const left = e.clientX - targetOffset.left;
-                this.rightMouse.downTL = { top, left };
+                const $layout = $('.layout', this.$el);
+                let downObj = {};
+                Object.assign(
+                    downObj,
+                    {
+                        x: element.left - e.clientX,
+                        y: element.top - e.clientY,
+                        maxLeft: $layout.width() - element.width,
+                        maxTop: $layout.height() - element.height
+                    }
+                )
 
                 document.onmousemove = ev => {
-                    this.imousemove(ev, element)
+                    this.imousemove(ev, element, downObj)
                     ev.preventDefault()
                 }
                 document.onmouseup = () => {
-                    document.onmousemove = null
-                    document.onmouseup = null
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                    downObj = null;
                 }
             },
-            imousemove(ev, element) {
-                const layoutOffset = $('.layout', this.$el).offset();
-                const top = ev.clientY - layoutOffset.top + 30 - this.rightMouse.downTL.top;
-                const left = ev.clientX - layoutOffset.left - this.rightMouse.downTL.left;
+            imousemove(ev, element, downObj) {
+                // 对已经添加的组件的拖动
+                let top = downObj.y + ev.clientY;
+                let left = downObj.x + ev.clientX;
+                if (top < 0) {
+                    top = 0;
+                }
+                if (top > downObj.maxTop) {
+                    top = downObj.maxTop
+                }
+
+                if (left < 0) {
+                    left = 0;
+                }
+                if (left > downObj.maxLeft) {
+                    left = downObj.maxLeft
+                }
                 element.top = top;
                 element.left = left;
             },
@@ -182,27 +201,42 @@
                 }
                 return p;
             },
-            end(e) {
-                const layoutOffset = $('.layout', this.$el).offset();
-                const top = this.leftMouse.evt.clientY - layoutOffset.top;
-                const left = this.leftMouse.evt.clientX - layoutOffset.left;
-                const cloneItem = _.cloneDeep(this.components[e.oldIndex])
-                const editProps = _.cloneDeep(cloneItem.props)
-                const item = { ...cloneItem, top: top - this.leftMouse.downTL.top + 30, left: left - this.leftMouse.downTL.left, editProps, width: 300, height: 300 }
-                item.id = shortid.generate();
-                this.layout.push(item)
-            },
             mousedown(e) {
+                // 从左侧列表拉进来的mousedown
                 if (e.button !== 0) return;
-                const target = e.target;
-                const targetOffset = $(target).offset();
-                const top = e.clientY - targetOffset.top;
-                const left = e.clientX - targetOffset.left;
+                this.leftMouse.getEvt = true;
+                const $target = $(e.target);
+                const layoutOffset = $('.layout', this.$el).offset();
+                const targetOffset = $target.offset();
+                const top = e.clientY - targetOffset.top - $target.height() + layoutOffset.top;
+                const left = e.clientX - targetOffset.left + layoutOffset.left;
                 this.leftMouse.downTL = { top, left };
             },
             mousemove(e) {
-                this.leftMouse.getEvt = true;
-                this.leftMouse.evt = e;
+                if (!this.leftMouse.getEvt) return;
+                this.leftMouse.evt = {
+                    clientY: e.clientY,
+                    clientX: e.clientX
+                };
+            },
+            end(e) {
+                if (!this.leftMouse.evt) {
+                    this.leftMouse.reset();
+                    return;
+                }
+                let top = this.leftMouse.evt.clientY - this.leftMouse.downTL.top;
+                let left = this.leftMouse.evt.clientX - this.leftMouse.downTL.left;
+                const cloneItem = _.cloneDeep(this.components[e.oldIndex])
+                const editProps = cloneItem.props;
+                if (top < 0) {
+                    top = 0;
+                }
+                if (left < 0) {
+                    left = 0;
+                }
+                const item = { ...cloneItem, top, left, editProps, width: 300, height: 300, id: shortid.generate() }
+                this.layout.push(item)
+                this.leftMouse.reset();
             }
         },
         mounted() {

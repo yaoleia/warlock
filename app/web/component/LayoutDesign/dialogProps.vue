@@ -20,11 +20,11 @@
             </div>
             <div class="block">
                 <span>width:</span>
-                <el-slider v-model="curElement.width" show-input :max='1000' :min="100" :step='5'></el-slider>
+                <el-slider v-model="curElement.width" show-input :max='1000' :min="150" :step='5'></el-slider>
             </div>
             <div class="block">
                 <span>height:</span>
-                <el-slider v-model="curElement.height" show-input :max='1000' :min="100" :step='5'></el-slider>
+                <el-slider v-model="curElement.height" show-input :max='1000' :min="150" :step='5'></el-slider>
             </div>
         </div>
     </div>

@@ -1,5 +1,4 @@
 <script>
-    import Webcam from 'webcamjs'
     export default {
         data() {
             return {
@@ -21,10 +20,12 @@
                 }
             },
             width: {
-                required: false
+                required: false,
+                default: 300
             },
             height: {
-                required: false
+                required: false,
+                default: 300
             }
         },
         computed: {
@@ -34,27 +35,14 @@
                     height: 400,
                     dest_width: 400,
                     dest_height: 300,
-                    crop_width: 600,
-                    crop_height: 450,
                     image_format: 'jpeg',
                     jpeg_quality: 90,
                     flip_horiz: false,
                     swfURL: './public/webcam/webcam.swf'
                 }
                 const o = { ...defaultOpts, ...this.opts };
-                if (!this.width) {
-                    return o;
-                }
-                const rate = this.width / this.height;
                 o.width = this.width;
                 o.height = this.height;
-                if (rate > 420 / 315) {
-                    o.crop_width = this.width;
-                    o.crop_height = this.width * 315 / 420;
-                } else {
-                    o.crop_height = this.height;
-                    o.crop_width = this.height * 420 / 315;
-                }
                 return o;
             }
         },
@@ -72,21 +60,24 @@
         },
         methods: {
             init() {
-                Webcam.reset()
-                Webcam.set(this.options)
-                Webcam.on('live', () => {
-                    this.ready = true
-                    this.$emit('ready')
+                import('webcamjs').then(Webcam => {
+                    this.Webcam = Webcam;
+                    Webcam.reset()
+                    Webcam.set(this.options)
+                    Webcam.on('live', () => {
+                        this.ready = true
+                        this.$emit('ready')
+                    })
+                    Webcam.on('error', err => {
+                        this.camError = err
+                    })
+                    Webcam.attach('#' + this.id)
                 })
-                Webcam.on('error', err => {
-                    this.camError = err
-                })
-                Webcam.attach('#' + this.id)
             },
             uninit() {
                 this.ready = false
                 this.camError = null
-                Webcam.reset()
+                this.Webcam.reset()
             },
             takeSnapshot() {
                 return new Promise((resolve, reject) => {
@@ -94,7 +85,7 @@
                         reject()
                     }
                     const timestamp = new Date().getTime();
-                    Webcam.snap(uri => {
+                    this.Webcam.snap(uri => {
                         resolve({ uri, timestamp })
                     })
                 })
