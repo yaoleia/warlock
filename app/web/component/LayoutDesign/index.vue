@@ -267,8 +267,10 @@
                 font-size: 20px;
                 line-height: 66px;
                 position: absolute;
-                left: 30px;
+                left: 0;
                 top: 0;
+                width: 100%;
+                padding-left: 30px;
                 z-index: 5;
                 color: #9c9c9c;
             }

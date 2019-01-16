@@ -27,4 +27,5 @@ module.exports = app => {
   router.post('/api/trigger', controller.home.trigger);
   router.post('/api/tonce', controller.home.tonce);
   app.io.of('/').route('chat', app.io.controller.chat);
+  app.io.of('/').route('workflow', app.io.controller.workflow);
 };

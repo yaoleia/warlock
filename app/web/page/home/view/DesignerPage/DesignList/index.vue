@@ -185,6 +185,7 @@
                     throw error;
                 } finally {
                     loading.close();
+                    window.ws.emit('workflow', item);
                 }
             },
             async creatTask(item) {
@@ -227,7 +228,7 @@
                 this.$router.push({ name: '新建流程', params: { _id: item._id, flow: item, read: true } });
             },
             jumperHandle(flow) {
-                window.open(`/?id=${flow.task_id}&flow=${flow._id}`);
+                window.open(`/?workflowid=${flow._id}`);
             },
             contextmenuHandle(row, e) {
                 this.active = row;
@@ -437,6 +438,13 @@
                 if (EASY_ENV_IS_BROWSER) {
                     this.innerHeight = this.$el.clientHeight - 70;
                 }
+            },
+            emitWorkflow() {
+                window.ws.on('workflow', msg => {
+                    const item = this.designList.find(i => i._id === msg._id);
+                    if (!item) return;
+                    Object.assign(item, msg);
+                })
             }
         },
         computed: {
@@ -447,6 +455,16 @@
         mounted() {
             this.getInnerHeight();
             $(window).on('resize.record', this.getInnerHeight)
+
+            this.$nextTick(() => {
+                if (window.ws.connected) {
+                    this.emitWorkflow()
+                } else {
+                    window.ws.on('connect', () => {
+                        this.emitWorkflow()
+                    })
+                }
+            })
         },
         beforeMount() {
             if (this.algorithmModuleList.length) {

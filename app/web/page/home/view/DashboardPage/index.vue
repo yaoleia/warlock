@@ -22,7 +22,8 @@
                 sizeRate: {
                     width: 1,
                     height: 1
-                }
+                },
+                workflow: {}
             }
         },
         computed: {
@@ -34,7 +35,7 @@
             // 只会在浏览器执行
             this.$options.components.webcam = () => import('component/webcam')
         },
-        mounted() {
+        async mounted() {
             this.$request.record.getRecordList().then(resp => {
                 if (resp.data.list) {
                     if (this.productList.length === 0 && resp.data.list[0]) {
@@ -48,8 +49,101 @@
                     })
                 }
             })
+
+            this.$nextTick(() => {
+                if (window.ws.connected) {
+                    this.emitWorkflow()
+                } else {
+                    window.ws.on('connect', () => {
+                        this.emitWorkflow()
+                    })
+                }
+            })
+
+            try {
+                const workflowid = this.$root.workflowid;
+                if (!workflowid) return;
+                const resp = await this.$request.workflow.getWorkflowById(workflowid);
+                this.workflow = resp.data;
+                this.getWsMsg();
+            } catch (error) {
+                this.$message({
+                    message: '获取workflow失败！',
+                    type: 'error'
+                })
+            }
         },
         methods: {
+            emitWorkflow() {
+                window.ws.on('workflow', msg => {
+                    if (this.workflow._id !== msg._id) return;
+                    Object.assign(this.workflow, msg);
+                    this.getWsMsg();
+                })
+            },
+            loadingUi() {
+                return this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            },
+            async activeChange(statu) {
+                // task开关
+                const loading = this.loadingUi();
+                try {
+                    if (statu) {
+                        await this.creatTask(this.workflow);
+                    } else {
+                        await this.deleteTask(this.workflow);
+                    }
+                    await this.$request.workflow.patchWorkflow(this.workflow._id, this.workflow);
+                    this.getWsMsg();
+                } catch (error) {
+                    throw error;
+                } finally {
+                    loading.close();
+                    window.ws.emit('workflow', this.workflow);
+                }
+            },
+            async creatTask(item) {
+                // 创建task
+                try {
+                    // 获取一个任务id
+                    const task = await this.$request.task.getTaskId();
+                    const taskId = task.data;
+                    if (taskId) {
+                        const creatTask = await this.$request.task.postTask({
+                            task_id: taskId,
+                            workflow_id: item._id
+                        });
+                        if (creatTask.data.indexOf('error') != -1) {
+                            item.task_id = '';
+                            item.active = false;
+                            this.$message({
+                                message: `开启任务失败! ${creatTask.data}`,
+                                type: 'error'
+                            })
+                            return;
+                        }
+                        item.active = true;
+                        item.task_id = taskId;
+                    }
+                } catch (error) {
+                    item.active = false;
+                }
+            },
+            async deleteTask(item) {
+                // 删除task
+                try {
+                    const deleteTask = await this.$request.task.deleteTask(item.task_id);
+                    item.active = false;
+                    item.task_id = '';
+                } catch (error) {
+                    item.active = true;
+                }
+            },
             resize() {
                 if (window.innerWidth <= 1920) {
                     this.opts = {
@@ -91,7 +185,7 @@
                 }
             },
             emitChat() {
-                window.ws.off('msg').emit('chat', this.$root.taskId).on('msg', m => {
+                window.ws.off('msg').emit('chat', this.workflow.task_id).on('msg', m => {
                     if (this.switchCraft) {
                         this.curProduct = { ...m }
                     }
@@ -203,7 +297,9 @@
                 video.play()
             }
             this.$nextTick(() => {
-                this.getWsMsg()
+                if (this.workflow.task_id) {
+                    this.getWsMsg()
+                }
             })
         },
         watch: {
@@ -245,7 +341,15 @@
 <template>
     <div class="dashboard">
         <div class='left-wrap col' ref='leftWrap'>
-            <div :class='element.name' v-for="element in $root.workflow.layout" :key="element.id" :style="{top:element.top*sizeRate.height+'px',left:element.left*sizeRate.width+'px',width:element.width*sizeRate.width+'px',height:element.height*sizeRate.height+'px'}">
+            <div class="title">
+                <div class='switch-wrap'>
+                    <span class='switch-name'>实时详情:</span>
+                    <el-tooltip v-if="switchCraft!==null" :content="switchCraft?'on':'off'" placement="top">
+                        <el-switch v-model="switchCraft"></el-switch>
+                    </el-tooltip>
+                </div>
+            </div>
+            <div :class='element.name' v-for="element in workflow.layout" :key="element.id" :style="{top:element.top*sizeRate.height+'px',left:element.left*sizeRate.width+'px',width:element.width*sizeRate.width+'px',height:element.height*sizeRate.height+'px'}">
                 <ul>
                     <li class="component-body" @mousedown='switchCraft=false'>
                         <component @close='close' ref='component' :is='element.name' v-bind="getProps(element.props,element.editProps)" :width='element.width' :height='element.height'></component>
@@ -254,17 +358,19 @@
             </div>
         </div>
         <div class="right-img-col col" @mousemove.prevent="canScroll=false" @mouseleave.prevent="canScroll=true">
-            <p class="title">
+            <div class="title">
                 <span>实时记录</span>
-                <span class='switch-name'>实时详情:</span>
-                <el-tooltip v-if="switchCraft!==null" :content="switchCraft?'on':'off'" placement="top">
-                    <el-switch v-model="switchCraft"></el-switch>
-                </el-tooltip>
-            </p>
+                <div class='switch-wrap'>
+                    <span class='switch-name'>任务开关:</span>
+                    <el-tooltip v-if="workflow.active!==undefined" :content="workflow.active?'on':'off'" placement="top">
+                        <el-switch v-model="workflow.active" @change="activeChange"></el-switch>
+                    </el-tooltip>
+                </div>
+            </div>
             <div class="list-wrap">
                 <transition-group name="list-complete" tag="p">
                     <ul class="list-complete-item" :class="item.act?'act':''" v-for='item in productList' :key="item.ts" @click="listItemClick(item)">
-                        <msg-item v-for='(value,key) in item' :key='key' :_key='key' :value='value'></msg-item>
+                        <msg-item v-for='(value,key) in {status:item.status,ts:item.ts}' :key='key' :_key='key' :value='value'></msg-item>
                     </ul>
                 </transition-group>
             </div>
@@ -275,6 +381,30 @@
     .dashboard {
         display: flex;
         justify-content: space-between;
+        .title {
+            font-size: 20px;
+            line-height: 66px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding-left: 30px;
+            z-index: 5;
+            color: #9c9c9c;
+            .ts {
+                font-size: 14px;
+                padding-left: 20px;
+            }
+            .switch-wrap {
+                position: absolute;
+                right: 20px;
+                top: 0;
+                .switch-name {
+                    margin-left: 25px;
+                    font-size: 14px;
+                }
+            }
+        }
         .left-wrap {
             border-radius: 18px;
             margin-right: 40px;
@@ -310,29 +440,11 @@
             }
         }
         .col {
-            p.title {
-                font-size: 20px;
-                line-height: 66px;
-                position: absolute;
-                left: 30px;
-                top: 0;
-                z-index: 5;
-                color: #9c9c9c;
-                .ts {
-                    font-size: 14px;
-                    padding-left: 20px;
-                }
-            }
-            .switch-name {
-                margin-left: 25px;
-                font-size: 14px;
-            }
             &.right-img-col {
                 width: 520px;
                 position: relative;
                 background: rgba(255, 255, 255, 0.06);
                 border-radius: 18px;
-                height: 1082px;
                 padding: 66px 20px 60px 40px;
                 display: block;
                 overflow: hidden;

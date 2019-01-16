@@ -1,7 +1,7 @@
 <template>
     <div class="header-nav">
-        <el-menu router :default-active="tabactive" class='el-menu-demo' mode="horizontal" v-if='menu'>
-            <template v-for='(menu_v,menu_k) in menu' v-if="!menu_v.meta||menu_v.meta&&!menu_v.meta.hide">
+        <el-menu router :default-active="tabactive" class='el-menu-demo' mode="horizontal">
+            <template v-for='(menu_v,menu_k) in menuFilter'>
                 <el-submenu v-if='menu_v.children' :index='menu_k' :key='menu_k'>
                     <template slot='title'>
                         <!-- <div :class='menu_v.icon+" icon"'></div> -->
@@ -19,7 +19,7 @@
                 </el-menu-item>
             </template>
         </el-menu>
-        <div class="logout" v-if="username&&!$root.taskId">
+        <div class="logout" v-if="username&&!$root.workflowid">
             <v-icon name='user'></v-icon>
             <el-button type="text" @click='logout'>退出</el-button>
         </div>
@@ -43,6 +43,18 @@
         computed: {
             username() {
                 return this.$store.state.username;
+            },
+            menuFilter() {
+                const menu = {};
+                for (const key in this.menu) {
+                    if (this.menu.hasOwnProperty(key)) {
+                        const element = this.menu[key];
+                        if (!element.meta || element.meta && !element.meta.hide) {
+                            menu[key] = element;
+                        }
+                    }
+                }
+                return menu;
             }
         },
         methods: {
