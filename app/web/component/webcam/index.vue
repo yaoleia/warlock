@@ -3,7 +3,8 @@
         data() {
             return {
                 ready: false,
-                camError: null
+                camError: null,
+                timer: null
             }
         },
         props: {
@@ -33,8 +34,8 @@
                 const defaultOpts = {
                     width: 600,
                     height: 400,
-                    dest_width: 400,
-                    dest_height: 300,
+                    dest_width: 600,
+                    dest_height: 450,
                     image_format: 'jpeg',
                     jpeg_quality: 90,
                     flip_horiz: false,
@@ -54,8 +55,14 @@
         },
         watch: {
             options() {
-                this.uninit()
-                this.init()
+                if (this.timer) {
+                    clearTimeout(this.timer);
+                    this.timer = null;
+                }
+                this.uninit();
+                this.timer = setTimeout(() => {
+                    this.init();
+                }, 500);
             }
         },
         methods: {
@@ -75,9 +82,12 @@
                 })
             },
             uninit() {
+                if (this.Webcam) {
+                    this.Webcam.reset()
+                }
                 this.ready = false
                 this.camError = null
-                this.Webcam.reset()
+                this.Webcam = null
             },
             takeSnapshot() {
                 return new Promise((resolve, reject) => {
