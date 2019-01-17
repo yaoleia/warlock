@@ -12,6 +12,7 @@
                 productList: [],
                 opts: {},
                 curProduct: {},
+                curPosition: {},
                 defaultConfig: { testUrl: '', title: '' },
                 switchCraft: null,
                 canScroll: true,
@@ -39,7 +40,7 @@
             this.$request.record.getRecordList().then(resp => {
                 if (resp.data.list) {
                     if (this.productList.length === 0 && resp.data.list[0]) {
-                        this.curProduct = { ...resp.data.list[0] }
+                        this.curProduct = resp.data.list[0];
                     }
                     resp.data.list.forEach(l => {
                         const prod = this.productList.find(ll => ll.ts === l.ts)
@@ -165,7 +166,7 @@
             },
             close() {
                 this.switchCraft = true;
-                this.curProduct = { ...this.productList[0] }
+                this.curProduct = this.productList[0]
             },
             ifOk(type) {
                 return utils.ifOk(type)
@@ -187,7 +188,7 @@
             emitChat() {
                 window.ws.off('msg').emit('chat', this.workflow.task_id).on('msg', m => {
                     if (this.switchCraft) {
-                        this.curProduct = { ...m }
+                        this.curProduct = m
                     }
                     m.act = false;
                     const product = this.productList.find(l => l.ts === m.ts);
@@ -221,7 +222,7 @@
             },
             listItemClick(p) {
                 this.switchCraft = false;
-                this.curProduct = { ...p }
+                this.curProduct = p;
             },
             drawArea(data) {
                 const boardArea = d3.select('#board-area');
@@ -308,24 +309,39 @@
                     this.$refs.component.forEach(element => {
                         element.close && element.close();
                     });
-                    this.curProduct = { ...this.productList[0] }
+                    this.curProduct = this.productList[0]
                 }
             },
-            curProduct(p) {
+            curProduct(p, oldp) {
                 if (!p.ts) return;
+                oldp.act = false;
+                p.act = true;
                 this.$refs.component.forEach(element => {
                     element.close && element.close();
                 });
-                $('.flicker', this.$el).finish().fadeOut('fast').fadeIn('fast');
-                this.productList.forEach(l => {
-                    l.act = l.ts === p.ts;
-                })
+                // 闪现目标定位的红框
+                // $('.flicker', this.$el).finish().fadeOut('fast').fadeIn('fast');
+                const parent = $('.list-wrap', this.$el)[0];
                 if (this.switchCraft && this.canScroll) {
-                    $('.list-wrap', this.$el)[0].scrollTop = 0;
+                    parent.scrollTop = 0;
                 }
                 this.drawArea(p.phone_box)
+
+                this.$nextTick(() => {
+                    this.curPosition.dom = this.$refs[`item_${p.ts}`][0];
+                    this.curPosition.parent = parent;
+                    this.curPosition.top = this.curPosition.dom.offsetTop - parent.scrollTop;
+                })
             },
             productList(list) {
+                this.$nextTick(() => {
+                    if (this.curPosition.dom) {
+                        const index = this.productList.indexOf(this.curProduct);
+                        const clientHeight = this.curPosition.dom.clientHeight;
+                        const y = index * clientHeight - this.curPosition.top;
+                        this.curPosition.parent.scrollTop = y < 0 ? 0 : y;
+                    }
+                })
                 while (list && list.length > 100) {
                     list.pop();
                 }
@@ -368,8 +384,8 @@
                 </div>
             </div>
             <div class="list-wrap">
-                <transition-group name="list-complete" tag="p">
-                    <ul class="list-complete-item" :class="item.act?'act':''" v-for='item in productList' :key="item.ts" @click="listItemClick(item)">
+                <transition-group name="list" tag="p">
+                    <ul class="list-item" :ref="'item_'+item.ts" :class="item.act?'act':''" v-for='item in productList' :key="item.ts" @click="listItemClick(item)">
                         <msg-item v-for='(value,key) in {status:item.status,ts:item.ts}' :key='key' :_key='key' :value='value'></msg-item>
                     </ul>
                 </transition-group>
@@ -381,6 +397,15 @@
     .dashboard {
         display: flex;
         justify-content: space-between;
+        .list-enter-active,
+        .list-leave-active {
+            transition: all 0.5s;
+        }
+        .list-enter,
+        .list-leave-to {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
         .title {
             font-size: 20px;
             line-height: 66px;
@@ -449,11 +474,12 @@
                 display: block;
                 overflow: hidden;
                 .list-wrap {
+                    position: relative;
                     overflow: auto;
                     width: 100%;
                     height: 100%;
                     padding-right: 30px;
-                    .list-complete-item {
+                    .list-item {
                         list-style: none;
                         width: 100%;
                         display: flex;
@@ -463,7 +489,6 @@
                         justify-content: space-between;
                         cursor: pointer;
                         border-radius: 5px;
-                        border-bottom: 1px solid #444;
                         line-height: 30px;
                         position: relative;
                         &.act {
@@ -471,6 +496,9 @@
                         }
                         &:last-child {
                             border: none;
+                        }
+                        .msg-item {
+                            flex: 1;
                         }
                     }
                     .status {
