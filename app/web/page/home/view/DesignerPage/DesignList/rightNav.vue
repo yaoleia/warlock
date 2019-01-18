@@ -1,7 +1,7 @@
 <template>
     <div class="right-nav">
         <div class="export-wrap">
-            <el-button type="text" @click='handleDownload(exportOption.checkedMode?exportOption.multipleSelection:designList)'><i class="el-icon-download"></i> 导出</el-button>
+            <el-button type="text" @click='handleDownload(exportOption.checkedMode?exportOption.multipleSelection:workflowList)'><i class="el-icon-download"></i> 导出</el-button>
             <el-select v-model="exportOption.checkedMode" class="export-mode">
                 <el-option v-for="item in exportOption.options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
                 </el-option>
@@ -25,7 +25,7 @@
 
             };
         },
-        props: ['handleDownload', 'exportOption', 'onFileAdd', 'designList'],
+        props: ['handleDownload', 'exportOption', 'onFileAdd', 'workflowList'],
         computed: {},
         methods: {
             formReset() {

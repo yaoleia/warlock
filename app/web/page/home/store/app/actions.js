@@ -20,6 +20,12 @@ const actions = {
     const response = await clientApi.plugin.getPlugins(store);
     store.commit(Type.SET_ALGORITHM_MAP, response.data);
     return response;
+  },
+  SET_WORKFLOW_LIST: async (store) => {
+    // 获取运行着的任务
+    const workflows = await clientApi.workflow.getWorkflows();
+    store.commit(Type.SET_WORKFLOW_LIST, workflows.data);
+    return workflows;
   }
 };
 

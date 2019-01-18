@@ -16,6 +16,7 @@ export function postTask(json) {
     return axios.post('/api/task', json);
 }
 
-export function deleteTask(task_id) {
-    return axios.delete(`/api/task/${task_id}`);
+export function deleteTask(workflowid) {
+    // 根据workflow删除task
+    return axios.delete(`/api/task/${workflowid}`);
 }

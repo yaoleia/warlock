@@ -1,14 +1,10 @@
 <template>
     <div class="design-list">
         <div class="search">
-            <div class="search-left">
-                <!-- <el-date-picker v-model="q.dateRange" type="datetimerange" :picker-options="pickerOptions" start-placeholder="开始时间" end-placeholder="结束时间" align="left" value-format="timestamp">
-                </el-date-picker>
-                <el-button class="search-button" type="text" @click="q.pageIndex = 1;getDesignList()">查询</el-button> -->
-            </div>
-            <right-nav ref="rightNav" :handleDownload='handleDownload' :exportOption='exportOption' :onFileAdd='onFileAdd' :designList='designList'></right-nav>
+            <div class="search-left"></div>
+            <right-nav ref="rightNav" :handleDownload='handleDownload' :exportOption='exportOption' :onFileAdd='onFileAdd' :workflowList='workflowList'></right-nav>
         </div>
-        <el-table v-if='innerHeight' ref="multipleTable" stripe :data="designList" @row-contextmenu="contextmenuHandle" v-loading="loading" :height="innerHeight" @selection-change="handleSelectionChange">
+        <el-table v-if='innerHeight' ref="multipleTable" stripe :data="workflowList" @row-contextmenu="contextmenuHandle" v-loading="loading" :height="innerHeight" @selection-change="handleSelectionChange">
             <div slot="empty">
                 <p v-if='!loading && editorLoaded.state() === "resolved"'>
                     <img class="no-data" src="~asset/images/no-data.png">
@@ -16,7 +12,7 @@
             </div>
             <el-table-column type="selection">
             </el-table-column>
-            <el-table-column type="index" :index="indexMethod">
+            <el-table-column type="index">
             </el-table-column>
             <el-table-column prop="_id" label="ID">
             </el-table-column>
@@ -65,8 +61,6 @@
                 </template>
             </el-table-column>
         </el-table>
-        <!-- <el-pagination background class="pager" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="q.pageIndex" :page-sizes="[10, 20, 50, 100]" :page-size="q.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination> -->
         <upload-dialog :uploadOption='uploadOption' :uploadCancel='uploadCancel' :uploadDesignList='uploadDesignList'></upload-dialog>
         <context-menu v-show='active' ref="contextMenu" :handleCopy='handleCopy' :handleDelete='handleDelete' :handleDownload='handleDownload' :active='active'></context-menu>
     </div>
@@ -77,6 +71,7 @@
     import uploadDialog from './uploadDialog'
     import contextMenu from './contextmenu'
     import FlowDisplayer from 'component/ModelFlowEditor/displayer'
+    import { SET_WORKFLOW_LIST } from '../../../store/app/mutation-type'
     import _ from 'lodash';
     export default {
         data() {
@@ -84,7 +79,6 @@
                 innerHeight: 0,
                 active: null,
                 total: 30,
-                designList: [],
                 exportOption: {
                     multipleSelection: [],
                     checkedMode: 0,
@@ -145,12 +139,6 @@
                         }
                     ]
                 },
-                q: {
-                    pageIndex: 1,
-                    pageSize: 20,
-                    dateRange: '',
-                    endTime: ''
-                },
                 // 请求时的loading效果
                 loading: false
             }
@@ -174,53 +162,18 @@
             async activeChange(item, statu) {
                 // task开关
                 const loading = this.loadingUi();
+                let resp = null;
                 try {
                     if (statu) {
-                        await this.creatTask(item);
+                        resp = await this.$request.task.postTask(item);
                     } else {
-                        await this.deleteTask(item);
+                        resp = await this.$request.task.deleteTask(item._id);
                     }
-                    await this.$request.workflow.patchWorkflow(item._id, item);
+                    Object.assign(item, resp);
                 } catch (error) {
                     throw error;
                 } finally {
                     loading.close();
-                    window.ws.emit('workflow', item);
-                }
-            },
-            async creatTask(item) {
-                // 创建task
-                try {
-                    // 获取一个任务id
-                    const task = await this.$request.task.getTaskId();
-                    const taskId = task.data;
-                    if (taskId) {
-                        const creatTask = await this.$request.task.postTask({
-                            task_id: taskId,
-                            workflow_id: item._id
-                        });
-                        if (creatTask.data.indexOf('error') != -1) {
-                            item.task_id = '';
-                            item.active = false;
-                            this.$message({
-                                message: `开启任务失败! ${creatTask.data}`,
-                                type: 'error'
-                            })
-                            return;
-                        }
-                        item.task_id = taskId;
-                    }
-                } catch (error) {
-                    item.active = false;
-                }
-            },
-            async deleteTask(item) {
-                // 删除task
-                try {
-                    const deleteTask = await this.$request.task.deleteTask(item.task_id);
-                    item.task_id = '';
-                } catch (error) {
-                    item.active = true;
                 }
             },
             gotoWatch(item) {
@@ -269,7 +222,6 @@
                     })
                     await Promise.all(promises);
                     this.uploadCancel();
-                    await this.getDesignList();
                 } catch (error) {
                     throw error;
                 } finally {
@@ -341,11 +293,7 @@
             async deleteWorkflow(item) {
                 const loading = this.loadingUi();
                 try {
-                    if (item.active) {
-                        await this.deleteTask(item);
-                    }
                     const resp = await this.$request.workflow.deleteWorkflow(item._id);
-                    await this.getDesignList();
                 } catch (error) {
                     this.$message({
                         type: 'error',
@@ -369,15 +317,11 @@
                 }).then(async ({ value }) => {
                     newItem.name = value;
                     await this.creatWorkflow(newItem);
-                    await this.getDesignList();
                     this.$message({
                         type: 'success',
                         message: `克隆流程 ${value} 成功！`
                     });
                 })
-            },
-            indexMethod(index) {
-                return (this.q.pageIndex - 1) * this.q.pageSize + index + 1
             },
             async getDesignList() {
                 await this.editorLoaded;
@@ -385,37 +329,7 @@
                     this.loading = true;
                 }
                 try {
-                    let designList,
-                        tasks;
-                    const p1 = this.$request.workflow.getWorkflows().then(resp => designList = resp.data);
-                    const p2 = this.$request.task.getTasks().then(resp => tasks = resp.data);
-                    await Promise.all([p1, p2]);
-
-                    const promises = designList.map(async d => {
-                        // 异常
-                        if (!d.flowData) {
-                            d.flowData = { disabled: true };
-                            return
-                        }
-                        d.flowData.disabled = false;
-                        d.flowData.nodes.forEach(n => {
-                            if (!this.algorithmModuleList.includes(n.shape)) {
-                                n.shape = n.shape + '_delete'
-                                if (!d.flowData.disabled) {
-                                    d.flowData.disabled = true;
-                                }
-                            }
-                        })
-                        if (d.task_id) {
-                            if (!tasks.includes(d.task_id)) {
-                                d.task_id = '';
-                                d.active = false;
-                                await this.$request.workflow.patchWorkflow(d._id, d);
-                            }
-                        }
-                    })
-                    await Promise.all(promises);
-                    this.designList = designList.sort((a, b) => b.ts - a.ts);
+                    await this.$store.dispatch(SET_WORKFLOW_LIST)
                 } catch (error) {
                     this.$message({
                         type: 'error',
@@ -426,30 +340,40 @@
                     this.loading = false;
                 }
             },
-            handleSizeChange(val) {
-                this.q.pageSize = val
-                this.getDesignList()
-            },
-            handleCurrentChange(val) {
-                this.q.pageIndex = val
-                this.getDesignList()
-            },
             getInnerHeight() {
                 if (EASY_ENV_IS_BROWSER) {
                     this.innerHeight = this.$el.clientHeight - 70;
                 }
             },
             emitWorkflow() {
-                window.ws.on('workflow', msg => {
-                    const item = this.designList.find(i => i._id === msg._id);
-                    if (!item) return;
-                    Object.assign(item, msg);
+                window.ws.on('workflow', data => {
+                    const { type, msg } = data;
+                    if (type === 'update') {
+                        const item = this.workflowList.find(i => i._id === msg._id);
+                        if (item) {
+                            Object.assign(item, msg);
+                        }
+                        return;
+                    }
+                    if (type === 'add') {
+                        this.workflowList.unshift(msg);
+                        return;
+                    }
+                    if (type === 'delete') {
+                        const index = this.workflowList.findIndex(i => i._id === msg._id);
+                        if (index !== -1) {
+                            this.workflowList.splice(index, 1);
+                        }
+                    }
                 })
             }
         },
         computed: {
             algorithmModuleList() {
                 return this.$store.getters.algorithmModuleList;
+            },
+            workflowList() {
+                return this.$store.state.workflowList;
             }
         },
         mounted() {
@@ -470,25 +394,14 @@
             if (this.algorithmModuleList.length) {
                 this.getDesignList()
             }
-            $(window).on('click.designList contextmenu.designList', () => {
+            $(window).on('click.workflowList contextmenu.workflowList', () => {
                 this.active = null;
             });
         },
         beforeDestroy() {
-            $(window).off('click.designList contextmenu.designList resize.record');
+            $(window).off('click.workflowList contextmenu.workflowList resize.record');
         },
         watch: {
-            'q.dateRange': function(r) {
-                if (r === null) {
-                    this.q.pageIndex = 1
-                    this.getDesignList()
-                }
-            },
-            '$route.query': function(q) {
-                if (q.reload) {
-                    this.getDesignList()
-                }
-            },
             algorithmModuleList(arr, oldArr) {
                 if (arr.toString() === oldArr.toString()) return;
                 this.getDesignList()

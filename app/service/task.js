@@ -17,10 +17,20 @@ module.exports = class ArticeService extends egg.Service {
     return task.data;
   }
 
-  async creatTask(body) {
+  async creatTask(workflow) {
     try {
-      const resp = await this.ctx.http.post(`${this.serverUrl}/api/task`, body);
-      return resp;
+      const workflow_id = workflow._id;
+      const task_id = await this.ctx.service.task.getTaskId();
+      if (!workflow_id) {
+        // 创建testTask时使用
+        await this.ctx.http.post(`${this.serverUrl}/api/task`, { flowData: workflow.flowData, task_id });
+        return task_id;
+      }
+      await this.ctx.http.post(`${this.serverUrl}/api/task`, { workflow_id, task_id });
+      workflow.active = true;
+      workflow.task_id = task_id;
+      await this.ctx.service.workflow.updateWorkflow(workflow);
+      return workflow;
     } catch (error) {
       throw error;
     }
@@ -28,10 +38,16 @@ module.exports = class ArticeService extends egg.Service {
 
   async deleteTask(params) {
     try {
-      const resp = await this.ctx.http.delete(`${this.serverUrl}/api/task/${params.id}`);
-      return resp;
+      const workflow = await this.ctx.service.workflow.getWorkflow({ id: params.id })
+      await this.ctx.http.delete(`${this.serverUrl}/api/task/${workflow.task_id}`);
+
+      workflow.active = false;
+      workflow.task_id = '';
+      await this.ctx.service.workflow.updateWorkflow(workflow);
+      return workflow;
     } catch (error) {
-      throw error;
+      const resp = await this.ctx.http.delete(`${this.serverUrl}/api/task/${params.id} `);
+      return resp;
     }
   }
 

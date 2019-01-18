@@ -76,10 +76,13 @@
         },
         methods: {
             emitWorkflow() {
-                window.ws.on('workflow', msg => {
-                    if (this.workflow._id !== msg._id) return;
-                    Object.assign(this.workflow, msg);
-                    this.getWsMsg();
+                window.ws.on('workflow', data => {
+                    const { type, msg } = data;
+                    if (type === 'update') {
+                        if (this.workflow._id !== msg._id) return;
+                        Object.assign(this.workflow, msg);
+                        this.getWsMsg();
+                    }
                 })
             },
             loadingUi() {
@@ -93,56 +96,19 @@
             async activeChange(statu) {
                 // task开关
                 const loading = this.loadingUi();
+                let resp = null;
                 try {
                     if (statu) {
-                        await this.creatTask(this.workflow);
+                        resp = await this.$request.task.postTask(this.workflow);
                     } else {
-                        await this.deleteTask(this.workflow);
+                        resp = await this.$request.task.deleteTask(this.workflow._id);
                     }
-                    await this.$request.workflow.patchWorkflow(this.workflow._id, this.workflow);
+                    Object.assign(this.workflow, resp);
                     this.getWsMsg();
                 } catch (error) {
                     throw error;
                 } finally {
                     loading.close();
-                    window.ws.emit('workflow', this.workflow);
-                }
-            },
-            async creatTask(item) {
-                // 创建task
-                try {
-                    // 获取一个任务id
-                    const task = await this.$request.task.getTaskId();
-                    const taskId = task.data;
-                    if (taskId) {
-                        const creatTask = await this.$request.task.postTask({
-                            task_id: taskId,
-                            workflow_id: item._id
-                        });
-                        if (creatTask.data.indexOf('error') != -1) {
-                            item.task_id = '';
-                            item.active = false;
-                            this.$message({
-                                message: `开启任务失败! ${creatTask.data}`,
-                                type: 'error'
-                            })
-                            return;
-                        }
-                        item.active = true;
-                        item.task_id = taskId;
-                    }
-                } catch (error) {
-                    item.active = false;
-                }
-            },
-            async deleteTask(item) {
-                // 删除task
-                try {
-                    const deleteTask = await this.$request.task.deleteTask(item.task_id);
-                    item.active = false;
-                    item.task_id = '';
-                } catch (error) {
-                    item.active = true;
                 }
             },
             resize() {
@@ -309,7 +275,10 @@
                     this.$refs.component.forEach(element => {
                         element.close && element.close();
                     });
-                    this.curProduct = this.productList[0]
+                    const product = this.productList[0];
+                    if (product) {
+                        this.curProduct = product;
+                    }
                 }
             },
             curProduct(p, oldp) {

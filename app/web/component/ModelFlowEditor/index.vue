@@ -192,45 +192,24 @@
                 })
             },
             async saveDesign() {
-                if (!this.designItem._id) {
-                    Object.assign(this.designItem, {
-                        ts: new Date().getTime(),
-                        cts: new Date().getTime(),
-                        name: this.name,
-                        flowData: this.flow.save(),
-                        active: false
-                    })
-                    await this.creatFlow();
-                } else {
-                    Object.assign(this.designItem, { name: this.name, flowData: this.flow.save(), ts: new Date().getTime(), layout: this.layout, output: this.output })
-                    await this.patchFlow();
-                }
-            },
-            async patchFlow() {
                 const loading = this.loadingUi();
                 try {
-                    const resp = await this.$request.workflow.patchWorkflow(this.designItem._id, this.designItem);
+                    if (!this.designItem._id) {
+                        Object.assign(this.designItem, {
+                            ts: new Date().getTime(),
+                            cts: new Date().getTime(),
+                            name: this.name,
+                            flowData: this.flow.save(),
+                            active: false
+                        })
+                        await this.$request.workflow.postWorkflow(this.designItem);
+                    } else {
+                        Object.assign(this.designItem, { name: this.name, flowData: this.flow.save(), ts: new Date().getTime(), layout: this.layout, output: this.output })
+                        await this.$request.workflow.patchWorkflow(this.designItem._id, this.designItem);
+                    }
                     this.$nextTick(async () => {
                         await this.deleteTestTask()
-                        this.$router.push({ path: '/design/designList', query: { reload: true } })
-                    })
-                } catch (error) {
-                    this.$message({
-                        type: 'error',
-                        message: '保存失败！'
-                    })
-                    throw error;
-                } finally {
-                    loading.close();
-                }
-            },
-            async creatFlow() {
-                const loading = this.loadingUi();
-                try {
-                    const resp = await this.$request.workflow.postWorkflow(this.designItem);
-                    this.$nextTick(async () => {
-                        await this.deleteTestTask()
-                        this.$router.push({ path: '/design/designList', query: { reload: true } })
+                        this.$router.push({ path: '/design/designList' })
                     })
                 } catch (error) {
                     this.$message({
@@ -251,26 +230,12 @@
                 // 创建test|task
                 const loading = this.loadingUi();
                 try {
-                    // 获取一个任务id
-                    const task = await this.$request.task.getTaskId();
-                    const taskId = task.data;
                     const flowData = this.flow.save();
-                    if (taskId) {
-                        const creatTask = await this.$request.task.postTask({
-                            task_id: taskId,
-                            flowData
-                        })
-                        if (creatTask.data.indexOf('error') != -1) {
-                            this.taskId = '';
-                            this.$message({
-                                message: `开启任务失败! ${creatTask.data}`,
-                                type: 'error'
-                            })
-                            return;
-                        }
-                        this.taskId = taskId;
-                        this.runDesign = true;
-                    }
+                    const creatTask = await this.$request.task.postTask({
+                        flowData
+                    })
+                    this.taskId = creatTask.data;
+                    this.runDesign = true;
                 } catch (error) {
                     this.$message({
                         message: `开启任务失败! ${error}`,

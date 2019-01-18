@@ -5,11 +5,53 @@ class WorkflowService extends Service {
     super(ctx);
     this.ctx = ctx;
     this.serverUrl = this.app.config.serverUrl;
+    this.nsp = this.app.io.of('/');
   }
   async getWorkflowList() {
     try {
-      const resp = await this.ctx.http.get(`${this.serverUrl}/api/workflows`);
-      return resp;
+      let workflows,
+        tasks,
+        plugins;
+      const p1 = this.ctx.http.get(`${this.serverUrl}/api/workflows`).then(resp => { workflows = resp })
+      const p2 = this.ctx.service.task.getTasks().then(resp => { tasks = resp })
+      const p3 = this.ctx.service.plugin.getPluginList().then(resp => { plugins = resp.map(r => r.module) })
+      await Promise.all([p1, p2, p3])
+
+      // 对获取的workflow进行判断异常
+      const promises = workflows.map(async d => {
+        // 异常
+        // toEmit暂时全部更新
+        let toEmit = true;
+        if (!d.flowData) {
+          d.flowData = { disabled: true };
+          return
+        }
+        d.flowData.disabled = false;
+        d.flowData.nodes.forEach(n => {
+          if (!plugins.includes(n.shape)) {
+            // 准备更新workflow
+            if (!toEmit) { toEmit = true }
+            n.shape = n.shape + '_delete'
+            if (!d.flowData.disabled) {
+              d.flowData.disabled = true;
+            }
+          }
+        })
+        if (d.task_id) {
+          if (!tasks.includes(d.task_id)) {
+            d.task_id = '';
+            d.active = false;
+            await this.ctx.service.workflow.updateWorkflow(d);
+            toEmit = false;
+          }
+        }
+        if (toEmit) {
+          this.nsp.emit('workflow', { type: 'update', msg: d });
+        }
+      })
+      await Promise.all(promises);
+      workflows.sort((a, b) => b.ts - a.ts);
+      return workflows;
     } catch (error) {
       throw error;
     }
@@ -17,7 +59,13 @@ class WorkflowService extends Service {
 
   async deleteWorkflow(params) {
     try {
-      const resp = await this.ctx.http.delete(`${this.serverUrl}/api/workflow/${params.id}`);
+      const workflow_id = params.id;
+      const workflow = await this.ctx.service.workflow.getWorkflow({ id: workflow_id });
+      if (workflow.task_id) {
+        await this.ctx.http.delete(`${this.serverUrl}/api/task/${workflow.task_id}`);
+      }
+      const resp = await this.ctx.http.delete(`${this.serverUrl}/api/workflow/${workflow_id}`);
+      this.nsp.emit('workflow', { type: 'delete', msg: { _id: workflow_id } });
       return resp;
     } catch (error) {
       throw error;
@@ -35,6 +83,7 @@ class WorkflowService extends Service {
   async creatWorkflow(body) {
     try {
       const resp = await this.ctx.http.post(`${this.serverUrl}/api/workflow`, body);
+      this.nsp.emit('workflow', { type: 'add', msg: { ...body, _id: resp } });
       return resp;
     } catch (error) {
       throw error;
@@ -43,6 +92,7 @@ class WorkflowService extends Service {
   async updateWorkflow(body) {
     try {
       const resp = await this.ctx.http.post(`${this.serverUrl}/api/workflow/${body._id}`, body);
+      this.nsp.emit('workflow', { type: 'update', msg: body });
       return resp;
     } catch (error) {
       throw error;

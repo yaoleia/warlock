@@ -13,7 +13,8 @@ export default function createStore() {
   const state = {
     recordTotal: 0,
     recordList: [],
-    algorithmMap: {}
+    algorithmMap: {},
+    workflowList: []
   };
   return new Vuex.Store({
     state,
