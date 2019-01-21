@@ -38,12 +38,12 @@
                     <el-switch @change="activeChange(scope.row,$event)" :disabled="scope.row.flowData.disabled" v-model="scope.row.active"></el-switch>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="300">
+            <el-table-column label="操作" width="370">
                 <template slot-scope="scope">
                     <div class="opration">
                         <div class="top-btn">
-                            <el-button v-if='scope.row.active' title="外链" type="primary" @click="jumperHandle(scope.row)">
-                                <v-icon name='wailian'></v-icon>
+                            <el-button title="runtime" type="primary" @click="jumperHandle(scope.row)">
+                                <v-icon name='wailian'></v-icon> runtime
                             </el-button>
                             <router-link :to="{name: '新建流程',params: {_id:scope.row._id,flow: scope.row}}">
                                 <el-button title='修改' type="warning">
@@ -171,6 +171,10 @@
                     }
                     Object.assign(item, resp.data);
                 } catch (error) {
+                    if (statu) {
+                        item.task_id = '';
+                        item.active = false;
+                    }
                     throw error;
                 } finally {
                     loading.close();
@@ -304,16 +308,13 @@
                 }
             },
             async handleCopy(item) {
-                const newItem = _.cloneDeep(item);
-                newItem.active = false;
-                newItem.ts = new Date().getTime();
-                newItem.cts = new Date().getTime();
-                delete newItem._id;
-                delete newItem.task_id;
+                let newItem = _.cloneDeep(item);
+                const { flowData, layout, output, name } = newItem;
+                newItem = { flowData, layout, output, active: false, ts: new Date().getTime(), cts: new Date().getTime() }
                 this.$prompt('请输入新克隆的流程名称', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
-                    inputValue: `${newItem.name}_copy_${new Date().getTime()}`
+                    inputValue: `${name}_copy_${new Date().getTime()}`
                 }).then(async ({ value }) => {
                     newItem.name = value;
                     await this.creatWorkflow(newItem);
@@ -419,12 +420,11 @@
                 color: #f44336;
             }
             .cell .opration {
-                width: 330px;
-                margin: 0 auto;
                 .top-btn {
                     display: flex;
                     align-items: center;
                     display: table;
+                    white-space: nowrap;
                     margin: 0 auto;
                     .el-button {
                         font-weight: normal;

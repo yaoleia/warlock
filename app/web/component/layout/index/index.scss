@@ -160,6 +160,14 @@
             border-right: 1px solid #ff8800;
         }
     }
+    .el-table--enable-row-hover .el-table__body .el-table__row > td {
+        &:nth-child(1) {
+            border-left: 1px solid transparent;
+        }
+        &:last-child {
+            border-right: 1px solid transparent;
+        }
+    }
     .el-table--enable-row-hover .el-table__body .el-table__row:hover {
         box-shadow: 0 0 0 1px #ff8800;
     }

@@ -81,8 +81,13 @@
                     if (type === 'update') {
                         if (this.workflow._id !== msg._id) return;
                         Object.assign(this.workflow, msg);
-                        this.getWsMsg();
                     }
+                    if (type === 'delete') {
+                        if (this.workflow._id !== msg._id) return;
+                        this.workflow.task_id = '';
+                        this.workflow.active = false;
+                    }
+                    this.getWsMsg();
                 })
             },
             loadingUi() {
@@ -106,6 +111,10 @@
                     Object.assign(this.workflow, resp.data);
                     this.getWsMsg();
                 } catch (error) {
+                    if (statu) {
+                        this.workflow.task_id = '';
+                        this.workflow.active = false;
+                    }
                     throw error;
                 } finally {
                     loading.close();

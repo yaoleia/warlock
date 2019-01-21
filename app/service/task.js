@@ -26,7 +26,14 @@ module.exports = class ArticeService extends egg.Service {
         await this.ctx.http.post(`${this.serverUrl}/api/task`, { flowData: workflow.flowData, task_id });
         return task_id;
       }
-      await this.ctx.http.post(`${this.serverUrl}/api/task`, { workflow_id, task_id });
+      const resp = await this.ctx.http.post(`${this.serverUrl}/api/task`, { workflow_id, task_id });
+
+      // TODO: 开启错误
+      if (resp.indexOf('error') !== -1) {
+        this.ctx.status = 400;
+        return resp;
+      }
+
       workflow.active = true;
       workflow.task_id = task_id;
       await this.ctx.service.workflow.updateWorkflow(workflow);
