@@ -263,12 +263,13 @@
                     })
                     return;
                 }
-                list.forEach(li => {
+                const downloadList = _.cloneDeep(list);
+                downloadList.forEach(li => {
                     delete li._id;
                     delete li.task_id;
                     li.active = false;
                 });
-                export2Json(list);
+                export2Json(downloadList);
             },
             handleDelete(item) {
                 let msg = '此操作将删除该流程, 是否继续?';
