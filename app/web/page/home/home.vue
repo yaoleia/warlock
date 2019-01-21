@@ -144,7 +144,13 @@
             },
             startWsConnection() {
                 this.stopWsConnection()
-                const ws = io('/?room=admin&userId=1')
+                const ws = io('/', {
+                    query: {
+                        room: 'admin',
+                        userId: `client_${Math.random()}`,
+                    },
+                    transports: ['websocket']
+                })
 
                 ws.on('connect', () => {
                     console.log('websocket successfully connected !')

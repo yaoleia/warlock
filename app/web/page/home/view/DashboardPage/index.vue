@@ -103,7 +103,7 @@
                     } else {
                         resp = await this.$request.task.deleteTask(this.workflow._id);
                     }
-                    Object.assign(this.workflow, resp);
+                    Object.assign(this.workflow, resp.data);
                     this.getWsMsg();
                 } catch (error) {
                     throw error;

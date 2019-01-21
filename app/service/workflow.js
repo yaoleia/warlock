@@ -5,7 +5,6 @@ class WorkflowService extends Service {
     super(ctx);
     this.ctx = ctx;
     this.serverUrl = this.app.config.serverUrl;
-    this.nsp = this.app.io.of('/');
   }
   async getWorkflowList() {
     try {
@@ -46,7 +45,7 @@ class WorkflowService extends Service {
           }
         }
         if (toEmit) {
-          this.nsp.emit('workflow', { type: 'update', msg: d });
+          this.app.io.of('/').emit('workflow', { type: 'update', msg: d });
         }
       })
       await Promise.all(promises);
@@ -65,7 +64,7 @@ class WorkflowService extends Service {
         await this.ctx.http.delete(`${this.serverUrl}/api/task/${workflow.task_id}`);
       }
       const resp = await this.ctx.http.delete(`${this.serverUrl}/api/workflow/${workflow_id}`);
-      this.nsp.emit('workflow', { type: 'delete', msg: { _id: workflow_id } });
+      this.app.io.of('/').emit('workflow', { type: 'delete', msg: { _id: workflow_id } });
       return resp;
     } catch (error) {
       throw error;
@@ -83,17 +82,18 @@ class WorkflowService extends Service {
   async creatWorkflow(body) {
     try {
       const resp = await this.ctx.http.post(`${this.serverUrl}/api/workflow`, body);
-      this.nsp.emit('workflow', { type: 'add', msg: { ...body, _id: resp } });
-      return resp;
+      const msg = { ...body, _id: resp };
+      this.app.io.of('/').emit('workflow', { type: 'add', msg });
+      return msg;
     } catch (error) {
       throw error;
     }
   }
   async updateWorkflow(body) {
     try {
-      const resp = await this.ctx.http.post(`${this.serverUrl}/api/workflow/${body._id}`, body);
-      this.nsp.emit('workflow', { type: 'update', msg: body });
-      return resp;
+      await this.ctx.http.post(`${this.serverUrl}/api/workflow/${body._id}`, body);
+      this.app.io.of('/').emit('workflow', { type: 'update', msg: body });
+      return body;
     } catch (error) {
       throw error;
     }

@@ -169,7 +169,7 @@
                     } else {
                         resp = await this.$request.task.deleteTask(item._id);
                     }
-                    Object.assign(item, resp);
+                    Object.assign(item, resp.data);
                 } catch (error) {
                     throw error;
                 } finally {

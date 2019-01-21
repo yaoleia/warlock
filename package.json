@@ -4,7 +4,7 @@
   "description": "基于 easywebpack-vue 和 egg-view-vue-ssr 插件的 egg + vue 服务端渲染同构工程骨架项目",
   "scripts": {
     "dev": "export BABEL_ENV=development;egg-bin dev --sticky",
-    "start": "export EGG_SERVER_ENV=prod NODE_ENV=production;egg-scripts start --sticky",
+    "start": "export EGG_SERVER_ENV=prod NODE_ENV=production;egg-scripts start --sticky --workers=1",
     "debug": "egg-bin debug",
     "clean": "easy clean all",
     "build": "easy build prod",

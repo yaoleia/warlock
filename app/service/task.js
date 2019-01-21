@@ -21,7 +21,7 @@ module.exports = class ArticeService extends egg.Service {
     try {
       const workflow_id = workflow._id;
       const task_id = await this.ctx.service.task.getTaskId();
-      if (!workflow_id) {
+      if (workflow.flowData && !workflow_id) {
         // 创建testTask时使用
         await this.ctx.http.post(`${this.serverUrl}/api/task`, { flowData: workflow.flowData, task_id });
         return task_id;
