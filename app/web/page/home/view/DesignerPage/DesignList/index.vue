@@ -220,11 +220,19 @@
                 }
                 const loading = this.loadingUi();
                 try {
-                    const promises = addList.map(async r => {
-                        r.ts = new Date().getTime();
-                        await this.creatWorkflow(r);
-                    })
-                    await Promise.all(promises);
+                    // const promises = addList.map(r => {
+                    //     r.ts = new Date().getTime();
+                    //     return this.creatWorkflow(r);
+                    // })
+                    // console.log(promises)
+                    // await Promise.all(promises);
+                    let index = 0;
+                    while (index < addList.length) {
+                        const item = addList[index];
+                        item.ts = new Date().getTime();
+                        await this.creatWorkflow(item);
+                        index++;
+                    }
                     this.uploadCancel();
                 } catch (error) {
                     throw error;
