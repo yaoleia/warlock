@@ -35,7 +35,7 @@
             </el-table-column>
             <el-table-column label="运行状态">
                 <template slot-scope="scope">
-                    <el-switch @change="activeChange(scope.row,$event)" :disabled="scope.row.flowData.disabled" v-model="scope.row.active"></el-switch>
+                    <el-switch @change="activeChange(scope.row,$event)" :disabled="scope.row.flowData.disabled" :value="scope.row.active"></el-switch>
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="370">
@@ -169,12 +169,7 @@
                     } else {
                         resp = await this.$request.task.deleteTask(item._id);
                     }
-                    Object.assign(item, resp.data);
                 } catch (error) {
-                    if (statu) {
-                        item.task_id = '';
-                        item.active = false;
-                    }
                     throw error;
                 } finally {
                     loading.close();
@@ -220,6 +215,7 @@
                 }
                 const loading = this.loadingUi();
                 try {
+                    // TODO: 创建新workflow并发有问题
                     // const promises = addList.map(r => {
                     //     r.ts = new Date().getTime();
                     //     return this.creatWorkflow(r);

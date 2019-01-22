@@ -39,6 +39,12 @@ module.exports = app => {
 
 		await next();
 
+		// 断开连接同时断开与后端的ws连接
+		if (socket.backendClient) {
+			socket.backendClient();
+			socket.backendClient = null;
+		}
+
 		// 用户离开
 		logger.debug('#leave', room);
 

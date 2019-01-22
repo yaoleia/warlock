@@ -55,7 +55,7 @@
                 this.$emit('loaded');
             },
             error(e) {
-                if (!e.target) return;
+                if (!e.target || !this.url) return;
                 if (!this.alwaysTry) {
                     this.try--;
                 }

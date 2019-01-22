@@ -10,11 +10,10 @@
             return {
                 template_img: '/public/mock-img/template_img.jpg',
                 productList: [],
-                opts: {},
                 curProduct: {},
                 curPosition: {},
                 defaultConfig: { testUrl: '', title: '' },
-                switchCraft: null,
+                switchCraft: false,
                 canScroll: true,
                 svg: {
                     width: 600,
@@ -37,19 +36,20 @@
             this.$options.components.webcam = () => import('component/webcam')
         },
         async mounted() {
-            this.$request.record.getRecordList().then(resp => {
-                if (resp.data.list) {
-                    if (this.productList.length === 0 && resp.data.list[0]) {
-                        this.curProduct = resp.data.list[0];
-                    }
-                    resp.data.list.forEach(l => {
-                        const prod = this.productList.find(ll => ll.ts === l.ts)
-                        if (!prod) {
-                            this.productList.push(l)
-                        }
-                    })
-                }
-            })
+            // TODO: 获取历史记录
+            // this.$request.record.getRecordList().then(resp => {
+            //     if (resp.data.list) {
+            //         if (this.productList.length === 0 && resp.data.list[0]) {
+            //             this.curProduct = resp.data.list[0];
+            //         }
+            //         resp.data.list.forEach(l => {
+            //             const prod = this.productList.find(ll => ll.ts === l.ts)
+            //             if (!prod) {
+            //                 this.productList.push(l)
+            //             }
+            //         })
+            //     }
+            // })
 
             this.$nextTick(() => {
                 if (window.ws.connected) {
@@ -66,7 +66,6 @@
                 if (!workflowid) return;
                 const resp = await this.$request.workflow.getWorkflowById(workflowid);
                 this.workflow = resp.data;
-                this.getWsMsg();
             } catch (error) {
                 this.$message({
                     message: '获取workflow失败！',
@@ -84,10 +83,8 @@
                     }
                     if (type === 'delete') {
                         if (this.workflow._id !== msg._id) return;
-                        this.workflow.task_id = '';
-                        this.workflow.active = false;
+                        Object.assign(this.workflow, { task_id: '', active: false })
                     }
-                    this.getWsMsg();
                 })
             },
             loadingUi() {
@@ -108,8 +105,6 @@
                     } else {
                         resp = await this.$request.task.deleteTask(this.workflow._id);
                     }
-                    Object.assign(this.workflow, resp.data);
-                    this.getWsMsg();
                 } catch (error) {
                     if (statu) {
                         this.workflow.task_id = '';
@@ -121,18 +116,6 @@
                 }
             },
             resize() {
-                if (window.innerWidth <= 1920) {
-                    this.opts = {
-                        width: 450,
-                        height: 300,
-                        dest_width: 320,
-                        dest_height: 240,
-                        crop_width: 450,
-                        crop_height: 338
-                    }
-                } else {
-                    this.opts = {}
-                }
                 const leftWrap = this.$refs.leftWrap;
                 this.sizeRate = {
                     width: leftWrap.clientWidth / 1340,
@@ -148,17 +131,6 @@
             },
             defectType(type) {
                 return utils.defectType(type)
-            },
-            getWsMsg() {
-                if (window.ws.connected) {
-                    this.emitChat()
-                    this.switchCraft = true;
-                } else {
-                    window.ws.on('connect', () => {
-                        this.switchCraft = true;
-                        this.emitChat()
-                    })
-                }
             },
             emitChat() {
                 window.ws.off('msg').emit('chat', this.workflow.task_id).on('msg', m => {
@@ -272,13 +244,17 @@
             if (video) {
                 video.play()
             }
-            this.$nextTick(() => {
-                if (this.workflow.task_id) {
-                    this.getWsMsg()
-                }
-            })
         },
         watch: {
+            workflow: {
+                handler(workflow) {
+                    if (workflow.active) {
+                        this.switchCraft = true;
+                    }
+                    this.emitChat();
+                },
+                deep: true
+            },
             switchCraft(s) {
                 if (s && this.$refs.component) {
                     this.$refs.component.forEach(element => {
@@ -346,7 +322,7 @@
             <div :class='element.name' v-for="element in workflow.layout" :key="element.id" :style="{top:element.top*sizeRate.height+'px',left:element.left*sizeRate.width+'px',width:element.width*sizeRate.width+'px',height:element.height*sizeRate.height+'px'}">
                 <ul>
                     <li class="component-body" @mousedown='switchCraft=false'>
-                        <component @close='close' ref='component' :is='element.name' v-bind="getProps(element.props,element.editProps)" :width='element.width' :height='element.height'></component>
+                        <component @close='close' ref='component' :is='element.name' v-bind="getProps(element.props,element.editProps)" :width='element.width*sizeRate.width' :height='element.height*sizeRate.height'></component>
                     </li>
                 </ul>
             </div>
@@ -357,7 +333,7 @@
                 <div class='switch-wrap'>
                     <span class='switch-name'>任务开关:</span>
                     <el-tooltip v-if="workflow.active!==undefined" :content="workflow.active?'on':'off'" placement="top">
-                        <el-switch v-model="workflow.active" @change="activeChange"></el-switch>
+                        <el-switch :value="workflow.active" @change="activeChange"></el-switch>
                     </el-tooltip>
                 </div>
             </div>
