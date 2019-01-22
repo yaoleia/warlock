@@ -39,6 +39,7 @@
     import draggable from 'vuedraggable'
     import imgStream from 'component/imgStream'
     import magnifier from 'component/magnifier'
+    import webcam from 'component/webcam'
     import dialogProps from './dialogProps'
     import shortid from 'shortid'
     import _ from 'lodash';
@@ -48,13 +49,10 @@
             draggable,
             imgStream,
             magnifier,
-            dialogProps
+            dialogProps,
+            webcam
         },
         props: ['runMsgList', 'layout', 'dialogOpened', 'output'],
-        beforeMount() {
-            // 只会在浏览器执行
-            this.$options.components.webcam = () => import('component/webcam')
-        },
         data() {
             return {
                 curElement: null,

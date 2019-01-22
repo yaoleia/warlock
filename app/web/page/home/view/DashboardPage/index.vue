@@ -3,6 +3,7 @@
     import magnifier from 'component/magnifier'
     import utils from 'framework/utils'
     import msgItem from 'component/TerminalBox/msgItem'
+    import webcam from 'component/webcam'
     import * as d3 from 'd3';
 
     export default {
@@ -30,10 +31,6 @@
             serverUrl() {
                 return this.$store.state.serverUrl
             }
-        },
-        beforeMount() {
-            // 只会在浏览器执行
-            this.$options.components.webcam = () => import('component/webcam')
         },
         async mounted() {
             // TODO: 获取历史记录
@@ -304,7 +301,8 @@
         components: {
             imgStream,
             magnifier,
-            msgItem
+            msgItem,
+            webcam
         }
     }
 </script>

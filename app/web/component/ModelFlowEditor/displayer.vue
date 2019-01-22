@@ -57,6 +57,8 @@
 </script>
 <style lang="scss">
     .g6-displayer {
-        pointer-events: none;
+        > div {
+            pointer-events: none;
+        }
     }
 </style>

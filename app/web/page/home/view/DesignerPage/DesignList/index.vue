@@ -20,7 +20,7 @@
             </el-table-column>
             <el-table-column label="概览" width="230">
                 <template slot-scope="scope">
-                    <flow-displayer :flowData='scope.row.flowData' class="flow-wrap"></flow-displayer>
+                    <flow-displayer @click.native="gotoWatch(scope.row)" :flowData='scope.row.flowData' class="flow-wrap"></flow-displayer>
                 </template>
             </el-table-column>
             <el-table-column label="创建时间" width="180">
