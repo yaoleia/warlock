@@ -29,10 +29,10 @@
                             </transition-group>
                         </el-form-item>
                     </el-form>
-                    <div class="params-title" v-if="selectedModel.plugin_id === '083daf3e8a200971a2ba8891f91a57c1'">
-                        <div class="params-title"><i class="el-icon-info"></i> pusher</div>
-                        <div v-for="o in output" :key='o'>{{o}}</div>
-                    </div>
+                    <ul class="params-pusher" v-if="selectedModel.plugin_id === '083daf3e8a200971a2ba8891f91a57c1'">
+                        <li class="params-title"><i class="el-icon-info"></i> dataHub</li>
+                        <li class="key-list" v-for="o in output" :key='o'>{{o}}</li>
+                    </ul>
                     <el-form @submit.native.prevent v-if='selectedModel.exec_outputs'>
                         <div class="params-title"><i class="el-icon-info"></i> exec_outputs</div>
                         <el-form-item v-for='(item,key) in selectedModel.exec_outputs' :key='key'>
@@ -160,7 +160,7 @@
 </script>
 <style lang="scss">
     .detail-pannel {
-        height: calc(100% - 182px);
+        height: calc(100% - 200px);
         position: absolute;
         right: 0px;
         z-index: 2;
@@ -252,6 +252,14 @@
                 background: #333;
                 color: #ddd;
                 border: none;
+            }
+            ul {
+                list-style: none;
+                .key-list {
+                    color: #bbb;
+                    font-size: 15px;
+                    margin: 5px 8px;
+                }
             }
         }
     }

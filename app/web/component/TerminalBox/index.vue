@@ -153,7 +153,7 @@
         bottom: 0;
         left: 200px;
         right: 260px;
-        height: 182px;
+        height: 200px;
         background: rgba($color: #333, $alpha: 0.9);
         line-height: 34px;
         padding: 5px 10px 5px 60px;
