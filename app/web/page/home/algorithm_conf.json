@@ -1,303 +1,286 @@
-{
-  "062381ad5a6f10f1b06ba85a36befbb8": {
-    "author": "liwen",
-    "class": "PutText",
-    "create_time": 1543987372,
-    "exec_outputs": {
-      "put_text_dst": {
-        "type": "python/name:numpy.ndarray"
-      }
-    },
+[
+  {
+    "super_type": "Algorithm",
+    "version": "1_0_0",
+    "plugin_id": "376f65e3198227d8185bcd3f123dff0c",
     "exec_params": {
       "raw_img": {
-        "require": true,
         "type": [
           "python/name:numpy.ndarray"
         ],
+        "require": true,
         "value": "None"
       }
     },
+    "module": "bgr_gray",
+    "exec_outputs": {
+      "BGRGray_gray": {
+        "type": "python/name:numpy.ndarray",
+        "show": true
+      }
+    },
+    "class": "BGRGray",
+    "author": "liwen",
     "init_params": {
       "param1": {
-        "require": true,
         "type": "str",
+        "require": true,
         "value": "test1"
       },
       "param2": {
-        "require": true,
         "type": "int",
+        "require": true,
         "value": 10
-      },
-      "word": {
-        "require": false,
-        "type": "str",
-        "value": "he he da"
       }
     },
-    "module": "put_text",
-    "plugin_id": "062381ad5a6f10f1b06ba85a36befbb8",
-    "super_type": "Algorithm",
     "type": "test_algorithm",
-    "version": "1_0_0"
+    "create_time": 1543987372
   },
-  "216d90493116ecf0d8cb893631b4019b": {
-    "author": "liwen",
-    "class": "InformPusher",
-    "create_time": 154234683346,
-    "exec_outputs": {
-      "socket_io": {
-        "type": "socket"
+  {
+    "super_type": "HardWare",
+    "version": "0_0_1",
+    "plugin_id": "7e9cf2cdd97cf7651959683bc715bdda",
+    "exec_params": {
+      "trigger_status": {
+        "type": "bool",
+        "require": true,
+        "value": false
       }
     },
+    "module": "logitech_camera",
+    "exec_outputs": {
+      "image_data": {
+        "type": "python/name:numpy.ndarray",
+        "show": true
+      }
+    },
+    "class": "LogitechCamera",
+    "author": "liwen",
+    "init_params": {
+      "cache_path": {
+        "type": "str",
+        "require": true,
+        "value": "/Users/admin/dev/shm/tmp/camera_cache/{request_time}.bmp"
+      },
+      "width_preview": {
+        "type": "int",
+        "require": true,
+        "value": 608
+      },
+      "cam_num": {
+        "type": "int",
+        "require": true,
+        "value": 0
+      },
+      "height_preview": {
+        "type": "int",
+        "require": true,
+        "value": 406
+      }
+    },
+    "type": "Camera",
+    "create_time": 154234683346
+  },
+  {
+    "super_type": "HardWare",
+    "version": "x",
+    "plugin_id": "902f9cc7902eb6a03663fa4d771b5e66",
+    "exec_params": {
+      "trigger_source": {
+        "type": "bool",
+        "require": true,
+        "value": false
+      }
+    },
+    "module": "virtual_camera",
+    "exec_outputs": {
+      "image_data": {
+        "type": "python/name:numpy.ndarray",
+        "show": true
+      }
+    },
+    "class": "VirtualCamera",
+    "author": "liwen",
+    "init_params": {
+      "source_path": {
+        "type": "str",
+        "require": true,
+        "value": "/dev/shm/tmp/camera_cache"
+      },
+      "gather_mode": {
+        "type": "str",
+        "require": false,
+        "value": "in_order"
+      }
+    },
+    "type": "Camera",
+    "create_time": 154234683346
+  },
+  {
+    "super_type": "Algorithm",
+    "version": "0_0_1",
+    "plugin_id": "794b973a5c12359a09e41e678f8fe378",
+    "exec_params": {
+      "origin_img": {
+        "type": "python/name:numpy.ndarray",
+        "require": true,
+        "value": "None"
+      }
+    },
+    "module": "model",
+    "exec_outputs": {
+      "model_kpts": {
+        "type": "list",
+        "show": true
+      }
+    },
+    "class": "Detector",
+    "author": "ZhengPengkun",
+    "init_params": {
+      "thre_point": {
+        "type": "float",
+        "require": true,
+        "value": 0.5
+      },
+      "model_path": {
+        "type": "str",
+        "require": true,
+        "value": "/home/ubuntu/Code/zongshen/engine/plugins/Algorithm/Detection/model_0_0_1/encrypted_model.pt"
+      },
+      "boxsize": {
+        "type": "int",
+        "require": true,
+        "value": 1024
+      },
+      "key_path": {
+        "type": "str",
+        "require": true,
+        "value": "/home/ubuntu/Code/zongshen/engine/plugins/Algorithm/Detection/model_0_0_1/key"
+      }
+    },
+    "type": "Detection",
+    "create_time": 1543987372
+  },
+  {
+    "super_type": "Other",
+    "module": "data_hub",
+    "version": "x",
     "exec_params": {
       "push_info": {
-        "require": true
+        "require": true,
+        "value": null
       }
     },
     "init_params": {
-      "event": {
+      "interval_time": {
+        "type": "float",
         "require": true,
+        "value": 1
+      },
+      "event": {
         "type": "str",
+        "require": true,
         "value": "server_response"
       },
-      "host": {
-        "require": true,
-        "type": "str",
-        "value": "127.0.0.1"
-      },
-      "interval_time": {
-        "require": true,
-        "type": "float",
-        "value": 0.1
-      },
       "namespace": {
-        "require": true,
         "type": "str",
-        "value": "/push"
-      },
-      "port": {
         "require": true,
-        "type": "int",
-        "value": 5002
+        "value": "/push"
       }
     },
-    "module": "inform_pusher",
-    "plugin_id": "216d90493116ecf0d8cb893631b4019b",
-    "super_type": "Other",
-    "type": "Pusher",
-    "version": "x"
-  },
-  "258c5cd2445372409cdd9d093d615f48": {
+    "class": "InformPusher",
     "author": "liwen",
-    "class": "SimulateTrigger",
     "create_time": 154234683346,
+    "type": "Pusher",
+    "plugin_id": "083daf3e8a200971a2ba8891f91a57c1"
+  },
+  {
+    "super_type": "HardWare",
+    "version": "x",
+    "plugin_id": "6167e7abdf9a8bfc0c7733539062205c",
+    "module": "simulate_trigger",
     "exec_outputs": {
       "trigger_status": {
         "type": "bool"
       }
     },
-    "init_param": {
+    "class": "SimulateTrigger",
+    "author": "liwen",
+    "init_params": {
       "interval_time": {
-        "require": true,
         "type": "float",
+        "require": true,
         "value": 1
       }
     },
-    "module": "simulate_trigger",
-    "plugin_id": "258c5cd2445372409cdd9d093d615f48",
-    "super_type": "HardWare",
     "type": "trigger",
-    "version": "x"
+    "create_time": 154234683346
   },
-  "57f678706abaf4dfd7788fa6fa52ba68": {
-    "author": "liwen",
-    "class": "GetRotationMatrix2D",
-    "create_time": 1543987372,
-    "exec_outputs": {
-      "BGRGray_gray": {
-        "type": "python/name:numpy.ndarray"
-      }
-    },
+  {
+    "super_type": "Algorithm",
+    "module": "img_augment",
+    "version": "0_0_1",
+    "plugin_id": "babf4b74f56163f22d801745d6578345",
     "exec_params": {
-      "raw_img": {
+      "img": {
+        "type": "python/name:numpy.ndarray",
         "require": true,
-        "type": [
-          "python/name:numpy.ndarray"
-        ],
         "value": "None"
       }
     },
     "init_params": {
-      "param1": {
+      "scale": {
+        "type": "float",
         "require": true,
-        "type": "str",
-        "value": "test1"
-      },
-      "param2": {
+        "value": 1
+      }
+    },
+    "exec_outputs": {
+      "augment_result": {
+        "show": true,
+        "type": "python/name:numpy.ndarray"
+      }
+    },
+    "type": "Tools",
+    "author": "ZhengPengkun",
+    "class": "Compose",
+    "create_time": 1543987372
+  },
+  {
+    "super_type": "Algorithm",
+    "version": "1_0_0",
+    "plugin_id": "6439fd636d62298a8461994e92d48ee4",
+    "exec_params": {
+      "raw_img": {
+        "type": [
+          "python/name:numpy.ndarray"
+        ],
         "require": true,
-        "type": "int",
-        "value": 10
+        "value": "None"
       }
     },
     "module": "get_rotation_matrix2d",
-    "plugin_id": "57f678706abaf4dfd7788fa6fa52ba68",
-    "super_type": "Algorithm",
-    "type": "test_algorithm",
-    "version": "1_0_0"
-  },
-  "5b90bfe6ecfb09bbe81affcf3be22b10": {
-    "author": "liwen",
-    "class": "ImgBinary",
-    "create_time": 1543987372,
-    "exec_outputs": {
-      "ImgBinary_im_fixed": {
-        "type": "python/name:numpy.ndarray"
-      }
-    },
-    "exec_params": {
-      "raw_img": {
-        "require": true,
-        "type": [
-          "python/name:numpy.ndarray"
-        ],
-        "value": "None"
-      }
-    },
-    "init_params": {
-      "param1": {
-        "require": true,
-        "type": "str",
-        "value": "test1"
-      },
-      "param2": {
-        "require": true,
-        "type": "int",
-        "value": 10
-      }
-    },
-    "module": "img_binary",
-    "plugin_id": "5b90bfe6ecfb09bbe81affcf3be22b10",
-    "super_type": "Algorithm",
-    "type": "test_algorithm",
-    "version": "1_0_0"
-  },
-  "75f937d5af573fb11796a52938185f3d": {
-    "author": "liwen",
-    "class": "WarpAffine",
-    "create_time": 1543987372,
-    "exec_outputs": {
-      "warpAffine_dst": {
-        "type": "python/name:numpy.ndarray"
-      }
-    },
-    "exec_params": {
-      "raw_img": {
-        "require": true,
-        "type": [
-          "python/name:numpy.ndarray"
-        ],
-        "value": "None"
-      }
-    },
-    "init_params": {
-      "param1": {
-        "require": true,
-        "type": "str",
-        "value": "test1"
-      },
-      "param2": {
-        "require": true,
-        "type": "int",
-        "value": 10
-      }
-    },
-    "module": "warpaffine",
-    "plugin_id": "75f937d5af573fb11796a52938185f3d",
-    "super_type": "Algorithm",
-    "type": "test_algorithm",
-    "version": "1_0_0"
-  },
-  "acb0b6544d5ba772d907246fd12ddd40": {
-    "author": "liwen",
-    "class": "BGRGray",
-    "create_time": 1543987372,
     "exec_outputs": {
       "BGRGray_gray": {
-        "type": "python/name:numpy.ndarray"
+        "type": "python/name:numpy.ndarray",
+        "show": true
       }
     },
-    "exec_params": {
-      "raw_img": {
-        "require": true,
-        "type": [
-          "python/name:numpy.ndarray"
-        ],
-        "value": "None"
-      }
-    },
+    "class": "GetRotationMatrix2D",
+    "author": "liwen",
     "init_params": {
       "param1": {
-        "require": true,
         "type": "str",
+        "require": true,
         "value": "test1"
       },
       "param2": {
-        "require": true,
         "type": "int",
+        "require": true,
         "value": 10
       }
     },
-    "module": "bgr_gray",
-    "plugin_id": "acb0b6544d5ba772d907246fd12ddd40",
-    "super_type": "Algorithm",
     "type": "test_algorithm",
-    "version": "1_0_0"
-  },
-  "b7acc31b7535b5265e296ee2fcef76d5": {
-    "author": "liwen",
-    "class": "LogitechCamera",
-    "create_time": 154234683346,
-    "exec_outputs": {
-      "image_data": {
-        "type": "python/name:numpy.ndarray"
-      },
-      "image_path": {
-        "type": "file_path"
-      }
-    },
-    "exec_params": {
-      "trigger_status": {
-        "require": true,
-        "type": "bool",
-        "value": false
-      }
-    },
-    "init_params": {
-      "cache_path": {
-        "require": true,
-        "type": "str",
-        "value": "/Users/admin/dev/shm/tmp/camera_cache/{request_time}.bmp"
-      },
-      "cam_num": {
-        "require": true,
-        "type": "int",
-        "value": 0
-      },
-      "height_preview": {
-        "require": true,
-        "type": "int",
-        "value": 406
-      },
-      "width_preview": {
-        "require": true,
-        "type": "int",
-        "value": 608
-      }
-    },
-    "module": "logitech_camera",
-    "plugin_id": "b7acc31b7535b5265e296ee2fcef76d5",
-    "super_type": "HardWare",
-    "type": "Camera",
-    "version": "0_0_1"
+    "create_time": 1543987372
   }
-}
+]

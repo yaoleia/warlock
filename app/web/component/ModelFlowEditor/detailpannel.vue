@@ -29,7 +29,7 @@
                             </transition-group>
                         </el-form-item>
                     </el-form>
-                    <div class="params-title" v-if="selectedModel.module === 'inform_pusher'">
+                    <div class="params-title" v-if="selectedModel.plugin_id === '083daf3e8a200971a2ba8891f91a57c1'">
                         <div class="params-title"><i class="el-icon-info"></i> pusher</div>
                         <div v-for="o in output" :key='o'>{{o}}</div>
                     </div>

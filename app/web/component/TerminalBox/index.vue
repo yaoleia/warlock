@@ -152,7 +152,7 @@
         position: absolute;
         bottom: 0;
         left: 200px;
-        right: 200px;
+        right: 260px;
         height: 182px;
         background: rgba($color: #333, $alpha: 0.9);
         line-height: 34px;
