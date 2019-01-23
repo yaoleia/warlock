@@ -52,14 +52,13 @@ axios.interceptors.response.use(
     console.log('err' + error) // for debug
     Message({
       message: error.message,
-      type: 'error',
-      duration: 5000
+      type: 'error'
     })
     return Promise.reject(error)
   }
 )
 
-axios.defaults.timeout = 5000;
+axios.defaults.timeout = 10000;
 axios.defaults.xsrfHeaderName = 'x-csrf-token';
 axios.defaults.xsrfCookieName = 'csrfToken';
 export default {

@@ -39,7 +39,7 @@ module.exports = app => {
         'Content-Type': 'application/json; charset=UTF-8'
       }
     },
-    timeout: 5000
+    timeout: 10000
   };
 
   exports.vuessr = {
