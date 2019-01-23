@@ -48,15 +48,6 @@
                         // 如果是新添加模块,则把注册数据安到model上
                         if (!model.module) {
                             const params = _.cloneDeep(this.params);
-                            const outputs = params.exec_outputs;
-                            for (const key in outputs) {
-                                if (outputs.hasOwnProperty(key)) {
-                                    const output = outputs[key];
-                                    if (output.show !== undefined) {
-                                        output.show = true;
-                                    }
-                                }
-                            }
                             Object.assign(model, { ...params, anchor: this.anchor.map(a => a[2]) })
                         }
 
