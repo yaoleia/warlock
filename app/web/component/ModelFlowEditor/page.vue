@@ -17,7 +17,7 @@
         border: 1px solid #444;
         height: 100%;
         margin-left: 200px;
-        margin-right: 200px;
+        margin-right: 260px;
         canvas {
             display: block;
         }

@@ -11,7 +11,8 @@ export default {
             selectedModel: {}, // 当前选中项数据模型
             curZoom: 1, // 当前缩放比率
             minZoom: 0.5, // 最小缩放比率
-            maxZoom: 2 // 最大缩放比率
+            maxZoom: 2, // 最大缩放比率
+            timer: null
         };
     },
     methods: {
@@ -134,13 +135,20 @@ export default {
 
             flow.on('afterchange', ev => {
                 this.deleteTestTask();
-                this.fixEvPramas();
-                const { action, item } = ev;
-                if (item && item.model) {
-                    this.pushMsg(item.model, action)
-                    return;
+                if (this.timer) {
+                    clearTimeout(this.timer);
+                    this.timer = null;
                 }
-                this.pushMsg(action)
+                this.timer = setTimeout(() => {
+                    this.fixEvPramas();
+                    const { action, item } = ev;
+                    if (item && item.model) {
+                        this.pushMsg(item.model, action)
+                        return;
+                    }
+                    this.pushMsg(action)
+                    this.timer = null;
+                }, 200);
             });
 
             let anchorItem = null;
@@ -224,6 +232,7 @@ export default {
         },
         fixEvPramas() {
             const nodes = this.flow.getNodes();
+            const arr = [];
             nodes.forEach(n => {
                 const model = n.getModel();
                 const object = { ...model.exec_outputs, ...model.exec_params };
@@ -231,9 +240,13 @@ export default {
                     if (object.hasOwnProperty(key)) {
                         const element = object[key];
                         element.list = [];
+                        if (element.show && this.isToPusher(n)) {
+                            arr.push(`${key}@${model.id}`)
+                        }
                     }
                 }
             })
+            this.output = [...this.DEFAULT_OUTPUTS, ...arr];
             const edges = this.flow.getEdges();
             edges.forEach(e => {
                 const smodel = e.source.getModel();
@@ -248,6 +261,18 @@ export default {
                 smodel.exec_outputs[sName].list.push(toSource);
                 tmodel.exec_params[tName].list.push(toTarget);
             })
+        },
+        isToPusher(n) {
+            // 判断是否最终连接了pusher
+            if (n.getModel().module === 'inform_pusher') return true;
+            const edges = n.getEdges().filter(edge => edge.target !== n);
+            let flag = false;
+            edges.map(edge => {
+                if (this.isToPusher(edge.target)) {
+                    flag = true;
+                }
+            });
+            return flag;
         },
         changeSelected(item) {
             this.flow.clearSelected();

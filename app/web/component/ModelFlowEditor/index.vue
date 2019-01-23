@@ -13,9 +13,9 @@
         </div>
         <div class="bottom-container">
             <item-pannel ref="itempannel" v-show="!readMode" />
-            <detail-pannel ref='detailpannel' :readMode='readMode' :selectedModel='selectedModel' @updateGraph='updateGraph' @toggleGrid='toggleGrid' />
+            <detail-pannel ref='detailpannel' :output='output' :readMode='readMode' :selectedModel='selectedModel' @changeOutput='fixEvPramas' @updateGraph='updateGraph' @toggleGrid='toggleGrid' />
             <navigator :cur-zoom="curZoom" :min-zoom="minZoom" :max-zoom="maxZoom" @change-zoom="changeZoom">
-                <div ref="minimap" slot="minimap"></div>
+                <div ref="minimap" slot="minimap" class="minimap"></div>
             </navigator>
             <page ref="page" @keydown.native.ctrl.192='ctrl192' />
             <terminal-box :runDesign.sync='runDesign' @stop='deleteTestTask' @start='creatTestTask' :taskId='taskId' :msgList.sync='msgList' :showTerminal.sync='showTerminal' :terminalIs='terminalIs' :runMsgList='runMsgList'></terminal-box>
@@ -52,6 +52,7 @@
         extends: Editor,
         data() {
             return {
+                DEFAULT_OUTPUTS: ['ts', 'status'],
                 dialogOpened: false,
                 showLayout: false,
                 taskId: '',

@@ -44,8 +44,8 @@
 </script>
 <style lang="scss">
     .navigator {
-        width: 200px;
-        height: 182px;
+        width: 260px;
+        height: 200px;
         position: absolute;
         bottom: 0px;
         right: 0px;
@@ -58,6 +58,7 @@
         .minimap {
             width: 200px;
             height: 120px;
+            margin: 10px auto;
         }
         .g6-editor-minimap-container {
             background: none !important;

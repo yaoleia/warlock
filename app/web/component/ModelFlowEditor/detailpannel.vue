@@ -4,20 +4,24 @@
             <div class="pannel-title">插件详情</div>
             <div class="block-container">
                 <div v-if="selectedModel && selectedModel.module">
-                    <div class="title">{{selectedModel.shape}}</div>
+                    <div class="title">{{selectedModel.module}} <i>({{selectedModel.id}})</i></div>
                     <el-form @submit.native.prevent v-if='selectedModel.init_params'>
                         <div class="params-title"><i class="el-icon-info"></i> init_params</div>
                         <el-form-item v-for='(item,key) in selectedModel.init_params' :key='key'>
-                            <div class="params-name"><span v-if="item.require" class="red">*</span> {{key}}:</div>
+                            <div class="params-name">
+                                <span><strong v-if="item.require" class="red">*</strong> {{key}}:</span>
+                            </div>
                             <component :is='typeOfComponent(item.value)' v-model="item.value" :disabled="readMode"></component>
                         </el-form-item>
                     </el-form>
                     <el-form @submit.native.prevent v-if='selectedModel.exec_params'>
                         <div class="params-title"><i class="el-icon-info"></i> exec_params</div>
                         <el-form-item v-for='(item,key) in selectedModel.exec_params' :key='key'>
-                            <div class="params-name"><span v-if="item.require" class="red">*</span> {{key}}</div>
+                            <div class="params-name">
+                                <span><strong v-if="item.require" class="red">*</strong> {{key}}</span>
+                            </div>
                             <transition-group name="fade">
-                                <ul class="connect" v-if='item.list' v-for="i in item.list" :key="i.id">
+                                <ul class="connect" v-for="i in item.list" :key="i.id">
                                     <li><i class="el-icon-arrow-left"></i>{{i.name}}</li>
                                     <li>id: {{i.id}}</li>
                                     <li>module: {{i.module}}</li>
@@ -25,12 +29,21 @@
                             </transition-group>
                         </el-form-item>
                     </el-form>
+                    <div class="params-title" v-if="selectedModel.module === 'inform_pusher'">
+                        <div class="params-title"><i class="el-icon-info"></i> pusher</div>
+                        <div v-for="o in output" :key='o'>{{o}}</div>
+                    </div>
                     <el-form @submit.native.prevent v-if='selectedModel.exec_outputs'>
                         <div class="params-title"><i class="el-icon-info"></i> exec_outputs</div>
                         <el-form-item v-for='(item,key) in selectedModel.exec_outputs' :key='key'>
-                            <div class="params-name"><span v-if="item.require" class="red">*</span> {{key}}</div>
+                            <div class="params-name">
+                                <el-checkbox v-if="item.show!==undefined" v-model="item.show" @change="$emit('changeOutput')">
+                                    <span><strong v-if="item.require" class="red">*</strong> {{key}}@{{selectedModel.id}}</span>
+                                </el-checkbox>
+                                <span v-else><strong v-if="item.require" class="red">*</strong> {{key}}</span>
+                            </div>
                             <transition-group name="fade">
-                                <ul class="connect" v-if='item.list' v-for="i in item.list" :key="i.id">
+                                <ul class="connect" v-for="i in item.list" :key="i.id">
                                     <li><i class="el-icon-arrow-right"></i>{{i.name}}</li>
                                     <li>id: {{i.id}}</li>
                                     <li>module: {{i.module}}</li>
@@ -102,7 +115,7 @@
                 checkedBox: []
             };
         },
-        props: ['selectedModel', 'readMode'],
+        props: ['selectedModel', 'readMode', 'output'],
         computed: {
             inputingLabel: {
                 get() {
@@ -151,14 +164,14 @@
         position: absolute;
         right: 0px;
         z-index: 2;
-        width: 200px;
+        width: 260px;
         opacity: 0;
         &.fade {
             opacity: 1;
             transition: 0.2s linear;
         }
         .connect {
-            color: #ccc;
+            color: #777;
             border: 1px solid #444;
             line-height: 24px;
             margin-bottom: 10px;
@@ -182,6 +195,8 @@
             padding: 4px;
         }
         .params-name {
+            display: flex;
+            justify-content: space-between;
             color: #878d99;
             .red {
                 font-size: 18px;
@@ -220,7 +235,11 @@
             .title {
                 font-size: 17px;
                 color: #ff8800;
-                padding-bottom: 30px;
+                padding-bottom: 10px;
+                i {
+                    font-size: 13px;
+                    color: #777;
+                }
             }
             input {
                 background: none;
