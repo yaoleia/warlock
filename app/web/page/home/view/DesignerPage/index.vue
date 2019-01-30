@@ -77,7 +77,7 @@
                                     ['L', x + borderRadius, y],
                                     ['A', borderRadius, borderRadius, 0, 0, 0, x, y + borderRadius]
                                 ],
-                                fill: this.params.plugin_id === '083daf3e8a200971a2ba8891f91a57c1' ? '#ff8800' : this.color
+                                fill: this.params.plugin_id === 'd6b4acf7ef8a232f68f59e1f2928926f' ? '#ff8800' : this.color
                             }
                         });
 

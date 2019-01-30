@@ -29,7 +29,7 @@
                             </transition-group>
                         </el-form-item>
                     </el-form>
-                    <ul class="params-pusher" v-if="selectedModel.plugin_id === '083daf3e8a200971a2ba8891f91a57c1'">
+                    <ul class="params-pusher" v-if="selectedModel.plugin_id === 'd6b4acf7ef8a232f68f59e1f2928926f'">
                         <li class="params-title"><i class="el-icon-info"></i> dataHub</li>
                         <li class="key-list" v-for="o in output" :key='o'>{{o}}</li>
                     </ul>

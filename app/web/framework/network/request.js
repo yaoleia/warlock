@@ -58,7 +58,7 @@ axios.interceptors.response.use(
   }
 )
 
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 20000;
 axios.defaults.xsrfHeaderName = 'x-csrf-token';
 axios.defaults.xsrfCookieName = 'csrfToken';
 export default {

@@ -1,32 +1,33 @@
 const io = require('socket.io-client');
 module.exports = app => {
   return async function() {
-    const path = this.args[0];
+    const taskId = this.args[0];
     if (this.socket.backendClient) {
       this.socket.backendClient();
       this.socket.backendClient = null
     }
 
-    if (!path) return;
+    if (!taskId) return;
 
     const serverUrl = app.config.serverUrl;
-    const wsServerUrl = `${serverUrl.replace('5000', '5002')}/${path}`;
 
     if (!this.socket.backendClient) {
       this.socket.backendClient = ioClient(
-        wsServerUrl,
+        serverUrl,
+        taskId,
         this.socket
       );
     }
 
-    this.socket.emit('res', `Hi! I've got your message: ${path}`);
+    this.socket.emit('res', `Hi! I've got your message: ${taskId}`);
   };
 };
 
-function ioClient(addr, socket) {
+function ioClient(addr, taskId, socket) {
   let client = io(addr); // 实例pusher的ws
   client.on('connect', () => {
     console.log(`==== ${addr} ${socket.id} connect! ====`);
+    client.emit('join', { task_id: taskId })
   });
 
   client.on('server_response', message => {

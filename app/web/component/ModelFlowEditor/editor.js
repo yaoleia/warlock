@@ -264,7 +264,7 @@ export default {
         },
         isToPusher(n) {
             // 判断是否最终连接了pusher
-            if (n.getModel().plugin_id === '083daf3e8a200971a2ba8891f91a57c1') return true;
+            if (n.getModel().plugin_id === 'd6b4acf7ef8a232f68f59e1f2928926f') return true;
             const edges = n.getEdges().filter(edge => edge.target !== n);
             let flag = false;
             edges.map(edge => {
