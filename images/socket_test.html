@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SocketIO</title>
+    <style type="text/css">
+        input {
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 7px 0px 7px 5px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s
+        }
+
+        input:focus {
+            border-color: #66afe9;
+            outline: 0;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
+        }
+
+        .session_con {
+            width: 80%;
+            height: 100%;
+            border: 1px solid #666;
+            margin: 50px auto 0;
+            background: #f9f9f9;
+        }
+
+        .session_input {
+            width: auto;
+            height: 800px;
+            border: 1px solid #666;
+            background: #fff;
+            margin: 10px auto 0;
+            overflow: auto;
+        }
+
+        .start-button {
+            /* 按钮美化 */
+            width: 270px;
+            /* 宽度 */
+            height: 40px;
+            /* 高度 */
+            border-width: 0px;
+            /* 边框宽度 */
+            border-radius: 3px;
+            /* 边框半径 */
+            background: #ffbd00;
+            /* 背景颜色 */
+            cursor: pointer;
+            /* 鼠标移入按钮范围时出现手势 */
+            outline: none;
+            /* 不显示轮廓线 */
+            font-family: Microsoft YaHei;
+            /* 设置字体 */
+            color: white;
+            /* 字体颜色 */
+            font-size: 17px;
+            /* 字体大小 */
+        }
+
+        .start-button:hover {
+            /* 鼠标移入按钮范围时改变颜色 */
+            background: #5599FF;
+        }
+
+        .stop-button {
+            /* 按钮美化 */
+            width: 270px;
+            /* 宽度 */
+            height: 40px;
+            /* 高度 */
+            border-width: 0px;
+            /* 边框宽度 */
+            border-radius: 3px;
+            /* 边框半径 */
+            background: #ff0016;
+            /* 背景颜色 */
+            cursor: pointer;
+            /* 鼠标移入按钮范围时出现手势 */
+            outline: none;
+            /* 不显示轮廓线 */
+            font-family: Microsoft YaHei;
+            /* 设置字体 */
+            color: white;
+            /* 字体颜色 */
+            font-size: 17px;
+            /* 字体大小 */
+        }
+
+        .stop-button:hover {
+            /* 鼠标移入按钮范围时改变颜色 */
+            background: #5599FF;
+        }
+
+        .server_response {
+            margin: 10px;
+        }
+
+        .server_response span {
+            display: inline-block;
+            background: #0181cc;
+            border-radius: 10px;
+            color: #fff;
+            padding: 5px 10px;
+            word-break: break-word;
+        }
+
+        .host_t span {
+            background: #ef4342;
+            color: #fff;
+        }
+
+        .port_t span {
+            background: #ef16d8;
+            color: #fff;
+        }
+
+        .event_t span {
+            background: #6cef35;
+            color: #fff;
+        }
+
+        .namespace_t span {
+            background: #42eaef;
+            color: #fff;
+        }
+
+        .btns {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+
+        .btns input {
+            flex: 1;
+            margin: 10px;
+        }
+
+        .param_input {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+
+        .param_input input {
+            flex: 1;
+            margin: 10px;
+        }
+
+        .param_input>div {
+            margin: 10px 0;
+        }
+
+        .img-xys {
+            display: inline-block;
+            height: auto;
+            max-width: 100%;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+
+        img {
+            width: auto;
+            height: auto;
+        }
+    </style>
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/socket.io/1.5.1/socket.io.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //propertychange监听input里面的字符变化,属性改变事件
+            $('input').bind('input propertychange', function () {
+                var $this = $(this);
+                console.log($this);
+                var text_length = $this.val().length;//获取当前文本框的长度
+                var current_width = parseInt(text_length) * 16;//该16是改变前的宽度除以当前字符串的长度,算出每个字符的长度
+                $this.css("width", current_width + "px");
+            });
+        })
+
+        // 建立socket连接，等待服务器“推送”数据，用回调函数更新图表
+        var socket;
+        var start_connect = function () {
+            var response_content = document.getElementById("response_content");
+            var event = document.getElementById("event");
+            var namespace = document.getElementById("namespace");
+            var host = document.getElementById("host");
+            var port = document.getElementById("port");
+            socket = io.connect(location.protocol + '//' + '10.18.92.184' + ':' + port.value + '/');
+            socket.emit('join', { 'task_id': 'ccda5c164a5741e0b87fef7ada8ca180' });
+            socket.on('server_response', function (res) {
+                console.log(res);
+                var json_data = JSON.stringify(res.data);
+                response_content.innerHTML = response_content.innerHTML + '<div class="server_response"><span>Response :' + json_data + '</span></div>';
+
+                var dd = res['data'];
+                var image_data = null;
+                for (var meta in dd) {
+                    var reg = /^http.*(gif|png|jpe?g|bmp)$/gi;
+                    var str = dd[meta].toString();
+                    var re_result = str.match(reg);
+                    if (re_result == null) {
+                        continue
+                    } else {
+                        image_data = image_data + '<img class="img-xys" src="' + re_result + '" />';
+                    }
+
+                }
+                response_content.innerHTML = response_content.innerHTML +
+                    '<div class="container">' + image_data + '</div>';
+
+            });
+
+        };
+
+        var stop_connect = function () {
+            socket.close()
+        };
+
+
+    </script>
+</head>
+
+<body>
+    <div class="session_con">
+        <div class="session_input" id="response_content">
+            <div class="server_response"><span id="server_response">Response：等待连接!</span></div>
+        </div>
+        <div class="param_input">
+
+            <div class="host_t"><span id="h">Host:</span>
+                <input type="text" class="host" id="host" value="0.0.0.0" size="30%">
+            </div>
+            <div class="port_t"><span id="p">Port:</span>
+                <input type="text" class="port" id="port" value=5000></div>
+
+            <div class="event_t"><span id="e">Event:</span>
+                <input type="text" class="event" id="event" value="server_response"></div>
+
+            <div class="namespace_t"><span id="n">Namespace:</span>
+                <input type="text" class="namespace" id="namespace" value="yaoniming3000">
+            </div>
+        </div>
+
+        <div class="btns">
+            <input type="button" value="开始" onclick="start_connect()" class="start-button" id="start" />
+            <input type="button" value="停止" onclick="stop_connect()" class="stop-button" id="stop" />
+        </div>
+
+    </div>
+</body>
+
+</html>
