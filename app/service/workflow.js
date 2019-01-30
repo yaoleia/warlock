@@ -12,7 +12,9 @@ class WorkflowService extends Service {
         tasks,
         plugins;
       const p1 = this.ctx.http.get(`${this.serverUrl}/api/workflows`).then(resp => { workflows = resp })
-      const p2 = this.ctx.service.task.getTasks().then(resp => { tasks = resp })
+      const p2 = this.ctx.service.task.getTasks().then(resp => {
+        tasks = resp.map(t => t.task_id)
+      })
       const p3 = this.ctx.service.plugin.getPluginList().then(resp => { plugins = resp.map(r => r.module) })
       await Promise.all([p1, p2, p3])
 

@@ -24,22 +24,25 @@ module.exports = app => {
 };
 
 function ioClient(addr, taskId, socket) {
-  let client = io(`${addr}/`); // 实例pusher的ws
-  client.on('connect', () => {
-    console.log(`==== ${addr} ${socket.id} connect! ====`);
-    client.emit('join', { task_id: taskId })
-    client.on('server_response', message => {
-      // 转发pusher到warlock前端
-      socket.emit('msg', message.data);
-      console.log(JSON.stringify(message))
-    });
+  let client = io(addr); // 实例pusher的ws
 
-    client.on('disconnect', () => {
-      client.off('connect_error')
-      client.close();
-      client = null;
-      console.log('websocket successfully closed');
-    });
+  client.on('server_response', message => {
+    // 转发pusher到warlock前端
+    console.log(JSON.stringify(message))
+    socket.emit('msg', message.data);
+  });
+
+
+  client.on('connect', () => {
+    client.emit('join', { task_id: taskId })
+    console.log(`==== ${addr} ${client.id} connect ${taskId} success ! ====`);
+  });
+
+  client.on('disconnect', () => {
+    client.off('connect_error')
+    client.close();
+    client = null;
+    console.log('websocket successfully closed');
   });
 
   client.on('connect_error', () => {
