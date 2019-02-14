@@ -16,11 +16,13 @@
 
 <script>
     import msgItem from 'component/TerminalBox/msgItem'
+    import io from 'socket.io-client'
     export default {
         data() {
             return {
                 onHover: false,
-                active: null
+                active: null,
+                ws: null
             };
         },
         props: ['showTerminal', 'runDesign', 'taskId', 'runMsgList'],
@@ -34,6 +36,36 @@
             },
             msgClick(item) {
                 this.active = item;
+            },
+            stopWsConnection() {
+                if (this.ws) {
+                    this.ws.close()
+                    this.ws = null
+                }
+            },
+            startWsConnection() {
+                const ws = io(this.serverUrl, {
+                    transports: ['websocket']
+                })
+
+                ws.on('connect', () => {
+                    ws.emit('join', { task_id: this.taskId })
+                    console.log('test task successfully connected !')
+                })
+
+                ws.on('server_response', message => {
+                    const data = message.data;
+                    data.act = false;
+                    this.runMsgList.push(data)
+                    if (this.onHover) return;
+                    this.active = data;
+                });
+                this.ws = ws
+            }
+        },
+        computed: {
+            serverUrl() {
+                return this.$store.state.serverUrl
             }
         },
         watch: {
@@ -45,12 +77,11 @@
             taskId: {
                 handler(id, oldId) {
                     if (!oldId && !id) return;
-                    window.ws.off('msg').emit('chat', id).on('msg', m => {
-                        m.act = false;
-                        this.runMsgList.push(m)
-                        if (this.onHover) return;
-                        this.active = m;
-                    })
+                    if (id) {
+                        this.startWsConnection()
+                    } else {
+                        this.stopWsConnection()
+                    }
                     this.$message({
                         type: 'success',
                         message: id ? '启动成功！' : '关闭成功！'

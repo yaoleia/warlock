@@ -20,3 +20,8 @@ export function deleteTask(workflowid) {
     // 根据workflow删除task
     return axios.delete(`/api/task/${workflowid}`);
 }
+
+export function deleteTestTask(task_id) {
+    // 根据workflow删除task
+    return axios.delete(`/api/testtask/${task_id}`);
+}

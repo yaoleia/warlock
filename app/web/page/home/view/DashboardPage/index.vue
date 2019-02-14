@@ -5,6 +5,7 @@
     import msgItem from 'component/TerminalBox/msgItem'
     import webcam from 'component/webcam'
     import * as d3 from 'd3';
+    import io from 'socket.io-client'
 
     export default {
         data() {
@@ -24,7 +25,8 @@
                     width: 1,
                     height: 1
                 },
-                workflow: {}
+                workflow: {},
+                ws: null
             }
         },
         computed: {
@@ -129,8 +131,24 @@
             defectType(type) {
                 return utils.defectType(type)
             },
-            emitChat() {
-                window.ws.off('msg').emit('chat', this.workflow.task_id).on('msg', m => {
+            stopWsConnection() {
+                if (this.ws) {
+                    this.ws.close()
+                    this.ws = null
+                }
+            },
+            startWsConnection() {
+                const ws = io(this.serverUrl, {
+                    transports: ['websocket']
+                })
+
+                ws.on('connect', () => {
+                    ws.emit('join', { task_id: this.workflow.task_id })
+                    console.log('task successfully connected !')
+                })
+
+                ws.on('server_response', message => {
+                    const m = message.data;
                     if (this.switchCraft) {
                         this.curProduct = m
                     }
@@ -162,7 +180,15 @@
                             }
                         });
                     }
-                })
+                });
+                this.ws = ws;
+            },
+            emitChat() {
+                if (this.workflow.task_id) {
+                    this.startWsConnection()
+                } else {
+                    this.stopWsConnection()
+                }
             },
             listItemClick(p) {
                 this.switchCraft = false;

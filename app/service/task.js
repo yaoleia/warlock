@@ -44,16 +44,18 @@ module.exports = class ArticeService extends egg.Service {
 
   async deleteTask(params) {
     try {
+      if (params.task_id) {
+        const resp = await this.ctx.http.delete(`${this.serverUrl}/api/task/${params.task_id} `);
+        return resp;
+      }
       const workflow = await this.ctx.service.workflow.getWorkflow({ id: params.id })
       await this.ctx.http.delete(`${this.serverUrl}/api/task/${workflow.task_id}`);
-
       workflow.active = false;
       workflow.task_id = '';
       await this.ctx.service.workflow.updateWorkflow(workflow);
       return workflow;
     } catch (error) {
-      const resp = await this.ctx.http.delete(`${this.serverUrl}/api/task/${params.id} `);
-      return resp;
+      throw error;
     }
   }
 

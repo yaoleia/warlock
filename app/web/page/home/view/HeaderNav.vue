@@ -59,8 +59,15 @@
         },
         methods: {
             async logout() {
-                await this.$request.account.logout();
-                window.location.href = '/index/login';
+                const p = await this.$confirm('确认退出登录?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
+                if (p) {
+                    await this.$request.account.logout();
+                    window.location.href = '/index/login';
+                }
             },
             slider() { }
         },

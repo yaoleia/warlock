@@ -19,6 +19,9 @@ module.exports = app => {
   // task任务
   router.resources('task', '/api/task', controller.task);
 
+  // 删除测试的task
+  router.delete('/api/testtask/:id', controller.task.deleteTestTask)
+
   router.get('/api/start', controller.home.start);
   router.get('/api/stop', controller.home.stop);
   router.post('/api/usb', controller.home.usb);

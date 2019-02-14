@@ -252,7 +252,7 @@
                 if (this.taskId === this.designItem.task_id) return;
                 const loading = this.loadingUi();
                 try {
-                    const deleteTask = await this.$request.task.deleteTask(this.taskId);
+                    await this.$request.task.deleteTestTask(this.taskId);
                     this.taskId = '';
                     this.runDesign = false;
                 } catch (error) {
