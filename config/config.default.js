@@ -29,7 +29,7 @@ module.exports = app => {
   exports.redis = {
     client: {
       port: 6379,
-      host: env.SERVER_HOST.replace(new RegExp(/[\S]+\//g), '') || '0.0.0.0',
+      host: env.SERVER_HOST ? env.SERVER_HOST.replace(new RegExp(/[\S]+\//g), '') : '0.0.0.0',
       password: '',
       db: 0,
     },
