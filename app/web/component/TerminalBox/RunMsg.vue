@@ -37,6 +37,7 @@
             }
         },
         mounted() {
+            this.cacheTaskId = this.taskId;
             window.ws.on('msg', data => {
                 data.act = false;
                 this.runMsgList.push(data)
@@ -62,14 +63,18 @@
                 handler(id, oldId) {
                     if (!oldId && !id) return;
                     if (id) {
+                        if (oldId) {
+                            window.ws.emit('leave', oldId)
+                        }
                         window.ws.emit('join', id)
                     } else {
                         window.ws.emit('leave', oldId)
                     }
                     this.$message({
                         type: 'success',
-                        message: id ? '启动成功！' : '关闭成功！'
+                        message: id && id === this.cacheTaskId ? '已连接正在运行的任务！' : id ? '开启成功！' : '关闭成功！'
                     })
+
                 },
                 immediate: true
             },

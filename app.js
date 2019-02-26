@@ -9,9 +9,11 @@ module.exports = async app => {
   const serverUrl = app.config.serverUrl;
   let tasks = await app.curl(`${serverUrl}/api/tasks`, {
     method: 'GET',
-    dataType: 'json'
+    dataType: 'json',
+    timeout: 20000
   });
   tasks.data.forEach(element => {
+    if (!element.task_flag) return;
     app.redis.subscribe(element.task_id);
   });
 };

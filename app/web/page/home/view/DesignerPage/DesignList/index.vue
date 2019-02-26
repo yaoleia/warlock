@@ -20,7 +20,7 @@
             </el-table-column>
             <el-table-column label="概览" width="230">
                 <template slot-scope="scope">
-                    <flow-displayer @click.native="gotoWatch(scope.row)" :flowData='scope.row.flowData' class="flow-wrap"></flow-displayer>
+                    <flow-displayer @click.native="jumpToWatch(scope.row)" :flowData='scope.row.flowData' class="flow-wrap"></flow-displayer>
                 </template>
             </el-table-column>
             <el-table-column label="创建时间" width="180">
@@ -45,12 +45,10 @@
                             <el-button title="runtime" type="primary" @click="jumperHandle(scope.row)">
                                 <v-icon name='wailian'></v-icon> runtime
                             </el-button>
-                            <router-link :to="{name: '新建流程',params: {_id:scope.row._id,flow: scope.row}}">
-                                <el-button title='修改' type="warning">
-                                    <v-icon name='xiugaitupian'></v-icon> 修改
-                                </el-button>
-                            </router-link>
-                            <el-button title="查看" type="info" @click="gotoWatch(scope.row)">
+                            <el-button title='修改' type="warning" :disabled="scope.row.active" @click='jumpToEdit(scope.row)'>
+                                <v-icon name='xiugaitupian'></v-icon> 修改
+                            </el-button>
+                            <el-button title="查看" type="info" @click="jumpToWatch(scope.row)">
                                 <v-icon name='065chakandingdan'></v-icon> 查看
                             </el-button>
                             <el-button title="更多按钮" type="text" @click="contextmenuHandle(scope.row,$event)">
@@ -151,6 +149,9 @@
             rightNav
         },
         methods: {
+            jumpToEdit(row) {
+                this.$router.push({ name: '新建流程', params: { _id: row._id, flow: row } })
+            },
             loadingUi() {
                 return this.$loading({
                     lock: true,
@@ -175,7 +176,7 @@
                     loading.close();
                 }
             },
-            gotoWatch(item) {
+            jumpToWatch(item) {
                 // 跳转到查看work-flow的displayer
                 this.$router.push({ name: '新建流程', params: { _id: item._id, flow: item, read: true } });
             },

@@ -253,7 +253,7 @@
                 const loading = this.loadingUi();
                 try {
                     await this.$request.task.deleteTestTask(this.taskId);
-                    this.taskId = '';
+                    this.taskId = this.designItem.task_id || '';
                     this.runDesign = false;
                 } catch (error) {
                     throw error;

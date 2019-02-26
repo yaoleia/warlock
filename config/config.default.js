@@ -5,8 +5,7 @@ const env = process.env;
 module.exports = app => {
   const exports = {};
 
-  // exports.serverUrl = `${env.SERVER_HOST}:${env.SERVER_PORT}` || 'http://0.0.0.0:5000';
-  exports.serverUrl = `${env.SERVER_HOST}:${env.SERVER_PORT}` || 'https://easy-mock.com/mock/5c25a7aac2518a5416c67ccd/designer';
+  exports.serverUrl = env.SERVER_HOST ? `${env.SERVER_HOST}:${env.SERVER_PORT}` : 'https://easy-mock.com/mock/5c25a7aac2518a5416c67ccd/designer';
 
   exports.cluster = {
     listen: {
@@ -30,7 +29,7 @@ module.exports = app => {
   exports.redis = {
     client: {
       port: 6379,
-      host: '10.18.92.31',
+      host: env.SERVER_HOST || '0.0.0.0',
       password: '',
       db: 0,
     },

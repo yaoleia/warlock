@@ -93,7 +93,7 @@
         },
         watch: {
             runMsgList(list) {
-                const newItem = list.slice(-1)[0];
+                const newItem = { ...list.slice(-1)[0] };
                 for (const key in newItem) {
                     if (newItem.hasOwnProperty(key)) {
                         const element = newItem[key];
@@ -239,7 +239,7 @@
         },
         mounted() {
             if (this.runMsgList.length) {
-                this.wsDate = this.runMsgList.slice(-1)[0];
+                this.wsDate = { ...this.runMsgList.slice(-1)[0] };
             }
         }
     };
