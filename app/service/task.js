@@ -21,39 +21,53 @@ module.exports = class ArticeService extends egg.Service {
     try {
       const workflow_id = workflow._id;
       const task_id = await this.ctx.service.task.getTaskId();
+      let res = null;
       if (workflow.flowData && !workflow_id) {
         // 创建testTask时使用
         await this.ctx.http.post(`${this.serverUrl}/api/task`, { flowData: workflow.flowData, task_id });
-        return task_id;
-      }
-      const resp = await this.ctx.http.post(`${this.serverUrl}/api/task`, { workflow_id, task_id });
+        res = task_id;
+      } else {
+        const resp = await this.ctx.http.post(`${this.serverUrl}/api/task`, { workflow_id, task_id });
 
-      // TODO: 开启错误
-      if (!resp.task_flag) {
-        this.ctx.status = 400;
-        return resp;
+        // TODO: 开启错误
+        if (!resp.task_flag) {
+          this.ctx.status = 400;
+          return resp;
+        }
+        workflow.active = true;
+        workflow.task_id = task_id;
+        await this.ctx.service.workflow.updateWorkflow(workflow);
+        res = workflow;
       }
-      workflow.active = true;
-      workflow.task_id = task_id;
-      await this.ctx.service.workflow.updateWorkflow(workflow);
-      return workflow;
+
+      const tid = res.task_id ? res.task_id : res;
+      this.app.redis.subscribe(tid);
+
+      return res;
     } catch (error) {
       throw error;
     }
   }
 
   async deleteTask(params) {
+    let res = null;
     try {
       if (params.task_id) {
         const resp = await this.ctx.http.delete(`${this.serverUrl}/api/task/${params.task_id} `);
-        return resp;
+        res = params.task_id;
+      } else {
+        const workflow = await this.ctx.service.workflow.getWorkflow({ id: params.id })
+        await this.ctx.http.delete(`${this.serverUrl}/api/task/${workflow.task_id}`);
+        workflow.active = false;
+        workflow.task_id = '';
+        await this.ctx.service.workflow.updateWorkflow(workflow);
+        res = workflow;
       }
-      const workflow = await this.ctx.service.workflow.getWorkflow({ id: params.id })
-      await this.ctx.http.delete(`${this.serverUrl}/api/task/${workflow.task_id}`);
-      workflow.active = false;
-      workflow.task_id = '';
-      await this.ctx.service.workflow.updateWorkflow(workflow);
-      return workflow;
+
+      const tid = res.task_id ? res.task_id : res;
+      this.app.redis.unsubscribe(tid);
+
+      return res;
     } catch (error) {
       throw error;
     }

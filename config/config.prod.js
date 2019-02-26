@@ -7,6 +7,6 @@
 const env = process.env;
 module.exports = app => {
   const exports = {};
-  exports.serverUrl = env.SERVER_URL || 'http://0.0.0.0:5000';
+  exports.serverUrl = `${env.SERVER_HOST}:${env.SERVER_PORT}` || 'http://0.0.0.0:5000';
   return exports;
 };

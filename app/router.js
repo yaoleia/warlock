@@ -31,4 +31,6 @@ module.exports = app => {
   router.post('/api/tonce', controller.home.tonce);
   app.io.of('/').route('chat', app.io.controller.chat);
   app.io.of('/').route('workflow', app.io.controller.workflow);
+  app.io.of('/').route('join', app.io.controller.join);
+  app.io.of('/').route('leave', app.io.controller.leave);
 };

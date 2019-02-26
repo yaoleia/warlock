@@ -390,7 +390,7 @@
                 if (window.ws.connected) {
                     this.emitWorkflow()
                 } else {
-                    window.ws.on('connect', () => {
+                    window.ws.once('connect', () => {
                         this.emitWorkflow()
                     })
                 }
@@ -406,6 +406,7 @@
         },
         beforeDestroy() {
             $(window).off('click.workflowList contextmenu.workflowList resize.record');
+            window.ws.off('workflow');
         },
         watch: {
             algorithmModuleList(arr, oldArr) {

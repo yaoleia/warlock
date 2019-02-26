@@ -16,13 +16,11 @@
 
 <script>
     import msgItem from 'component/TerminalBox/msgItem'
-    import io from 'socket.io-client'
     export default {
         data() {
             return {
                 onHover: false,
-                active: null,
-                ws: null
+                active: null
             };
         },
         props: ['showTerminal', 'runDesign', 'taskId', 'runMsgList'],
@@ -36,32 +34,18 @@
             },
             msgClick(item) {
                 this.active = item;
-            },
-            stopWsConnection() {
-                if (this.ws) {
-                    this.ws.close()
-                    this.ws = null
-                }
-            },
-            startWsConnection() {
-                const ws = io(this.serverUrl, {
-                    transports: ['websocket']
-                })
-
-                ws.on('connect', () => {
-                    ws.emit('join', { task_id: this.taskId })
-                    console.log('test task successfully connected !')
-                })
-
-                ws.on('server_response', message => {
-                    const data = message.data;
-                    data.act = false;
-                    this.runMsgList.push(data)
-                    if (this.onHover) return;
-                    this.active = data;
-                });
-                this.ws = ws
             }
+        },
+        mounted() {
+            window.ws.on('msg', data => {
+                data.act = false;
+                this.runMsgList.push(data)
+                if (this.onHover) return;
+                this.active = data;
+            });
+        },
+        beforeDestroy() {
+            window.ws.off('msg');
         },
         computed: {
             serverUrl() {
@@ -78,9 +62,9 @@
                 handler(id, oldId) {
                     if (!oldId && !id) return;
                     if (id) {
-                        this.startWsConnection()
+                        window.ws.emit('join', id)
                     } else {
-                        this.stopWsConnection()
+                        window.ws.emit('leave', oldId)
                     }
                     this.$message({
                         type: 'success',

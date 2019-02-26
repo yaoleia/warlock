@@ -11,7 +11,8 @@ RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shang
 RUN yarn
 RUN npm run build
 
-ENV SERVER_URL UNSET
+ENV SERVER_HOST UNSET
+ENV SERVER_PORT UNSET
 
 EXPOSE 7501
 

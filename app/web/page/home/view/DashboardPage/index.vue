@@ -5,7 +5,6 @@
     import msgItem from 'component/TerminalBox/msgItem'
     import webcam from 'component/webcam'
     import * as d3 from 'd3';
-    import io from 'socket.io-client'
 
     export default {
         data() {
@@ -25,8 +24,7 @@
                     width: 1,
                     height: 1
                 },
-                workflow: {},
-                ws: null
+                workflow: {}
             }
         },
         computed: {
@@ -50,16 +48,6 @@
             //     }
             // })
 
-            this.$nextTick(() => {
-                if (window.ws.connected) {
-                    this.emitWorkflow()
-                } else {
-                    window.ws.on('connect', () => {
-                        this.emitWorkflow()
-                    })
-                }
-            })
-
             try {
                 const workflowid = this.$root.workflowid;
                 if (!workflowid) return;
@@ -71,9 +59,24 @@
                     type: 'error'
                 })
             }
+
+            this.$nextTick(() => {
+                if (window.ws.connected) {
+                    this.emitWsEvent()
+                } else {
+                    window.ws.once('connect', () => {
+                        this.emitWsEvent()
+                    })
+                }
+            })
+
+        },
+        beforeDestroy() {
+            window.ws.off('msg');
+            window.ws.off('workflow');
         },
         methods: {
-            emitWorkflow() {
+            emitWsEvent() {
                 window.ws.on('workflow', data => {
                     const { type, msg } = data;
                     if (type === 'update') {
@@ -85,6 +88,40 @@
                         Object.assign(this.workflow, { task_id: '', active: false })
                     }
                 })
+
+                window.ws.on('msg', m => {
+                    if (this.switchCraft) {
+                        this.curProduct = m
+                    }
+                    m.act = false;
+                    const product = this.productList.find(l => l.ts === m.ts);
+                    if (!product) {
+                        this.productList.unshift(m);
+                    } else {
+                        // 检测去重
+                        Object.assign(product, this.curProduct)
+                    }
+
+                    const self = this;
+                    if (!m.status) {
+                        this.$notify({
+                            title: `PID: ${m.ts}`,
+                            customClass: 'warlock-warning-notify',
+                            dangerouslyUseHTMLString: true,
+                            message: `<div class="dm-img">
+                                        <p>NG</p>
+                                    </div>`,
+                            type: 'warning',
+                            position: 'bottom-right',
+                            onClick() {
+                                if (self.$route.path !== '/') {
+                                    self.$router.push('/')
+                                }
+                                self.listItemClick(m);
+                            }
+                        });
+                    }
+                });
             },
             loadingUi() {
                 return this.$loading({
@@ -131,63 +168,13 @@
             defectType(type) {
                 return utils.defectType(type)
             },
-            stopWsConnection() {
-                if (this.ws) {
-                    this.ws.close()
-                    this.ws = null
-                }
-            },
-            startWsConnection() {
-                const ws = io(this.serverUrl, {
-                    transports: ['websocket']
-                })
-
-                ws.on('connect', () => {
-                    ws.emit('join', { task_id: this.workflow.task_id })
-                    console.log('task successfully connected !')
-                })
-
-                ws.on('server_response', message => {
-                    const m = message.data;
-                    if (this.switchCraft) {
-                        this.curProduct = m
-                    }
-                    m.act = false;
-                    const product = this.productList.find(l => l.ts === m.ts);
-                    if (!product) {
-                        this.productList.unshift(m);
-                    } else {
-                        // 检测去重
-                        Object.assign(product, this.curProduct)
-                    }
-
-                    const self = this;
-                    if (!m.status) {
-                        this.$notify({
-                            title: `PID: ${m.ts}`,
-                            customClass: 'warlock-warning-notify',
-                            dangerouslyUseHTMLString: true,
-                            message: `<div class="dm-img">
-                                        <p>NG</p>
-                                    </div>`,
-                            type: 'warning',
-                            position: 'bottom-right',
-                            onClick() {
-                                if (self.$route.path !== '/') {
-                                    self.$router.push('/')
-                                }
-                                self.listItemClick(m);
-                            }
-                        });
-                    }
-                });
-                this.ws = ws;
-            },
             emitChat() {
                 if (this.workflow.task_id) {
-                    this.startWsConnection()
+                    this.cacheTaskId = this.workflow.task_id;
+                    window.ws.emit('join', this.workflow.task_id)
                 } else {
-                    this.stopWsConnection()
+                    window.ws.emit('leave', this.cacheTaskId)
+                    this.cacheTaskId = null;
                 }
             },
             listItemClick(p) {

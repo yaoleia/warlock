@@ -147,7 +147,7 @@
                 const ws = io('/', {
                     query: {
                         room: 'admin',
-                        userId: `client_${Math.random()}`,
+                        // userId: `client_${Math.random()}`,
                     },
                     transports: ['websocket']
                 })

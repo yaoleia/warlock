@@ -10,10 +10,15 @@ exports.http = {
 
 exports.io = {
 	enable: true,
-	package: 'egg-socket.io',
+	package: 'egg-socket.io'
 }
+
+exports.redis = {
+	enable: true,
+	package: 'egg-redis'
+};
 
 exports.validate = {
 	enable: true,
-	package: 'egg-validate',
+	package: 'egg-validate'
 }
