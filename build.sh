@@ -46,6 +46,7 @@ cp -r app $targetDir
 cp -r config $targetDir
 cp -r images $targetDir
 cp -r public $targetDir
+cp app.js $targetDir
 cp package.json $targetDir
 cp package-lock.json $targetDir
 cp prod.sh $targetDir
