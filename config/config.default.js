@@ -14,7 +14,7 @@ module.exports = app => {
   };
 
   exports.session = {
-    renew: true,
+    renew: true
   }
 
   exports.io = {
@@ -32,7 +32,7 @@ module.exports = app => {
       host: env.SERVER_HOST ? env.SERVER_HOST.replace(new RegExp(/[\S]+\//g), '') : '0.0.0.0',
       password: '',
       db: 0,
-    },
+    }
   };
 
   exports.siteFile = {

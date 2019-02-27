@@ -9,7 +9,7 @@ module.exports = app => {
 
     async logout(ctx) {
       ctx.logger.info('[account controller] user logout', ctx.session.username);
-      ctx.session.username = null;
+      delete ctx.session.username;
       ctx.body = 'logout success';
       ctx.redirect('/login');
     }
@@ -20,13 +20,10 @@ module.exports = app => {
       const url = ctx.url.replace(/\/index/, '');
       const username = ctx.session.username;
       const resp = {
-        ctx,
         url,
         serverUrl
       };
-      if (username) {
-        resp.username = username;
-      }
+      resp.username = username || '';
       await ctx.render('home/home.js', resp);
     }
 

@@ -28,6 +28,7 @@
     "egg-logger": "^2.3.1",
     "egg-redis": "^2.3.0",
     "egg-scripts": "^2.5.1",
+    "egg-session": "^3.1.0",
     "egg-socket.io": "^4.1.2",
     "egg-validate": "^2.0.2",
     "egg-view-vue-ssr": "^3.0.5",

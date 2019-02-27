@@ -18,6 +18,8 @@ exports.redis = {
 	package: 'egg-redis'
 };
 
+exports.session = true
+
 exports.validate = {
 	enable: true,
 	package: 'egg-validate'
