@@ -385,7 +385,7 @@
         },
         mounted() {
             this.getInnerHeight();
-            $(window).on('resize.record', this.getInnerHeight)
+            $(window).on('resize.design', this.getInnerHeight)
 
             this.$nextTick(() => {
                 if (window.ws.connected) {
@@ -406,7 +406,7 @@
             });
         },
         beforeDestroy() {
-            $(window).off('click.workflowList contextmenu.workflowList resize.record');
+            $(window).off('click.workflowList contextmenu.workflowList resize.design');
             window.ws.off('workflow');
         },
         watch: {
@@ -479,13 +479,6 @@
             }
             .el-date-editor .el-range-separator {
                 color: #aaa;
-            }
-        }
-    }
-    @media screen and (max-width: 1920px) {
-        .design-list {
-            .el-table {
-                height: 621px;
             }
         }
     }

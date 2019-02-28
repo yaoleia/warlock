@@ -5,7 +5,7 @@
             </el-date-picker>
             <el-button class="search-button" type="text" @click="q.pageIndex = 1;query()">查询</el-button>
         </div>
-        <el-table stripe :data="recordList" v-loading="loading" :height="innerHeight">
+        <el-table stripe :data="recordList" v-loading="loading" :height="innerHeight" v-if='innerHeight'>
             <div slot="empty">
                 <img class="no-data" src="~asset/images/no-data.png">
             </div>
@@ -132,6 +132,10 @@
         activated() {
             this.getEndTime()
         },
+        mounted() {
+            this.getInnerHeight();
+            $(window).on('resize.record', this.getInnerHeight);
+        },
         methods: {
             prevOrNext(n) {
                 let i = this.recordList.findIndex(l => {
@@ -189,11 +193,7 @@
             },
             getInnerHeight() {
                 if (EASY_ENV_IS_BROWSER) {
-                    if (window.innerWidth <= 1920) {
-                        this.innerHeight = 620;
-                    } else {
-                        this.innerHeight = 890;
-                    }
+                    this.innerHeight = this.$el.clientHeight - 140;
                 }
             }
         },
@@ -224,8 +224,6 @@
             if (!(this.recordList && this.recordList.length > 0)) {
                 this.fetchApi(this.$store, this.q)
             }
-            this.getInnerHeight();
-            $(window).on('resize.record', this.getInnerHeight)
         },
         beforeDestroy() {
             $(window).off('resize.record');
@@ -284,13 +282,6 @@
             }
             .el-date-editor .el-range-separator {
                 color: #aaa;
-            }
-        }
-    }
-    @media screen and (max-width: 1920px) {
-        .history-list {
-            .el-table {
-                height: 621px;
             }
         }
     }

@@ -284,15 +284,21 @@ body {
 
 @media screen and (max-width: 1920px) {
     #app .main {
-        max-height: 918px;
+        height: 925px;
         .app-body {
             padding-top: 5px;
-            height: calc(100% - 100px);
+            height: calc(100% - 90px);
         }
 
         .header {
             max-width: 1420px;
-            height: 100px;
+            height: 90px;
+            .logo {
+                width: 135px;
+            }
+            .header-nav {
+                height: 90px;
+            }
         }
         .main-container {
             >div {
@@ -302,10 +308,6 @@ body {
         }
         .dashboard {
             .col {
-                .mb30 {
-                    margin-bottom: 23px;
-                }
-
                 .img-stream {
                     border-radius: 14px;
                     .el-card__body {
@@ -318,52 +320,11 @@ body {
                     line-height: 50px;
                     padding-left: 20px;
                 }
-
-                &.left-img-col {
-                    width: 540px;
-                    margin-right: 18px;
-
-                    .img-stream {
-                        height: 395px;
-                    }
-
-                    .msg {
-                        left: 45px;
-                        top: 50px;
-                        width: calc(100% - 90px);
-                        height: calc(100% - 95px);
-                    }
-                }
-
-                &.middle-img-col {
-                    height: 812px;
-                    width: 449px;
-                    margin-right: 18px;
-                    border-radius: 14px;
-
-                    .img-stream {
-                        padding: 0;
-                        border-radius: 9px;
-                    }
-                }
-
                 &.right-img-col {
                     width: 390px;
                     padding: 50px 10px 45px 45px;
                     border-radius: 14px;
                 }
-            }
-        }
-    }
-}
-
-@media screen and (max-width: 1440px) {
-    #app .main {
-        max-height: 684px;
-        .main-container {
-            >div {
-                min-width: 1420px;
-                width: 1420px;
             }
         }
     }

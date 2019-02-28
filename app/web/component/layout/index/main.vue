@@ -12,6 +12,7 @@
         height: 100%;
         display: flex;
         align-items: center;
+        justify-content: center;
     }
     html,
     body {
@@ -19,11 +20,10 @@
         background-image: linear-gradient(to bottom, #2d2d2d, #252121);
     }
     .main {
-        max-height: 1252px;
         height: 1252px;
         padding-bottom: 30px;
-        margin: 0 auto;
         position: relative;
+        flex-shrink: 0;
         .el-menu:not(.el-menu--collapse) {
             // width: 230px;
         }

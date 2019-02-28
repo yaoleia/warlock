@@ -88,11 +88,7 @@
     }
     @media screen and (max-width: 1920px) {
         .param {
-            width: 1420px;
             padding-top: 23px;
-            .header-btns {
-                width: 240px;
-            }
             .right-content {
                 width: 1100px;
                 height: 790px;

@@ -77,7 +77,7 @@
 
 <style lang="scss">
     .header-nav {
-        height: 100px;
+        height: 120px;
         position: absolute;
         right: 0;
         top: 0;
