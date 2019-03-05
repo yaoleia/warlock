@@ -60,7 +60,7 @@
             </el-table-column>
         </el-table>
         <upload-dialog :uploadOption='uploadOption' :uploadCancel='uploadCancel' :uploadDesignList='uploadDesignList'></upload-dialog>
-        <context-menu v-show='active' ref="contextMenu" :handleCopy='handleCopy' :handleDelete='handleDelete' :handleDownload='handleDownload' :active='active'></context-menu>
+        <context-menu v-show='active' ref="contextMenu" :creatWorkflow='creatWorkflow' :deleteWorkflow='deleteWorkflow' :handleDownload='handleDownload' :active='active'></context-menu>
     </div>
 </template>
 <script type="babel">
@@ -141,6 +141,7 @@
                 loading: false
             }
         },
+        inject: ['socket'],
         props: ['editorLoaded'],
         components: {
             FlowDisplayer,
@@ -276,19 +277,6 @@
                 });
                 export2Json(downloadList);
             },
-            handleDelete(item) {
-                let msg = '此操作将删除该流程, 是否继续?';
-                if (item.active) {
-                    msg = '*任务正在运行,此操作将关闭任务*，' + msg;
-                }
-                this.$confirm(msg, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(async () => {
-                    await this.deleteWorkflow(item);
-                })
-            },
             async creatWorkflow(item) {
                 try {
                     const resp = await this.$request.workflow.postWorkflow(item);
@@ -313,23 +301,6 @@
                     loading.close();
                 }
             },
-            async handleCopy(item) {
-                let newItem = _.cloneDeep(item);
-                const { flowData, layout, output, name } = newItem;
-                newItem = { flowData, layout, output, active: false, ts: new Date().getTime(), cts: new Date().getTime() }
-                this.$prompt('请输入新克隆的流程名称', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputValue: `${name}_copy_${new Date().getTime()}`
-                }).then(async ({ value }) => {
-                    newItem.name = value;
-                    await this.creatWorkflow(newItem);
-                    this.$message({
-                        type: 'success',
-                        message: `克隆流程 ${value} 成功！`
-                    });
-                })
-            },
             async getDesignList() {
                 await this.editorLoaded;
                 if (EASY_ENV_IS_BROWSER) {
@@ -353,7 +324,7 @@
                 }
             },
             emitWorkflow() {
-                window.ws.on('workflow', data => {
+                this.socket.on('workflow', data => {
                     const { type, msg } = data;
                     if (type === 'update') {
                         const item = this.workflowList.find(i => i._id === msg._id);
@@ -385,10 +356,10 @@
         },
         mounted() {
             this.$nextTick(() => {
-                if (window.ws.connected) {
+                if (this.socket.connected) {
                     this.emitWorkflow()
                 } else {
-                    window.ws.once('connect', () => {
+                    this.socket.once('connect', () => {
                         this.emitWorkflow()
                     })
                 }
@@ -405,7 +376,7 @@
 
             this.$once('hook:beforeDestroy', () => {
                 $(window).off('click.workflowList contextmenu.workflowList resize.design');
-                window.ws.off('workflow');
+                this.socket.off('workflow');
             })
         },
         watch: {

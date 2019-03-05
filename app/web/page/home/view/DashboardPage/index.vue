@@ -27,6 +27,7 @@
                 workflow: {}
             }
         },
+        inject: ['socket'],
         computed: {
             serverUrl() {
                 return this.$store.state.serverUrl
@@ -61,23 +62,23 @@
             }
 
             this.$nextTick(() => {
-                if (window.ws.connected) {
+                if (this.socket.connected) {
                     this.emitWsEvent()
                 } else {
-                    window.ws.once('connect', () => {
+                    this.socket.once('connect', () => {
                         this.emitWsEvent()
                     })
                 }
             })
 
             this.$once('hook:beforeDestroy', () => {
-                window.ws.off('msg');
-                window.ws.off('workflow');
+                this.socket.off('msg');
+                this.socket.off('workflow');
             })
         },
         methods: {
             emitWsEvent() {
-                window.ws.on('workflow', data => {
+                this.socket.on('workflow', data => {
                     const { type, msg } = data;
                     if (type === 'update') {
                         if (this.workflow._id !== msg._id) return;
@@ -89,7 +90,7 @@
                     }
                 })
 
-                window.ws.on('msg', m => {
+                this.socket.on('msg', m => {
                     if (this.switchCraft) {
                         this.curProduct = m
                     }
@@ -171,9 +172,9 @@
             emitChat() {
                 if (this.workflow.task_id) {
                     this.cacheTaskId = this.workflow.task_id;
-                    window.ws.emit('join', this.workflow.task_id)
+                    this.socket.emit('join', this.workflow.task_id)
                 } else {
-                    window.ws.emit('leave', this.cacheTaskId)
+                    this.socket.emit('leave', this.cacheTaskId)
                     this.cacheTaskId = null;
                 }
             },

@@ -7,7 +7,7 @@
                 <el-button type="text" size="small" @click.stop="clearMsgList"><i class="el-icon-delete"></i> 清空</el-button>
             </div>
             <div class="radio-wrap" @contextmenu.stop.prevent>
-                <el-button type="text" :class="componentIs=='output'?'active':''" @click="componentIs='output'">
+                <el-button type="text" :class="componentIs=='editor'?'active':''" @click="componentIs='editor'">
                     <v-icon name="console" />
                 </el-button>
                 <el-button type="text" :class="componentIs=='run'?'active':''" @click="runClick">
@@ -16,7 +16,7 @@
                 </el-button>
             </div>
             <keep-alive>
-                <component :is='componentIs+"-msg"' :msgList='msgList' :runDesign='runDesign' :runMsgList='runMsgList' :taskId='taskId' :showTerminal='showTerminal'></component>
+                <component :is='componentIs+"-msg"' :runDesign='runDesign' :showTerminal='showTerminal'></component>
             </keep-alive>
         </div>
     </transition>
@@ -24,25 +24,26 @@
 
 <script>
     import runMsg from './RunMsg'
-    const outputMsg = {
+    const editorMsg = {
         data() {
             return {
             }
         },
-        props: ['msgList', 'showTerminal'],
-        template: `<transition-group name="list-complete" tag="ul" class="msg-list" ref="msgList">
-                <li class="list-complete-item" v-for="item in msgList" :key="item.ts">> {{item.msg}}</li>
+        inject: ['editorMsgList'],
+        props: ['showTerminal'],
+        template: `<transition-group name="list-complete" tag="ul" class="msg-list" ref="editorMsgList">
+                <li class="list-complete-item" v-for="item in editorMsgList" :key="item.ts">> {{item.msg}}</li>
             </transition-group>`,
         methods: {
             scrollTobottom() {
                 this.$nextTick(() => {
-                    const item = this.$refs.msgList.$el;
+                    const item = this.$refs.editorMsgList.$el;
                     item.scrollTop = item.scrollHeight;
                 })
             },
         },
         watch: {
-            msgList(list) {
+            editorMsgList(list) {
                 if (!list.length) return;
                 while (list.length > 100) {
                     list.shift();
@@ -63,14 +64,15 @@
                 showContextMenu: false,
                 canMove: false,
                 mouse: {},
-                componentIs: 'output'
+                componentIs: 'editor'
             };
         },
+        inject: ['editorMsgList', 'runMsgList'],
         components: {
-            outputMsg,
+            editorMsg,
             runMsg
         },
-        props: ['showTerminal', 'msgList', 'terminalIs', 'runDesign', 'taskId', 'runMsgList'],
+        props: ['showTerminal', 'terminalIs', 'runDesign'],
         watch: {
             terminalIs(s) {
                 if (s) {
@@ -110,11 +112,8 @@
             },
             clearMsgList() {
                 this.showContextMenu = false;
-                if (this.componentIs === 'output') {
-                    this.$emit('update:msgList', [])
-                } else {
-                    this.runMsgList.splice(0, this.runMsgList.length);
-                }
+                const arr = this[`${this.componentIs}MsgList`];
+                arr.splice(0, arr.length);
             },
             mousemove(e) {
                 const { diffH } = this.mouse;

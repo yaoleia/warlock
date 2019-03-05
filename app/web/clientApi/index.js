@@ -6,10 +6,10 @@ import * as workflow from './workflow'
 import * as test from './test'
 
 export default {
-    account,
-    plugin,
-    record,
-    task,
-    workflow,
-    test
+  account,
+  plugin,
+  record,
+  task,
+  workflow,
+  test
 }

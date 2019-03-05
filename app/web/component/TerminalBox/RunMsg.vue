@@ -23,7 +23,8 @@
                 active: null
             };
         },
-        props: ['showTerminal', 'runDesign', 'taskId', 'runMsgList'],
+        inject: ['runMsgList', 'taskId', 'socket'],
+        props: ['showTerminal', 'runDesign'],
         components: { msgItem },
         methods: {
             scrollTobottom() {
@@ -38,7 +39,7 @@
         },
         mounted() {
             this.cacheTaskId = this.taskId;
-            window.ws.on('msg', data => {
+            this.socket.on('msg', data => {
                 data.act = false;
                 this.runMsgList.push(data)
                 if (this.onHover) return;
@@ -46,7 +47,7 @@
             });
 
             this.$once('hook:beforeDestroy', () => {
-                window.ws.off('msg');
+                this.socket.off('msg');
             })
         },
         computed: {
@@ -65,11 +66,11 @@
                     if (!oldId && !id) return;
                     if (id) {
                         if (oldId) {
-                            window.ws.emit('leave', oldId)
+                            this.socket.emit('leave', oldId)
                         }
-                        window.ws.emit('join', id)
+                        this.socket.emit('join', id)
                     } else {
-                        window.ws.emit('leave', oldId)
+                        this.socket.emit('leave', oldId)
                     }
                     this.$message({
                         type: 'success',

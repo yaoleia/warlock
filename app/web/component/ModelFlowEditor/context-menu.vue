@@ -63,7 +63,7 @@
             </div>
         </div>
         <div class="all-selected">
-            <el-button type="text" @click="$emit('terminalFor','output')">
+            <el-button type="text" @click="$emit('terminalFor','editor')">
                 <v-icon name="console" /> 查看输出</el-button>
             <el-button type="text" @click="$emit('terminalFor','run')">
                 <v-icon name="play" /> 查看运行</el-button>

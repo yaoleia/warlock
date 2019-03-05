@@ -18,11 +18,11 @@
                 <div ref="minimap" slot="minimap" class="minimap"></div>
             </navigator>
             <page ref="page" @keydown.native.ctrl.192='ctrl192' />
-            <terminal-box :runDesign.sync='runDesign' @stop='deleteTestTask' @start='creatTestTask' :taskId='taskId' :msgList.sync='msgList' :showTerminal.sync='showTerminal' :terminalIs='terminalIs' :runMsgList='runMsgList'></terminal-box>
+            <terminal-box :runDesign.sync='runDesign' @stop='deleteTestTask' @start='creatTestTask' :showTerminal.sync='showTerminal' :terminalIs='terminalIs'></terminal-box>
             <context-menu ref="contextmenu" v-show="!readMode" @terminalFor='terminalFor' />
         </div>
         <el-dialog title="页面布局" :visible.sync="showLayout" @opened='dialogOpened = true' @closed='dialogOpened = false' custom-class="layout-pop-dialog" :fullscreen='true' :close-on-press-escape='false'>
-            <layout-design :runMsgList='runMsgList' :dialogOpened='dialogOpened' :layout='layout' :output='output' />
+            <layout-design :dialogOpened='dialogOpened' :layout='layout' :output='output' />
         </el-dialog>
     </div>
 </template>
@@ -50,6 +50,13 @@
             layoutDesign
         },
         extends: Editor,
+        provide() {
+            return {
+                runMsgList: this.runMsgList,
+                editorMsgList: this.editorMsgList,
+                taskId: this.taskId
+            }
+        },
         data() {
             return {
                 DEFAULT_OUTPUTS: ['ts', 'status'],
@@ -57,7 +64,7 @@
                 showLayout: false,
                 taskId: '',
                 runDesign: false,
-                msgList: [],
+                editorMsgList: [],
                 runMsgList: [],
                 layout: [],
                 output: [],

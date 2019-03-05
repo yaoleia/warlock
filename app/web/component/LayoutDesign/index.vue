@@ -52,7 +52,8 @@
             dialogProps,
             webcam
         },
-        props: ['runMsgList', 'layout', 'dialogOpened', 'output'],
+        inject: ['runMsgList'],
+        props: ['layout', 'dialogOpened', 'output'],
         data() {
             return {
                 curElement: null,

@@ -5,18 +5,8 @@
 </template>
 <script type="babel">
     export default {
-        data() {
-            return {
-            };
-        },
-        beforeMount() {
-            // 只会在浏览器执行
-            this.$options.components.ModelFlowEditor = () => import('component/ModelFlowEditor')
-        },
-        computed: {},
-        methods: {
-        },
-        mounted() {
+        components: {
+            ModelFlowEditor: () => import('component/ModelFlowEditor')
         }
     };
 </script>

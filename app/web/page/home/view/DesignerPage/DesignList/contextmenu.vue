@@ -12,19 +12,40 @@
     </div>
 </template>
 <script type="babel">
+    import _ from 'lodash';
     export default {
-        components: {
-        },
-        data() {
-            return {
-
-            };
-        },
-        props: ['handleCopy', 'handleDelete', 'handleDownload', 'active'],
-        computed: {},
+        props: ['creatWorkflow', 'deleteWorkflow', 'handleDownload', 'active'],
         methods: {
-        },
-        mounted() {
+            async handleCopy(item) {
+                let newItem = _.cloneDeep(item);
+                const { flowData, layout, output, name } = newItem;
+                newItem = { flowData, layout, output, active: false, ts: new Date().getTime(), cts: new Date().getTime() }
+                this.$prompt('请输入新克隆的流程名称', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputValue: `${name}_copy_${new Date().getTime()}`
+                }).then(async ({ value }) => {
+                    newItem.name = value;
+                    await this.creatWorkflow(newItem);
+                    this.$message({
+                        type: 'success',
+                        message: `克隆流程 ${value} 成功！`
+                    });
+                })
+            },
+            handleDelete(item) {
+                let msg = '此操作将删除该流程, 是否继续?';
+                if (item.active) {
+                    msg = '*任务正在运行,此操作将关闭任务*，' + msg;
+                }
+                this.$confirm(msg, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    await this.deleteWorkflow(item);
+                })
+            }
         }
     };
 </script>
