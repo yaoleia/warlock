@@ -79,20 +79,20 @@
             }
         },
         mounted() {
-            $(window).on(`resize.${this._uid}`, this.onResize)
-        },
-        beforeDestroy() {
-            $(window).off(`resize.${this._uid}`)
-        },
-        methods: {
-            onResize() {
+            $(window).on(`resize.${this._uid}`, () => {
                 const $el = $(this.$el);
                 let height = this.$el.clientHeight;
                 const parentHeight = this.$parent.$el.clientHeight - 50;
                 if (parentHeight >= height) return;
                 height = parentHeight;
                 $el.css({ height });
-            },
+            })
+
+            this.$once('hook:beforeDestroy', () => {
+                $(window).off(`resize.${this._uid}`)
+            })
+        },
+        methods: {
             runClick() {
                 if (this.componentIs === 'run') {
                     if (this.runDesign) {

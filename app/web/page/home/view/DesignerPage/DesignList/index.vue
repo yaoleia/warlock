@@ -384,9 +384,6 @@
             }
         },
         mounted() {
-            this.getInnerHeight();
-            $(window).on('resize.design', this.getInnerHeight)
-
             this.$nextTick(() => {
                 if (window.ws.connected) {
                     this.emitWorkflow()
@@ -396,18 +393,20 @@
                     })
                 }
             })
-        },
-        beforeMount() {
+
             if (this.algorithmModuleList.length) {
                 this.getDesignList()
             }
+            this.getInnerHeight();
+
             $(window).on('click.workflowList contextmenu.workflowList', () => {
                 this.active = null;
-            });
-        },
-        beforeDestroy() {
-            $(window).off('click.workflowList contextmenu.workflowList resize.design');
-            window.ws.off('workflow');
+            }).on('resize.design', this.getInnerHeight);
+
+            this.$once('hook:beforeDestroy', () => {
+                $(window).off('click.workflowList contextmenu.workflowList resize.design');
+                window.ws.off('workflow');
+            })
         },
         watch: {
             algorithmModuleList(arr, oldArr) {

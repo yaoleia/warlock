@@ -70,10 +70,10 @@
                 }
             })
 
-        },
-        beforeDestroy() {
-            window.ws.off('msg');
-            window.ws.off('workflow');
+            this.$once('hook:beforeDestroy', () => {
+                window.ws.off('msg');
+                window.ws.off('workflow');
+            })
         },
         methods: {
             emitWsEvent() {

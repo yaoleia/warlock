@@ -290,6 +290,10 @@
         mounted() {
             this.getInnerHeight();
             $(window).on('resize.upload', this.getInnerHeight);
+
+            this.$once('hook:beforeDestroy', () => {
+                $(window).off('resize.upload');
+            })
         },
         watch: {
             'progress.percent': function(p) {
@@ -303,9 +307,6 @@
         },
         beforeMount() {
             this.pluginList = Object.values(this.algorithmConf);
-        },
-        beforeDestroy() {
-            $(window).off('resize.upload');
         }
     };
 </script>

@@ -44,9 +44,10 @@
                 if (this.onHover) return;
                 this.active = data;
             });
-        },
-        beforeDestroy() {
-            window.ws.off('msg');
+
+            this.$once('hook:beforeDestroy', () => {
+                window.ws.off('msg');
+            })
         },
         computed: {
             serverUrl() {

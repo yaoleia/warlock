@@ -14,29 +14,12 @@
             cover: {
                 required: false
             },
-            noListen: {
-                required: false
-            },
             Position: {
                 required: false
             }
         },
-        async mounted() {
-            if (!this.noListen) {
-                // $(window).on(`resize.${this._uid}`, () => {
-                //     if (!this.imgClass) {
-                //         this.onImgLoad();
-                //     }
-                // })
-            }
-        },
         activated() {
             this.onImgLoad();
-        },
-        beforeDestroy() {
-            if (!this.noListen) {
-                // $(window).off(`resize.${this._uid}`);
-            }
         },
         methods: {
             onImgLoad(e) {

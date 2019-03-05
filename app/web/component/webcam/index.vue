@@ -49,9 +49,10 @@
         },
         mounted() {
             this.init()
-        },
-        beforeDestroy() {
-            this.uninit()
+
+            this.$once('hook:beforeDestroy', () => {
+                this.uninit()
+            })
         },
         watch: {
             options() {

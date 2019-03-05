@@ -33,7 +33,10 @@
                 });
                 editor.add(page)
                 this.page = page;
-                this.editor = editor;
+
+                this.$once('hook:beforeDestroy', () => {
+                    editor.destroy();
+                })
             },
             draw() {
                 this.page.read(this.flowData)
@@ -44,9 +47,6 @@
             this.height = this.$el.clientHeight;
             await this.init();
             this.draw();
-        },
-        beforeDestroy() {
-            this.editor.destroy();
         },
         watch: {
             flowData() {

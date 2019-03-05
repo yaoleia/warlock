@@ -135,6 +135,10 @@
         mounted() {
             this.getInnerHeight();
             $(window).on('resize.record', this.getInnerHeight);
+
+            this.$once('hook:beforeDestroy', () => {
+                $(window).off('resize.record');
+            })
         },
         methods: {
             prevOrNext(n) {
@@ -224,9 +228,6 @@
             if (!(this.recordList && this.recordList.length > 0)) {
                 this.fetchApi(this.$store, this.q)
             }
-        },
-        beforeDestroy() {
-            $(window).off('resize.record');
         },
         watch: {
             'q.dateRange': function(r) {
