@@ -7,7 +7,7 @@ Vue.use(plugin);
 export default function(options) {
   const state = window.__INITIAL_STATE__ || {};
   if (options.store) {
-    options.store.replaceState(state);
+    options.store.replaceState({ ...state, ...options.store.state });
   } else {
     options.data = { ...state, ...options.data };
   }
