@@ -27,7 +27,7 @@ export default function createLayout(name, components, tpl) {
                       <meta name="keywords" :content="vKeywords">
                       <meta name="description" :content="vDescription">
                       <meta http-equiv="content-type" content="text/html;charset=utf-8">
-                      <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+                      <meta name="viewport" content="width=1240, maximum-scale=1, user-scalable=no, minimal-ui">
                       <!-- Add to home screen for Windows -->
                       <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
                       <meta name="msapplication-TileColor" content="#2F3BA2">

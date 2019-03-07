@@ -11,9 +11,9 @@
             </div>
             <el-table-column type="index" width="55" :index="indexMethod">
             </el-table-column>
-            <el-table-column prop="dm_code" label="二维码ID">
+            <el-table-column prop="dm_code" label="二维码ID" width="200">
             </el-table-column>
-            <el-table-column prop="dm_path" label="二维码" width="220">
+            <el-table-column prop="dm_path" label="二维码" width="150">
                 <template slot-scope="props">
                     <el-popover placement="right" trigger="hover" popper-class="dm-popper">
                         <div class="dm-pop">
@@ -263,7 +263,6 @@
             .dm-code-img-wrap {
                 cursor: zoom-in;
                 height: 40px;
-                margin: 0 70px;
                 img {
                     height: 100%;
                 }

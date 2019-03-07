@@ -22,7 +22,7 @@
             </el-submenu>
         </el-menu>
 
-        <el-dialog title="主摄像机" :visible.sync="mainDialog" width='450px' :modal="false">
+        <el-dialog title="主摄像机" :visible.sync="mainDialog" :modal="false">
             <span class="demonstration">h_preview</span>
             <el-slider v-model="main.h_preview" show-input @keyup.enter.native="submitClick('main')" :max="2000" @change="changeSlider('main','h_preview','w_preview',3/2)"></el-slider>
             <span class="demonstration">w_preview</span>
@@ -54,7 +54,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="辅助摄像机" :visible.sync="usbDialog" width='450px' :modal="false">
+        <el-dialog title="辅助摄像机" :visible.sync="usbDialog" :modal="false">
             <span class="demonstration">cam_num</span>
             <el-input-number @keyup.enter.native="submitClick('usb')" v-model="usb.cam_num" :min="0" :max="10" label="描述文字"></el-input-number><br /><br />
             <span class="demonstration">曝光</span>
@@ -69,7 +69,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="光源" :visible.sync="lightDialog" width='450px' :modal="false">
+        <el-dialog title="光源" :visible.sync="lightDialog" :modal="false">
             <el-form :model="light">
                 <el-radio-group v-model="light.init_status" @change="submitClick('light')">
                     <el-radio :label="true">开灯</el-radio>
@@ -95,7 +95,7 @@
                 <el-button type="primary" @click="submitClick('light')" :loading="lightLoading">确 定</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="激光触发" :visible.sync="triggerDialog" width='450px' :modal="false">
+        <el-dialog title="激光触发" :visible.sync="triggerDialog" :modal="false">
             <el-form :model="trigger">
                 <el-radio-group v-model="trigger.model" @change="submitClick('trigger')">
                     <el-radio :label="1">硬件触发</el-radio>
@@ -244,9 +244,19 @@
             position: absolute;
             right: auto;
             bottom: auto;
+            height: 100%;
+            width: 130%;
         }
         .el-dialog {
-            margin-top: 50px !important;
+            margin: 0 !important;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            .el-dialog__body {
+                flex-grow: 1;
+                overflow-y: auto;
+            }
         }
         .el-submenu__title {
             color: #fff;

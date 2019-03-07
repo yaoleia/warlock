@@ -111,7 +111,7 @@
     }
     
     .el-table {
-        margin-top: 30px;
+        margin-top: 20px;
         min-height: 300px;
         .el-table__body-wrapper {
             padding-top: 1px;
@@ -298,6 +298,9 @@ body {
             }
             .header-nav {
                 height: 90px;
+                span {
+                    font-size: 17px !important;
+                }
             }
         }
         .main-container {
@@ -314,16 +317,71 @@ body {
                         border-radius: 9px;
                     }
                 }
-
-                p.title {
-                    font-size: 18px;
-                    line-height: 50px;
-                    padding-left: 20px;
+                &.left-wrap {
+                    border-radius: 14px;
                 }
                 &.right-img-col {
                     width: 390px;
-                    padding: 50px 10px 45px 45px;
+                    padding: 48px 8px 30px 30px;
                     border-radius: 14px;
+                }
+                .title {
+                    font-size: 16px;
+                    line-height: 48px;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    #app .main {
+        height: 750px;
+        .app-body {
+            padding-top: 5px;
+            height: calc(100% - 60px);
+        }
+
+        .header {
+            max-width: 1200px;
+            height: 60px;
+            .logo {
+                width: 90px;
+            }
+            .header-nav {
+                height: 60px;
+                span {
+                    font-size: 15px !important;
+                }
+            }
+        }
+        .main-container {
+            >div {
+                min-width: 1200px;
+                width: 1200px;
+            }
+        }
+        .dashboard {
+            .col {
+                .img-stream {
+                    border-radius: 10px;
+                    .el-card__body {
+                        border-radius: 6px;
+                    }
+                }
+
+                &.left-wrap {
+                    border-radius: 10px;
+                }
+                &.right-img-col {
+                    width: 350px;
+                    padding: 44px 10px 25px 25px;
+                    border-radius: 10px;
+                }
+                .title {
+                    font-size: 15px;
+                    line-height: 44px;
+                    padding-left: 25px;
                 }
             }
         }

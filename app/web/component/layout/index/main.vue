@@ -11,8 +11,6 @@
         position: relative;
         height: 100%;
         display: flex;
-        align-items: center;
-        justify-content: center;
     }
     html,
     body {
@@ -24,6 +22,7 @@
         padding-bottom: 30px;
         position: relative;
         flex-shrink: 0;
+        margin: auto;
         .el-menu:not(.el-menu--collapse) {
             // width: 230px;
         }

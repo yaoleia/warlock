@@ -11,7 +11,7 @@ module.exports = app => {
       ctx.logger.info('[account controller] user logout', ctx.session.username);
       delete ctx.session.username;
       ctx.body = 'logout success';
-      ctx.redirect('/login');
+      ctx.redirect('/index/login');
     }
 
     async home(ctx) {

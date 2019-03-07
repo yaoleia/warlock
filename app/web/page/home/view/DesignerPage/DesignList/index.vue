@@ -14,7 +14,10 @@
             </el-table-column>
             <el-table-column type="index">
             </el-table-column>
-            <el-table-column prop="_id" label="ID">
+            <el-table-column label="ID">
+                <template slot-scope="scope">
+                    <copy-text :value='scope.row._id'></copy-text>
+                </template>
             </el-table-column>
             <el-table-column prop="name" label="流程名称">
             </el-table-column>
@@ -23,14 +26,14 @@
                     <flow-displayer @click.native="jumpToWatch(scope.row)" :flowData='scope.row.flowData' class="flow-wrap"></flow-displayer>
                 </template>
             </el-table-column>
-            <el-table-column label="创建时间" width="180">
+            <el-table-column label="创建时间" width="130">
                 <template slot-scope="scope">
-                    <span v-text="$dateFns.format(scope.row.cts,'YYYY-MM-DD HH:mm:ss')"></span>
+                    <div>{{$dateFns.format(scope.row.cts,`YYYY-MM-DD`)}}<br />{{$dateFns.format(scope.row.cts,`HH:mm:ss`)}}</div>
                 </template>
             </el-table-column>
-            <el-table-column label="最后修改时间" width="180">
+            <el-table-column label="最后修改时间" width="130">
                 <template slot-scope="scope">
-                    <span v-text="$dateFns.format(scope.row.ts,'YYYY-MM-DD HH:mm:ss')"></span>
+                    <div>{{$dateFns.format(scope.row.ts,`YYYY-MM-DD`)}}<br />{{$dateFns.format(scope.row.ts,`HH:mm:ss`)}}</div>
                 </template>
             </el-table-column>
             <el-table-column label="运行状态">
@@ -69,6 +72,7 @@
     import uploadDialog from './uploadDialog'
     import contextMenu from './contextmenu'
     import FlowDisplayer from 'component/ModelFlowEditor/displayer'
+    import CopyText from 'component/CopyText'
     import { SET_WORKFLOW_LIST } from '../../../store/app/mutation-type'
     import _ from 'lodash';
     export default {
@@ -147,7 +151,8 @@
             FlowDisplayer,
             contextMenu,
             uploadDialog,
-            rightNav
+            rightNav,
+            CopyText
         },
         methods: {
             jumpToEdit(row) {

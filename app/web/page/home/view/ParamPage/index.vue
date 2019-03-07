@@ -56,6 +56,7 @@
         display: flex;
         justify-content: space-between;
         .param-nav {
+            flex-shrink: 0.4;
             height: auto;
             margin-right: 100px;
             width: 360px;

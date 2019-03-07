@@ -54,4 +54,5 @@ router.beforeEach((to, from, next) => {
     }
     next()
   }
+  window.document.title = `Sirius-${to.name}`;
 })
