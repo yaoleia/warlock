@@ -9,7 +9,8 @@ module.exports = {
     loader: {
       client: 'app/web/framework/vue/entry/client-loader.js',
       server: 'app/web/framework/vue/entry/server-loader.js',
-    }
+    },
+    template: 'app/web/view/layout.html'
   },
   alias: {
     clientApi: 'app/web/clientApi/index.js',
