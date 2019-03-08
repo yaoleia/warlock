@@ -2,7 +2,7 @@
     <div class="login">
         <div class="login-form">
             <div class="login-header">
-                <img src="../../asset/images/logo_nav.png" height="100" alt="">
+                <img src="~asset/images/logo_nav.png" height="100" alt="">
             </div>
             <div class="login-info">
                 <el-input placeholder="请输入用户名" @keyup.enter.native="passwordFocus" suffix-icon="fa fa-user" v-model="userName" style="margin-bottom: 18px">
