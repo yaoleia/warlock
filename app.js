@@ -32,7 +32,8 @@ module.exports = async app => {
     dataType: 'json',
     timeout: 20000
   });
-  tasks.data.forEach(element => {
+
+  Array.isArray(tasks.data) && tasks.data.forEach(element => {
     if (!element.task_flag) return;
     app.redis.subscribe(element.task_id);
   });
