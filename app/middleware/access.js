@@ -13,7 +13,8 @@ module.exports = () => {
     ctx.set('X-Response-Time', rs);
 
     const ext = path.extname(ctx.url).toLocaleLowerCase();
-    const isSkip = skipExt.indexOf(ext) !== -1 && ctx.status < 400;
+
+    const isSkip = (skipExt.indexOf(ext) !== -1 || ctx.url.indexOf('.') !== -1) && ctx.status < 400;
 
     if (!isSkip) {
       const ip = ctx.get('X-Real-IP') || ctx.ip;
@@ -29,14 +30,8 @@ module.exports = () => {
       // const message = util.format('[access] %s:%s - %s %s %s/%s %s %s %s %s %s',
       //   ip, port, method, url, protocol, status, length, referrer, rs, serverTime, ua);
       const message = util.format(
-        '%s status:%s length:%s referrer:%s rs:%s serverTime:%s ua:%s',
-        protocol,
+        '%s',
         status,
-        length,
-        referrer,
-        rs,
-        serverTime,
-        ua
       );
       ctx.logger.info(message);
       // console.log(JSON.stringify(ctx.body));
