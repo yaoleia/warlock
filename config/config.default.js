@@ -70,7 +70,7 @@ module.exports = app => {
 
   exports.keys = '123456';
 
-  exports.middleware = ['locals', 'access', 'gzip', 'proxy'];
+  exports.middleware = ['locals', 'access', 'gzip', 'proxy', 'conditional', 'etag'];
 
   exports.proxy = {
     match: '/api/proxyurl'
