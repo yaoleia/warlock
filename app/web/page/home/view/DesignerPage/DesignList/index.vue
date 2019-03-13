@@ -54,7 +54,7 @@
                             <el-button title="查看" type="info" @click="jumpToWatch(scope.row)">
                                 <v-icon name='065chakandingdan'></v-icon> 查看
                             </el-button>
-                            <el-button title="更多按钮" type="text" @click="contextmenuHandle(scope.row,$event)">
+                            <el-button title="更多按钮" type="text" @click="contextmenuHandle(scope.row,scope.column,$event)">
                                 <v-icon name='gengduoanniu'></v-icon>
                             </el-button>
                         </div>
@@ -189,7 +189,7 @@
             jumperHandle(flow) {
                 window.open(`/?workflowid=${flow._id}`);
             },
-            contextmenuHandle(row, e) {
+            contextmenuHandle(row, column, e) {
                 this.active = row;
                 this.$nextTick(() => {
                     const contextMenu = this.$refs.contextMenu.$el;
