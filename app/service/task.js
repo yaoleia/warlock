@@ -13,7 +13,7 @@ module.exports = class ArticeService extends egg.Service {
   }
 
   async getTaskId() {
-    const task = await this.app.curl(`${this.serverUrl}/api/task`, { method: 'GET', timeout: 20000 });
+    const task = await this.app.curl(`${this.serverUrl}/api/task`, { method: 'GET', dataType: 'json', timeout: 20000 });
     return task.data;
   }
 

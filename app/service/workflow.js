@@ -78,6 +78,7 @@ class WorkflowService extends Service {
       }
       const resp = await this.app.curl(`${this.serverUrl}/api/workflow/${workflow_id}`, {
         method: 'DELETE',
+        dataType: 'json',
         timeout: 20000
       });
       this.app.io.of('/').emit('workflow', { type: 'delete', msg: { _id: workflow_id } });
