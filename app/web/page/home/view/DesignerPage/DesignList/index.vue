@@ -177,7 +177,7 @@
                         resp = await this.$request.task.deleteTask(item._id);
                     }
                 } catch (error) {
-                    throw error;
+                    console.error(error);
                 } finally {
                     loading.close();
                 }

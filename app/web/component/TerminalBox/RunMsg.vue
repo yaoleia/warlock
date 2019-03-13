@@ -63,7 +63,6 @@
             },
             'task.id': {
                 handler(id, oldId) {
-                    console.log(332323)
                     if (!oldId && !id) return;
                     if (id) {
                         if (oldId) {
