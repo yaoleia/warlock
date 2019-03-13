@@ -42,7 +42,7 @@ module.exports = class ArticeService extends egg.Service {
           timeout: 20000
         });
 
-        console.log('task_flag: ' + resp.data.task_flag)
+        console.log('task_flag: ' + JSON.stringify(resp.data))
 
         // TODO: 开启错误
         if (!resp.data.task_flag) {
@@ -56,8 +56,9 @@ module.exports = class ArticeService extends egg.Service {
       }
 
       const tid = res.task_id ? res.task_id : res;
+      console.log('task_flag: ' + JSON.stringify(tid))
       if (typeof tid === 'string') {
-        this.app.redis.subscribe(tid);
+        this.app.redis.get('client2').subscribe(tid);
       }
       return res;
     } catch (error) {
@@ -70,14 +71,14 @@ module.exports = class ArticeService extends egg.Service {
     try {
       if (res) {
         await this.app.curl(`${this.serverUrl}/api/task/${res} `);
-        this.app.redis.unsubscribe(res);
+        this.app.redis.get('client2').unsubscribe(res);
       } else {
         const workflow = await this.ctx.service.workflow.getWorkflow({ id: params.id })
         await this.app.curl(`${this.serverUrl}/api/task/${workflow.task_id}`, {
           method: 'DELETE',
           timeout: 20000
         });
-        this.app.redis.unsubscribe(workflow.task_id);
+        this.app.redis.get('client2').unsubscribe(workflow.task_id);
         workflow.active = false;
         workflow.task_id = '';
         await this.ctx.service.workflow.updateWorkflow(workflow);

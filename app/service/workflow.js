@@ -106,6 +106,7 @@ class WorkflowService extends Service {
         method: 'POST',
         contentType: 'json',
         data: body,
+        dataType: 'json',
         timeout: 20000
       });
       const msg = { ...body, _id: resp.data };
