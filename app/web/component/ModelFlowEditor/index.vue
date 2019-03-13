@@ -242,8 +242,7 @@
                     const creatTask = await this.$request.task.postTask({
                         flowData
                     })
-                    // this.task.id = creatTask.data;
-                    this.task.id = '123'
+                    this.task.id = creatTask.data;
                     this.runDesign = true;
                 } catch (error) {
                     this.$message({
