@@ -28,7 +28,6 @@ class PluginService extends Service {
     try {
       const resp = await this.app.curl(`${this.serverUrl}/api/plugin/${params.id}`, {
         method: 'DELETE',
-        dataType: 'json',
         timeout: 20000
       });
       return resp.data;

@@ -13,7 +13,7 @@ module.exports = class ArticeService extends egg.Service {
   }
 
   async getTaskId() {
-    const task = await this.app.curl(`${this.serverUrl}/api/task`, { method: 'GET', dataType: 'json', timeout: 20000 });
+    const task = await this.app.curl(`${this.serverUrl}/api/task`, { method: 'GET', timeout: 20000 });
     return task.data;
   }
 
@@ -75,7 +75,6 @@ module.exports = class ArticeService extends egg.Service {
         const workflow = await this.ctx.service.workflow.getWorkflow({ id: params.id })
         await this.app.curl(`${this.serverUrl}/api/task/${workflow.task_id}`, {
           method: 'DELETE',
-          dataType: 'json',
           timeout: 20000
         });
         this.app.redis.unsubscribe(workflow.task_id);

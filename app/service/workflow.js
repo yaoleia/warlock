@@ -73,13 +73,11 @@ class WorkflowService extends Service {
       if (workflow.task_id) {
         await this.app.curl(`${this.serverUrl}/api/task/${workflow.task_id}`, {
           method: 'DELETE',
-          dataType: 'json',
           timeout: 20000
         });
       }
       const resp = await this.app.curl(`${this.serverUrl}/api/workflow/${workflow_id}`, {
         method: 'DELETE',
-        dataType: 'json',
         timeout: 20000
       });
       this.app.io.of('/').emit('workflow', { type: 'delete', msg: { _id: workflow_id } });
@@ -107,7 +105,6 @@ class WorkflowService extends Service {
         method: 'POST',
         contentType: 'json',
         data: body,
-        dataType: 'json',
         timeout: 20000
       });
       const msg = { ...body, _id: resp.data };
