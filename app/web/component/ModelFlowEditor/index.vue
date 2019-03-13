@@ -54,7 +54,7 @@
             return {
                 runMsgList: this.runMsgList,
                 editorMsgList: this.editorMsgList,
-                taskId: this.taskId
+                task: this.task
             }
         },
         data() {
@@ -62,7 +62,7 @@
                 DEFAULT_OUTPUTS: ['ts', 'status'],
                 dialogOpened: false,
                 showLayout: false,
-                taskId: '',
+                task: { id: '' },
                 runDesign: false,
                 editorMsgList: [],
                 runMsgList: [],
@@ -112,7 +112,7 @@
                     this.output = JSON.parse(JSON.stringify(params.flow.output));
                 }
                 if (params.flow.task_id) {
-                    this.taskId = params.flow.task_id;
+                    this.task.id = params.flow.task_id;
                 }
             }
 
@@ -242,7 +242,8 @@
                     const creatTask = await this.$request.task.postTask({
                         flowData
                     })
-                    this.taskId = creatTask.data;
+                    // this.task.id = creatTask.data;
+                    this.task.id = '123'
                     this.runDesign = true;
                 } catch (error) {
                     this.$message({
@@ -255,12 +256,12 @@
                 }
             },
             async deleteTestTask() {
-                if (!this.taskId) return;
-                if (this.taskId === this.designItem.task_id) return;
+                if (!this.task.id) return;
+                if (this.task.id === this.designItem.task_id) return;
                 const loading = this.loadingUi();
                 try {
-                    await this.$request.task.deleteTestTask(this.taskId);
-                    this.taskId = this.designItem.task_id || '';
+                    await this.$request.task.deleteTestTask(this.task.id);
+                    this.task.id = this.designItem.task_id || '';
                     this.runDesign = false;
                 } catch (error) {
                     throw error;

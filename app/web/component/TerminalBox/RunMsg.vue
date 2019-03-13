@@ -1,7 +1,7 @@
 <template>
     <div class="run-msg">
-        <div class="title" v-if='taskId'>
-            <!-- taskId: {{taskId}} -->
+        <div class="title" v-if='task.id'>
+            <!-- taskId: {{task.id}} -->
         </div>
         <ul class="active" v-if="active">
             <msg-item v-for='(value,key) in active' :key='key' :_key='key' :value='value' :showTerminal='showTerminal'></msg-item>
@@ -23,7 +23,7 @@
                 active: null
             };
         },
-        inject: ['runMsgList', 'taskId', 'socket'],
+        inject: ['runMsgList', 'task', 'socket'],
         props: ['showTerminal', 'runDesign'],
         components: { msgItem },
         methods: {
@@ -38,7 +38,7 @@
             }
         },
         mounted() {
-            this.cacheTaskId = this.taskId;
+            this.cacheTaskId = this.task.id;
             this.socket.on('msg', data => {
                 data.act = false;
                 this.runMsgList.push(data)
@@ -61,8 +61,9 @@
                     l.act = l.ts === obj.ts;
                 })
             },
-            taskId: {
+            'task.id': {
                 handler(id, oldId) {
+                    console.log(332323)
                     if (!oldId && !id) return;
                     if (id) {
                         if (oldId) {
