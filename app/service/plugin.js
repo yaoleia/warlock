@@ -13,8 +13,12 @@ class PluginService extends Service {
   }
   async getPluginList() {
     try {
-      const resp = await this.ctx.http.get(`${this.serverUrl}/api/plugins`);
-      return resp;
+      const resp = await this.app.curl(`${this.serverUrl}/api/plugins`, {
+        method: 'GET',
+        dataType: 'json',
+        timeout: 20000
+      });
+      return resp.data;
     } catch (error) {
       throw error;
     }
@@ -22,8 +26,12 @@ class PluginService extends Service {
 
   async deletePlugin(params) {
     try {
-      const resp = await this.ctx.http.delete(`${this.serverUrl}/api/plugin/${params.id}`);
-      return resp;
+      const resp = await this.app.curl(`${this.serverUrl}/api/plugin/${params.id}`, {
+        method: 'DELETE',
+        dataType: 'json',
+        timeout: 20000
+      });
+      return resp.data;
     } catch (error) {
       throw error;
     }
@@ -31,8 +39,12 @@ class PluginService extends Service {
 
   async getPlugin(params) {
     try {
-      const resp = await this.ctx.http.get(`${this.serverUrl}/api/plugin/${params.id}`);
-      return resp;
+      const resp = await this.app.curl(`${this.serverUrl}/api/plugin/${params.id}`, {
+        method: 'GET',
+        dataType: 'json',
+        timeout: 20000
+      });
+      return resp.data;
     } catch (error) {
       throw error;
     }
@@ -56,12 +68,10 @@ class PluginService extends Service {
         headers: form.headers(),
         // stream,
         stream: form,
-        dataType: 'json'
+        dataType: 'json',
+        timeout: 20000
       });
-      // const resp = await this.app.http.post(`${this.serverUrl}/api/plugin`, form, {
-      //   headers: form.headers()
-      // })
-      return resp;
+      return resp.data;
     } catch (error) {
       await sendToWormhole(stream);
       throw error;

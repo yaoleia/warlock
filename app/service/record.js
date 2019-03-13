@@ -30,9 +30,15 @@ class RecordService extends Service {
 
     console.log(reqObj);
     try {
-      const resp = await this.ctx.http.post(
+      const resp = await this.app.curl(
         `${this.serverUrl}/api/record`,
-        reqObj
+        {
+          method: 'POST',
+          contentType: 'json',
+          data: reqObj,
+          dataType: 'json',
+          timeout: 20000
+        }
       );
 
       // const resp = {
@@ -76,7 +82,7 @@ class RecordService extends Service {
       //     ]
       //   }
       // };
-      if (resp.data && resp.code === 1) {
+      if (resp.data.data && resp.data.code === 1) {
         resp.data.list.forEach(l => {
           for (const attr in l) {
             if (attr.indexOf('_path') !== -1) {

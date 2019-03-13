@@ -8,12 +8,12 @@ module.exports = class ArticeService extends egg.Service {
   }
 
   async getTasks() {
-    const tasks = await this.app.curl(`${this.serverUrl}/api/tasks`, { method: 'GET', dataType: 'json' });
+    const tasks = await this.app.curl(`${this.serverUrl}/api/tasks`, { method: 'GET', dataType: 'json', timeout: 20000 });
     return tasks.data;
   }
 
   async getTaskId() {
-    const task = await this.app.curl(`${this.serverUrl}/api/task`, { method: 'GET', dataType: 'json' });
+    const task = await this.app.curl(`${this.serverUrl}/api/task`, { method: 'GET', dataType: 'json', timeout: 20000 });
     return task.data;
   }
 
@@ -21,18 +21,33 @@ module.exports = class ArticeService extends egg.Service {
     try {
       const workflow_id = workflow._id;
       const task_id = await this.ctx.service.task.getTaskId();
+      console.log('task_id: ' + JSON.stringify(task_id))
       let res = null;
       if (workflow.flowData && !workflow_id) {
         // 创建testTask时使用
-        await this.ctx.http.post(`${this.serverUrl}/api/task`, { flowData: workflow.flowData, task_id });
+        await this.app.curl(`${this.serverUrl}/api/task`, {
+          method: 'POST',
+          contentType: 'json',
+          data: { flowData: workflow.flowData, task_id },
+          dataType: 'json',
+          timeout: 20000
+        });
         res = task_id;
       } else {
-        const resp = await this.ctx.http.post(`${this.serverUrl}/api/task`, { workflow_id, task_id });
+        const resp = await this.app.curl(`${this.serverUrl}/api/task`, {
+          method: 'POST',
+          contentType: 'json',
+          data: { workflow_id, task_id },
+          dataType: 'json',
+          timeout: 20000
+        });
+
+        console.log('task_flag: ' + resp.data.task_flag)
 
         // TODO: 开启错误
-        if (!resp.task_flag) {
+        if (!resp.data.task_flag) {
           this.ctx.status = 400;
-          return resp;
+          return resp.data;
         }
         workflow.active = true;
         workflow.task_id = task_id;
@@ -41,8 +56,9 @@ module.exports = class ArticeService extends egg.Service {
       }
 
       const tid = res.task_id ? res.task_id : res;
-      this.app.redis.subscribe(tid);
-
+      if (typeof tid === 'string') {
+        this.app.redis.subscribe(tid);
+      }
       return res;
     } catch (error) {
       throw error;
@@ -53,11 +69,15 @@ module.exports = class ArticeService extends egg.Service {
     let res = params.task_id;
     try {
       if (res) {
-        await this.ctx.http.delete(`${this.serverUrl}/api/task/${res} `);
+        await this.app.curl(`${this.serverUrl}/api/task/${res} `);
         this.app.redis.unsubscribe(res);
       } else {
         const workflow = await this.ctx.service.workflow.getWorkflow({ id: params.id })
-        await this.ctx.http.delete(`${this.serverUrl}/api/task/${workflow.task_id}`);
+        await this.app.curl(`${this.serverUrl}/api/task/${workflow.task_id}`, {
+          method: 'DELETE',
+          dataType: 'json',
+          timeout: 20000
+        });
         this.app.redis.unsubscribe(workflow.task_id);
         workflow.active = false;
         workflow.task_id = '';
@@ -72,8 +92,12 @@ module.exports = class ArticeService extends egg.Service {
 
   async showTask(params) {
     try {
-      const resp = await this.ctx.http.get(`${this.serverUrl}/api/task/${params.id}`);
-      return resp;
+      const resp = await this.app.curl(`${this.serverUrl}/api/task/${params.id}`, {
+        method: 'GET',
+        dataType: 'json',
+        timeout: 20000
+      });
+      return resp.data;
     } catch (error) {
       throw error;
     }

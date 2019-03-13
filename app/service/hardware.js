@@ -9,8 +9,12 @@ class hardwareService extends Service {
 
   async start(json) {
     try {
-      const result = await this.ctx.http.get(`${this.serverUrl}/api/control/start_img_processing`);
-      return result;
+      const result = await this.app.curl(`${this.serverUrl}/api/control/start_img_processing`, {
+        method: 'GET',
+        dataType: 'json',
+        timeout: 20000
+      });
+      return result.data;
     } catch (error) {
       return error;
     }
@@ -18,8 +22,12 @@ class hardwareService extends Service {
 
   async stop(json) {
     try {
-      const result = await this.ctx.http.get(`${this.serverUrl}/api/control/stop_img_processing`);
-      return result;
+      const result = await this.app.curl(`${this.serverUrl}/api/control/stop_img_processing`, {
+        method: 'GET',
+        dataType: 'json',
+        timeout: 20000
+      });
+      return result.data;
     } catch (error) {
       return error;
     }
@@ -27,8 +35,8 @@ class hardwareService extends Service {
 
   async setMainCam(json) {
     try {
-      const result = await this.ctx.http.post(`${this.serverUrl}/api/hardware/main_cam`, { param: { ...json } });
-      return result;
+      const result = await this.app.curl(`${this.serverUrl}/api/hardware/main_cam`, { method: 'POST', contentType: 'json', data: { ...json }, dataType: 'json', timeout: 20000 });
+      return result.data;
     } catch (error) {
       return error;
     }
@@ -36,8 +44,8 @@ class hardwareService extends Service {
 
   async setUsbCam(json) {
     try {
-      const result = await this.ctx.http.post(`${this.serverUrl}/api/hardware/usb_cam`, { param: { ...json } });
-      return result;
+      const result = await this.app.curl(`${this.serverUrl}/api/hardware/usb_cam`, { method: 'POST', contentType: 'json', data: { ...json }, dataType: 'json', timeout: 20000 });
+      return result.data;
     } catch (error) {
       return error;
     }
@@ -45,8 +53,8 @@ class hardwareService extends Service {
 
   async setLight(json) {
     try {
-      const result = await this.ctx.http.post(`${this.serverUrl}/api/hardware/light`, { param: { ...json } });
-      return result;
+      const result = await this.app.curl(`${this.serverUrl}/api/hardware/light`, { method: 'POST', contentType: 'json', data: { ...json }, dataType: 'json', timeout: 20000 });
+      return result.data;
     } catch (error) {
       return error;
     }
@@ -54,8 +62,8 @@ class hardwareService extends Service {
 
   async setTrigger(json) {
     try {
-      const result = await this.ctx.http.post(`${this.serverUrl}/api/hardware/trigger`, { param: { ...json } });
-      return result;
+      const result = await this.app.curl(`${this.serverUrl}/api/hardware/trigger`, { method: 'POST', contentType: 'json', data: { ...json }, dataType: 'json', timeout: 20000 });
+      return result.data;
     } catch (error) {
       return error;
     }

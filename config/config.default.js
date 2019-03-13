@@ -41,15 +41,6 @@ module.exports = app => {
     )
   };
 
-  exports.http = {
-    headers: {
-      common: {
-        'Content-Type': 'application/json; charset=UTF-8'
-      }
-    },
-    timeout: 20000
-  };
-
   exports.vuessr = {
     layout: path.join(app.baseDir, 'app/web/view/layout.html'),
     renderOptions: {
