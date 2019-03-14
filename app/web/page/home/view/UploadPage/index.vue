@@ -239,7 +239,6 @@
                         type: 'error',
                         message: '删除插件失败！'
                     })
-                    throw error;
                 } finally {
                     loading.close();
                 }

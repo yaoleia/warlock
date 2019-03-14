@@ -1,6 +1,6 @@
 module.exports = async app => {
   app.messenger.once('egg-ready', async () => {
-    app.redis.get('client2').on('message', (channel, message) => {
+    app.redis.get('subClient').on('message', (channel, message) => {
       app.io.of('/').to(channel).emit('msg', JSON.parse(message))
       console.log(channel + ': ' + message);
     })
@@ -15,6 +15,6 @@ module.exports = async app => {
 
   Array.isArray(tasks.data) && tasks.data.forEach(element => {
     if (!element.task_flag) return;
-    app.redis.get('client2').subscribe(element.task_id);
+    app.redis.get('subClient').subscribe(element.task_id);
   });
 };

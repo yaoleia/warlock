@@ -238,7 +238,10 @@
                     }
                     this.uploadCancel();
                 } catch (error) {
-                    throw error;
+                    this.$message({
+                        type: 'error',
+                        message: '上传流程失败！'
+                    })
                 } finally {
                     loading.close();
                 }
@@ -290,7 +293,6 @@
                         type: 'error',
                         message: '创建流程失败！'
                     })
-                    throw error;
                 }
             },
             async deleteWorkflow(item) {
@@ -318,7 +320,6 @@
                         type: 'error',
                         message: '获取流程列表失败！'
                     })
-                    throw error;
                 } finally {
                     this.loading = false;
                 }

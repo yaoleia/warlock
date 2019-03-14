@@ -224,7 +224,6 @@
                         type: 'error',
                         message: '保存失败！'
                     })
-                    throw error;
                 } finally {
                     loading.close();
                 }
@@ -249,7 +248,6 @@
                         message: `开启任务失败! ${error}`,
                         type: 'error'
                     })
-                    throw error;
                 } finally {
                     loading.close();
                 }
@@ -263,7 +261,10 @@
                     this.task.id = this.designItem.task_id || '';
                     this.runDesign = false;
                 } catch (error) {
-                    throw error;
+                    this.$message({
+                        type: 'error',
+                        message: '关闭任务失败！'
+                    })
                 } finally {
                     loading.close();
                 }

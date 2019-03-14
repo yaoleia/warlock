@@ -184,7 +184,6 @@
                         type: 'error',
                         message: '获取plugins列表失败！'
                     })
-                    throw error;
                 } finally {
                     this.editorLoaded.resolve();
                     loading.close();

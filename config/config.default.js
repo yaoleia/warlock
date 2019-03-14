@@ -29,13 +29,13 @@ module.exports = app => {
   const redisHost = env.SERVER_HOST ? env.SERVER_HOST.replace(new RegExp(/[\S]+\//g), '') : '0.0.0.0';
   exports.redis = {
     clients: {
-      client1: {
+      client: {
         port: 6379,
         host: redisHost,
         password: '',
         db: 0,
       },
-      client2: {
+      subClient: {
         port: 6379,
         host: redisHost,
         password: '',

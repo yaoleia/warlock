@@ -1,6 +1,6 @@
 <template>
     <div class="layout-design">
-        <draggable class="component-list" :list="components" :options='componentOptions' @end="end">
+        <draggable class="component-list" :list="components" v-bind='componentOptions' @end="end">
             <div :class='component.name+"-component"' v-for="component in components" :key="component.name" @mousedown.prevent="mousedown">
                 <ul>
                     <li class="handle">
@@ -13,7 +13,7 @@
                 </ul>
             </div>
         </draggable>
-        <draggable class="layout" :options="layoutOptions" @mousemove.native.prevent="mousemove">
+        <draggable class="layout" v-bind="layoutOptions" @mousemove.native.prevent="mousemove">
             <div :class='element.name' v-for="(element,index) in layout" :key="element.id" :style="{top:element.top+'px',left:element.left+'px',width:element.width+'px',height:element.height+'px'}">
                 <ul>
                     <li class="name" @mousedown.prevent.stop="imousedown($event, element)">

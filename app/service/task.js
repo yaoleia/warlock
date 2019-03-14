@@ -21,7 +21,6 @@ module.exports = class ArticeService extends egg.Service {
     try {
       const workflow_id = workflow._id;
       const task_id = await this.ctx.service.task.getTaskId();
-      console.log('task_id: ' + JSON.stringify(task_id))
       let res = null;
       if (workflow.flowData && !workflow_id) {
         // 创建testTask时使用
@@ -42,7 +41,7 @@ module.exports = class ArticeService extends egg.Service {
           timeout: 20000
         });
 
-        console.log('task_flag: ' + JSON.stringify(resp.data))
+        console.log('task_resp: ' + JSON.stringify(resp.data))
 
         // TODO: 开启错误
         if (!resp.data.task_flag) {
@@ -56,9 +55,9 @@ module.exports = class ArticeService extends egg.Service {
       }
 
       const tid = res.task_id ? res.task_id : res;
-      console.log('task_flag: ' + JSON.stringify(tid))
+      console.log('task_id: ' + JSON.stringify(tid))
       if (typeof tid === 'string') {
-        this.app.redis.get('client2').subscribe(tid);
+        this.app.redis.get('subClient').subscribe(tid);
       }
       return res;
     } catch (error) {
@@ -71,14 +70,14 @@ module.exports = class ArticeService extends egg.Service {
     try {
       if (res) {
         await this.app.curl(`${this.serverUrl}/api/task/${res} `);
-        this.app.redis.get('client2').unsubscribe(res);
+        this.app.redis.get('subClient').unsubscribe(res);
       } else {
         const workflow = await this.ctx.service.workflow.getWorkflow({ id: params.id })
         await this.app.curl(`${this.serverUrl}/api/task/${workflow.task_id}`, {
           method: 'DELETE',
           timeout: 20000
         });
-        this.app.redis.get('client2').unsubscribe(workflow.task_id);
+        this.app.redis.get('subClient').unsubscribe(workflow.task_id);
         workflow.active = false;
         workflow.task_id = '';
         await this.ctx.service.workflow.updateWorkflow(workflow);

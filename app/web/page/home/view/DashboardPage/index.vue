@@ -147,7 +147,6 @@
                         this.workflow.task_id = '';
                         this.workflow.active = false;
                     }
-                    throw error;
                 } finally {
                     loading.close();
                 }
