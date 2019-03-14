@@ -29,9 +29,6 @@
             },
             template_img: {
                 required: false
-            },
-            switchCraft: {
-                required: false
             }
         },
         methods: {
