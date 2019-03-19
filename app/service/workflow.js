@@ -109,7 +109,7 @@ class WorkflowService extends Service {
         dataType: 'json',
         timeout: 20000
       });
-      const msg = { ...body, _id: resp.data };
+      const msg = { ...body, _id: resp.data._id || resp.data };
       this.app.io.of('/').emit('workflow', { type: 'add', msg });
       return msg;
     } catch (error) {
