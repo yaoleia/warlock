@@ -50,11 +50,8 @@
                 <template slot-scope="scope">
                     <div class="opration">
                         <div class="top-btn">
-                            <el-button v-if='!scope.row.open' title="展开" type="text" @click.native="handleExpand(scope.row)">
-                                展开
-                            </el-button>
-                            <el-button v-else title="收起" type="text" @click.native="handleExpand(scope.row)">
-                                收起
+                            <el-button :title="expand[scope.$index]?'收起':'展开'" type="text" @click.native="handleExpand(scope)">
+                                {{expand[scope.$index]?'收起':'展开'}}
                             </el-button>
                             <el-button title="删除" type="text" @click.native="handleDelete(scope.row)">
                                 删除
@@ -174,7 +171,8 @@
                     name: ''
                 },
                 showProgess: false,
-                search: ''
+                search: '',
+                expand: []
             }
         },
         computed: {
@@ -188,20 +186,21 @@
                 return this.$store.state.serverUrl
             },
             pluginListFilter() {
-                return this.pluginList.filter(data => {
-                    data.open = false;
+                const filterArray = this.pluginList.filter(data => {
                     if (!this.search) return true;
                     const search = this.search.toLowerCase()
                     if (data.module.toLowerCase().includes(search)) return true;
                     if (data.type.toLowerCase().includes(search)) return true;
                     if (data.super_type.toLowerCase().includes(search)) return true;
                 })
+                this.expand = new Array(filterArray.length).fill(false);
+                return filterArray;
             }
         },
         methods: {
-            handleExpand(row) {
-                row.open = !row.open;
-                this.$refs.multipleTable.toggleRowExpansion(row)
+            handleExpand(scope) {
+                this.expand[scope.$index] = !this.expand[scope.$index]
+                this.$refs.multipleTable.toggleRowExpansion(scope.row)
             },
             onProgress(event, file) {
                 const { percent } = event;
