@@ -233,6 +233,7 @@ export default {
     fixEvPramas() {
       const nodes = this.flow.getNodes();
       const arr = [];
+      let flag = false;
       nodes.forEach(n => {
         const model = n.getModel();
         const object = { ...model.exec_outputs, ...model.exec_params };
@@ -240,13 +241,19 @@ export default {
           if (object.hasOwnProperty(key)) {
             const element = object[key];
             element.list = [];
-            if (element.show && this.isToPusher(n)) {
+            const isToPusher = this.isToPusher(n);
+            if (isToPusher && !flag) {
+              flag = true;
+            }
+            if (element.show && isToPusher) {
               arr.push(`${key}@${model.id}`)
             }
           }
         }
       })
-      this.output = [...this.DEFAULT_OUTPUTS, ...arr];
+
+      this.output = flag ? [...this.DEFAULT_OUTPUTS, ...arr] : [];
+
       const edges = this.flow.getEdges();
       edges.forEach(e => {
         const smodel = e.source.getModel();

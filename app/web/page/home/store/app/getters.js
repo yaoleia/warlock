@@ -1,7 +1,7 @@
 'use strict';
 import _ from 'lodash';
 export default {
-  algorithmModuleList: state => Object.values(state.algorithmMap).map(item => item.module),
+  algorithmModuleList: state => state.algorithmMap.map(item => item.module),
   algorithmTree: state => {
     const tree = _.groupBy(state.algorithmMap, 'super_type');
     for (const key in tree) {
