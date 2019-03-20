@@ -13,7 +13,7 @@
 </template>
 
 <script type="babel">
-    import ParamNav from './ParamNav.vue'
+    import paramNav from './paramNav.vue'
     import imgStream from 'component/imgStream'
     export default {
         data() {
@@ -24,7 +24,7 @@
             }
         },
         components: {
-            ParamNav,
+            paramNav,
             imgStream
         },
         computed: {

@@ -8,7 +8,7 @@ import ParamPage from '../view/ParamPage'
 import DesignPage from '../view/DesignerPage'
 import Designer from '../view/DesignerPage/Designer'
 import DesignList from '../view/DesignerPage/DesignList'
-import NotFound from '../view/NotFoundPage.vue'
+import NotFound from '../view/notFound.vue'
 import Login from '../view/LoginPage'
 import UploadPage from '../view/UploadPage'
 import _ from 'lodash';

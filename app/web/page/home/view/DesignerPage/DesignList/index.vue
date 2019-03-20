@@ -70,7 +70,7 @@
     import { export2Json } from '@/vendor/Export2Json'
     import rightNav from './rightNav'
     import uploadDialog from './uploadDialog'
-    import contextMenu from './contextmenu'
+    import contextMenu from './contextMenu'
     import FlowDisplayer from 'component/modelFlowEditor/displayer'
     import copyText from 'component/copyText'
     import { SET_WORKFLOW_LIST } from '../../../store/app/mutation-type'

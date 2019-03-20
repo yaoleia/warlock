@@ -8,7 +8,7 @@
     import './ui.js'
     import { constantRouterMap, userRouterMap, visitorRouterMap } from './router'
     import IndexLayout from 'component/layout/index'
-    import HeaderNav from './view/HeaderNav.vue'
+    import headerNav from './view/headerNav.vue'
     import io from 'socket.io-client'
     import { router, store } from './store-router'
 
@@ -23,7 +23,7 @@
         },
         components: {
             IndexLayout,
-            HeaderNav
+            headerNav
         },
         beforeMount() {
             this.checkMode();
