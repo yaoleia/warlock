@@ -44,45 +44,33 @@ class RecordService extends Service {
       // const resp = {
       //   code: 1,
       //   data: {
-      //     total: 32,
-      //     list: [
-      //       {
-      //         dm_code: 'FJW5675789734WTG1',
-      //         seg_img_path: '/public/mock-img/1.jpg',
-      //         reg_img_path: '/public/mock-img/2.jpg',
-      //         dm_path: '/public/mock-img/dmcode--1538018674.jpg',
-      //         mask_img_path: '/public/mock-img/3.jpg',
-      //         defect_type: 0,
-      //         detect_time: new Date().getTime(),
-      //         phone_box: {
-      //           point1: { x: 3142, y: 1776 },
-      //           point2: { x: 2079, y: 1761 },
-      //           point3: { x: 2106, y: -113 },
-      //           point4: { x: 3169, y: -98 }
-      //         }
-      //       },
-      //       {
-      //         dm_code: 'FJW5675789734WTG2',
-      //         seg_img_path: '/public/mock-img/1.jpg',
-      //         mask_img_path: '/public/mock-img/3.jpg',
-      //         reg_img_path: '/public/mock-img/2.jpg',
-      //         dm_path: '/public/mock-img/dmcode--1538018674.jpg',
-      //         defect_type: 1,
-      //         detect_time: new Date().getTime()
-      //       },
-      //       {
-      //         dm_code: 'FJW5675789734WTG3',
-      //         seg_img_path: '/public/mock-img/1.jpg',
-      //         mask_img_path: '/public/mock-img/3.jpg',
-      //         reg_img_path: '/public/mock-img/2.jpg',
-      //         dm_path: '/public/mock-img/dmcode--1538018674.jpg',
-      //         defect_type: 1,
-      //         detect_time: new Date().getTime()
-      //       }
-      //     ]
+      //     total: 100,
+      //     list: []
       //   }
       // };
-      if (resp.data.data && resp.data.code === 1) {
+      // let dataNum = resp.data.total;
+
+      // while (dataNum > 0) {
+      //   resp.data.list.push({
+      //     dm_code: 'FJW5675789734WTG1',
+      //     seg_img_path: 'http://127.0.0.1:7501/public/mock-img/1.jpg',
+      //     reg_img_path: 'http://127.0.0.1:7501/public/mock-img/2.jpg',
+      //     dm_path: 'http://127.0.0.1:7501/public/mock-img/dmcode--1538018674.jpg',
+      //     mask_img_path: 'http://127.0.0.1:7501/public/mock-img/3.jpg',
+      //     defect_type: 0,
+      //     detect_time: new Date().getTime(),
+      //     phone_box: {
+      //       point1: { x: 3142, y: 1776 },
+      //       point2: { x: 2079, y: 1761 },
+      //       point3: { x: 2106, y: -113 },
+      //       point4: { x: 3169, y: -98 }
+      //     },
+      //     ts: new Date().getTime() - dataNum * 3000
+      //   })
+      //   dataNum--;
+      // }
+
+      if (resp.data && resp.code === 1) {
         resp.data.list.forEach(l => {
           for (const attr in l) {
             if (attr.indexOf('_path') !== -1) {

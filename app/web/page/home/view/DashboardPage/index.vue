@@ -41,6 +41,7 @@
             //             this.curProduct = resp.data.list[0];
             //         }
             //         resp.data.list.forEach(l => {
+            //             l.act = false;
             //             const prod = this.productList.find(ll => ll.ts === l.ts)
             //             if (!prod) {
             //                 this.productList.push(l)
@@ -280,16 +281,19 @@
                 if (!p.ts) return;
                 oldp.act = false;
                 p.act = true;
-                this.$refs.component.forEach(element => {
-                    element.close && element.close();
-                });
+                if (Array.isArray(this.$refs.component)) {
+                    this.$refs.component.forEach(element => {
+                        element.close && element.close();
+                    });
+                }
                 // 闪现目标定位的红框
                 // $('.flicker', this.$el).finish().fadeOut('fast').fadeIn('fast');
+                // this.drawArea(p.phone_box)
+
                 const parent = $('.list-wrap', this.$el)[0];
                 if (this.switchCraft && this.canScroll) {
                     parent.scrollTop = 0;
                 }
-                this.drawArea(p.phone_box)
 
                 this.$nextTick(() => {
                     this.curPosition.dom = this.$refs[`item_${p.ts}`][0];
