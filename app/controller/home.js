@@ -38,17 +38,6 @@ module.exports = app => {
       }
     }
 
-    async add(ctx) {
-      ctx.body = this.service.article.saveArticle(ctx.request.body);
-    }
-    async del(ctx) {
-      const { id } = ctx.params;
-      ctx.body = this.service.article.deleteArticle(id);
-    }
-    async detail(ctx) {
-      const id = ctx.query.id;
-      ctx.body = {};
-    }
     async usb(ctx) {
       const body = ctx.request.body;
       ctx.body = await this.service.hardware.setUsbCam(body);

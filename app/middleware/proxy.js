@@ -7,7 +7,7 @@ const proxy = httpProxy.createProxyServer({
 proxy.on('proxyRes', (proxyRes, req, res) => {
   console.log(
     `Got response from proxy, url=${req.url}, code=${
-      proxyRes.statusCode
+    proxyRes.statusCode
     }, msg=${proxyRes.statusMessage}`
   );
 });
