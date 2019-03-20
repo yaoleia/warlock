@@ -76,7 +76,9 @@
                     _id: '',
                     flowData: {},
                     cts: '',
-                    ts: ''
+                    ts: '',
+                    layout: [],
+                    output: []
                 },
                 terminalIs: ''
             };
