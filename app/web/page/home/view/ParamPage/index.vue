@@ -6,8 +6,8 @@
                 <el-tab-pane label="主摄像机" name="main"></el-tab-pane>
                 <el-tab-pane label="辅助摄像机" name="usb"></el-tab-pane>
             </el-tabs>
-            <imgStream class="detect-main" v-show="activeName=='main'" @loaded="loaded('main')" @error="error('main')" :url="`${serverUrl}/detect/video_feed_main`"></imgStream>
-            <imgStream class="detect-usb" v-show="activeName=='usb'" @loaded="loaded('usb')" @error="error('usb')" :url="`${serverUrl}/detect/video_feed_usb`"></imgStream>
+            <img-stream class="detect-main" v-show="activeName=='main'" @loaded="loaded('main')" @error="error('main')" :url="`${serverUrl}/detect/video_feed_main`"></img-stream>
+            <img-stream class="detect-usb" v-show="activeName=='usb'" @loaded="loaded('usb')" @error="error('usb')" :url="`${serverUrl}/detect/video_feed_usb`"></img-stream>
         </div>
     </div>
 </template>

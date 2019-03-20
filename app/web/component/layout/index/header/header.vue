@@ -32,11 +32,11 @@
     }
 </style>
 <script type="babel">
-    import ScreenFull from 'component/Screenfull'
+    import screenFull from 'component/screenFull'
     import './header.scss'
     export default {
         components: {
-            ScreenFull
+            screenFull
         },
         data() {
             return {

@@ -6,7 +6,7 @@
 <script type="babel">
     export default {
         components: {
-            ModelFlowEditor: () => import('component/ModelFlowEditor')
+            modelFlowEditor: () => import('component/modelFlowEditor')
         }
     };
 </script>

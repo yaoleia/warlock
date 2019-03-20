@@ -1,8 +1,8 @@
 <script type="text/babel">
     import imgStream from 'component/imgStream'
-    import magnifier from 'component/magnifier'
+    import imgMagnifier from 'component/imgMagnifier'
     import utils from 'framework/utils'
-    import msgItem from 'component/TerminalBox/msgItem'
+    import msgItem from 'component/terminalBox/msgItem'
     import webcam from 'component/webcam'
     import * as d3 from 'd3';
 
@@ -317,7 +317,7 @@
         },
         components: {
             imgStream,
-            magnifier,
+            imgMagnifier,
             msgItem,
             webcam
         }

@@ -1,11 +1,11 @@
 <template>
     <div class="dialog-detail">
-        <magnifier :mask_img_path="cur.mask_img_path" :reg_img_path='cur.reg_img_path' ref="magnifier">
-            <imgStream class="img-big" :url="cur.reg_img_path"></imgStream>
-            <imgStream :url="cur.mask_img_path"></imgStream>
-        </magnifier>
+        <img-magnifier :mask_img_path="cur.mask_img_path" :reg_img_path='cur.reg_img_path' ref="magnifier">
+            <img-stream class="img-big" :url="cur.reg_img_path"></img-stream>
+            <img-stream :url="cur.mask_img_path"></img-stream>
+        </img-magnifier>
         <div class="right">
-            <!-- <imgStream title="目标定位" :url="cur.seg_img_path"></imgStream> -->
+            <!-- <img-stream title="目标定位" :url="cur.seg_img_path"></img-stream> -->
             <el-card class="msg">
                 <p class="title">检测结果详情</p>
                 <span>{{cur.dm_code}}</span>
@@ -99,7 +99,7 @@
 </style>
 <script type="text/babel">
     import imgStream from 'component/imgStream'
-    import magnifier from 'component/magnifier'
+    import imgMagnifier from 'component/imgMagnifier'
     import utils from 'framework/utils'
     export default {
         props: {
@@ -110,7 +110,7 @@
         },
         components: {
             imgStream,
-            magnifier
+            imgMagnifier
         },
         methods: {
             ifOk(type) {

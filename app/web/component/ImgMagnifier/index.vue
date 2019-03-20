@@ -1,8 +1,8 @@
 <script type="text/babel">
     import imgStream from 'component/imgStream'
-    import bigArea from 'component/magnifier/bigArea'
+    import bigArea from 'component/imgMagnifier/bigArea'
     export default {
-        name: 'magnifier',
+        name: 'imgMagnifier',
         data() {
             return {
                 mouse: {},
@@ -254,8 +254,8 @@
 </script>
 <template>
     <div class="magnifier" @mousedown.prevent="mousedown" @mousemove.prevent="mousemove" @mouseup="canMove=false" @mouseleave="canMove=false">
-        <imgStream :alwaysTry="true" class="img-big" v-if="reg_img_path" :url="reg_img_path"></imgStream>
-        <imgStream :alwaysTry="true" :url="mask_img_path"></imgStream>
+        <img-stream :alwaysTry="true" class="img-big" v-if="reg_img_path" :url="reg_img_path"></img-stream>
+        <img-stream :alwaysTry="true" :url="mask_img_path"></img-stream>
         <div class="area visibilityh" ref="area">
             <div class="close el-icon-close" @mousedown.stop @click.stop="close(true)"></div>
             <i @mousedown.prevent.stop="imousedown"></i>

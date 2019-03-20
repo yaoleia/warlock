@@ -71,8 +71,8 @@
     import rightNav from './rightNav'
     import uploadDialog from './uploadDialog'
     import contextMenu from './contextmenu'
-    import FlowDisplayer from 'component/ModelFlowEditor/displayer'
-    import CopyText from 'component/CopyText'
+    import FlowDisplayer from 'component/modelFlowEditor/displayer'
+    import copyText from 'component/copyText'
     import { SET_WORKFLOW_LIST } from '../../../store/app/mutation-type'
     import _ from 'lodash';
     export default {
@@ -152,7 +152,7 @@
             contextMenu,
             uploadDialog,
             rightNav,
-            CopyText
+            copyText
         },
         methods: {
             jumpToEdit(row) {

@@ -23,9 +23,9 @@
         position: relative;
         flex-shrink: 0;
         margin: auto;
-        .el-menu:not(.el-menu--collapse) {
-            // width: 230px;
-        }
+        // .el-menu:not(.el-menu--collapse) {
+        //     width: 230px;
+        // }
         .app {
             width: 100%;
             background-color: #ecf0f5;
