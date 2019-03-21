@@ -69,7 +69,10 @@ module.exports = class ArticeService extends egg.Service {
     let res = params.task_id;
     try {
       if (res) {
-        await this.app.curl(`${this.serverUrl}/api/task/${res} `);
+        await this.app.curl(`${this.serverUrl}/api/task/${res} `, {
+          method: 'DELETE',
+          timeout: 20000
+        });
         this.app.redis.get('subClient').unsubscribe(res);
       } else {
         const workflow = await this.ctx.service.workflow.getWorkflow({ id: params.id })
