@@ -111,7 +111,7 @@
         <div class="icon" :class="imgClass"></div>
         <slot />
         <div class="img-wrap" ref="imgWrap">
-            <img ref="img" class="img" :src="src" @click.alt.exact.stop="altClick" @load="onImgLoad" @error="onError" />
+            <img ref="img" class="img" v-if="src" :src="src" @click.alt.exact.stop="altClick" @load="onImgLoad" @error="onError" />
             <div class="face-area" ref="faceArea"></div>
         </div>
     </div>

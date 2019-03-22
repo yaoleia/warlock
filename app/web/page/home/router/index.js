@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import _ from 'lodash';
 
 import DashboardPage from '../view/DashboardPage'
 import RecordListPage from '../view/RecordListPage'
@@ -8,10 +9,9 @@ import ParamPage from '../view/ParamPage'
 import DesignPage from '../view/DesignerPage'
 import Designer from '../view/DesignerPage/Designer'
 import DesignList from '../view/DesignerPage/DesignList'
-import NotFound from '../view/notFound.vue'
+import NotFound from '../view/notFound'
 import Login from '../view/LoginPage'
 import UploadPage from '../view/UploadPage'
-import _ from 'lodash';
 
 Vue.use(VueRouter);
 

@@ -17,7 +17,7 @@
                 <template slot-scope="props">
                     <el-popover placement="right" trigger="hover" popper-class="dm-popper">
                         <div class="dm-pop">
-                            <img :src="props.row.dm_path">
+                            <img v-if="props.row.dm_path" :src="props.row.dm_path">
                         </div>
                         <div class="dm-code-img-wrap" slot="reference">
                             <img class="dm-code-img" v-if="props.row.dm_path" :src="props.row.dm_path">

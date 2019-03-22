@@ -51,33 +51,6 @@
                             </transition-group>
                         </el-form-item>
                     </el-form>
-                    <!-- <div v-if="selectedModel.shape === 'factory-card'">
-                        <el-form label-width="80px" label-position="left" @submit.native.prevent>
-                            <el-form-item label="名称：" prop="label">
-                                <el-input v-model="inputingLabel" />
-                            </el-form-item>
-                            <el-form-item label="字体颜色：" prop="color">
-                                <el-color-picker v-model="color" size="mini" />
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                    <div v-if="selectedModel.shape!== 'factory-card'">
-                        <el-form label-width="60px" @submit.native.prevent>
-                            <el-form-item label="名称：">
-                                <el-input v-model="inputingLabel" />
-                            </el-form-item>
-                        </el-form>
-                    </div>
-                    <div v-if="selectedModel.shape === 'distortion-correction'">
-                        <el-form label-width="60px" @submit.native.prevent>
-                            <el-form-item :label="item.key+':'" v-for="item in selected.item.shapeObj.optionList" :key="item.key">
-                                <el-input @keyup.native='inputChange($event,item.key)' v-model="selectedModel[item.key]" />
-                            </el-form-item>
-                        </el-form>
-                        <el-checkbox-group v-model="checkedBox" class="check-box">
-                            <el-checkbox v-for="item in selected.item.shapeObj.checkBoxList" :label="item.key" :key="item.key"></el-checkbox>
-                        </el-checkbox-group>
-                    </div> -->
                 </div>
             </div>
         </div>
@@ -112,6 +85,7 @@
         data() {
             return {
                 update: true,
+                tempInputingLabel: '',
                 checkedBox: []
             };
         },
@@ -119,18 +93,11 @@
         computed: {
             inputingLabel: {
                 get() {
-                    return this.selectedModel.label ? this.selectedModel.label : '';
+                    return this.tempInputingLabel ? this.tempInputingLabel : this.selectedModel.label;
                 },
                 set(value) {
+                    this.tempInputingLabel = value;
                     this.$emit('updateGraph', ['label', value]);
-                }
-            },
-            color: {
-                get() {
-                    return this.selectedModel.color ? this.selectedModel.color : '';
-                },
-                set(value) {
-                    this.$emit('updateGraph', ['color', value]);
                 }
             }
         },
@@ -150,6 +117,7 @@
                 this.$emit('updateGraph', ['checkedBox', arr]);
             },
             selectedModel() {
+                this.tempInputingLabel = '';
                 this.update = false
                 this.$nextTick(() => {
                     this.update = true
