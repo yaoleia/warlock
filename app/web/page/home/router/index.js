@@ -12,13 +12,26 @@ import DesignList from '../view/DesignerPage/DesignList'
 import NotFound from '../view/notFound'
 import Login from '../view/LoginPage'
 import UploadPage from '../view/UploadPage'
+import FabricPage from '../view/FabricPage'
 
 Vue.use(VueRouter);
 
 // 通用路由
 export const constantRouterMap = {
-  notFound: { path: '*', component: NotFound, meta: { hide: true } },
-  login: { path: '/login', component: Login, meta: { hide: true } }
+  notFound: {
+    path: '*',
+    component: NotFound,
+    meta: {
+      hide: true
+    }
+  },
+  login: {
+    path: '/login',
+    component: Login,
+    meta: {
+      hide: true
+    }
+  }
 }
 
 // 需要权限路由
@@ -28,21 +41,28 @@ export const userRouterMap = {
     path: '/design',
     redirect: '/design/designList',
     component: DesignPage,
-    meta: { role: ['admin'] },
+    meta: {
+      role: ['admin']
+    },
     children: {
       list: {
         icon: 'el-icon-document',
         name: '流程列表',
         path: '/design/designList',
         component: DesignList,
-        meta: { role: ['admin'] }
+        meta: {
+          role: ['admin']
+        }
       },
       design: {
         icon: 'el-icon-circle-plus-outline',
         name: '新建流程',
         path: '/design/designer/:_id',
         component: Designer,
-        meta: { role: ['admin'], noKeepAlive: true }
+        meta: {
+          role: ['admin'],
+          noKeepAlive: true
+        }
       }
     }
   },
@@ -50,7 +70,17 @@ export const userRouterMap = {
     name: '插件管理',
     path: '/upload',
     component: UploadPage,
-    meta: { role: ['admin'] }
+    meta: {
+      role: ['admin']
+    }
+  },
+  fabric: {
+    name: '图片标注',
+    path: '/fabric',
+    component: FabricPage,
+    meta: {
+      role: ['admin']
+    }
   }
 }
 
@@ -79,7 +109,11 @@ export const visitorRouterMap = {
 export function getRouer(router) {
   router = _.cloneDeep(router);
   return Object.values(router).map(l => {
-    const { children, icon, ...r } = l;
+    const {
+      children,
+      icon,
+      ...r
+    } = l;
     if (children) {
       r.children = getRouer(children);
     }
