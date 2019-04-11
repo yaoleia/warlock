@@ -10,42 +10,67 @@
             </div>
         </div>
 
-        <div class="control-wrap">
-
+        <div class="control-wrap" v-show="!loading&&!cut.bigSrc">
             <div class="left-control btns">
-                <div v-show='!loading&&!cut.bigSrc'>
-                    <el-upload action='' :on-change="beforeAvatarUpload" :auto-upload='false'>
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
-                    <el-button @click='cutImg' type="text" size="small" v-show='hasImg'>裁剪</el-button>
-                    <el-button @click='reset' type="text" size="small" v-show='hasImg'>重置画板</el-button>
-                    <el-button @click='clearMark(false)' type="text" size="small" v-show='hasImg'>清空标注</el-button>
-                    <el-button @click='toJson' type="text" size="small" v-show='hasImg'>json</el-button>
-                    <el-button @click='toPng' type="text" size="small" v-show='hasImg'>png</el-button>
+                <el-upload action='' :on-change="beforeAvatarUpload" :auto-upload='false'>
+                    <v-icon name='appendix'></v-icon>
+                </el-upload>
+                <div v-show='hasImg'>
+                    <el-button @click='cutImg' type="text" size="small" v-show='hasImg' title='裁剪'>
+                        <v-icon name='cut'></v-icon>
+                    </el-button>
+                    <el-button @click='reset' type="text" size="small" v-show='hasImg' title="重置画板">
+                        <v-icon name='shanchu'></v-icon>
+                    </el-button>
+                    <el-button @click='clearMark(false)' type="text" size="small" v-show='hasImg' title='清空标注'>
+                        <v-icon name='reset'></v-icon>
+                    </el-button>
+                    <el-button @click='fixIn' type="text" size="small" v-show='hasImg' title="适应画布">
+                        <v-icon name='fullscreen'></v-icon>
+                    </el-button>
+                    <el-button @click='toJson' type="text" size="small" v-show='hasImg' title='导出json'>
+                        <v-icon name='JSON'></v-icon>
+                    </el-button>
+                    <el-button @click='toPng' type="text" size="small" v-show='hasImg' title='导出png'>
+                        <v-icon name='ds-png'></v-icon>
+                    </el-button>
                 </div>
             </div>
 
             <div class="right-control">
                 <div v-show='hasImg'>
-                    <el-button @click='undo' type="text" size="small">undo</el-button>
-                    <el-button @click='redo' type="text" size="small">redo</el-button>
                     <el-radio-group v-model="editor.type" class="main-group" size="small">
-                        <el-radio-button label="brush">画笔</el-radio-button>
-                        <el-radio-button label="labelRect">矩形</el-radio-button>
-                        <el-radio-button label="labelCircle">圆形</el-radio-button>
-                        <el-radio-button label="labelPolygon">多边形</el-radio-button>
+                        <el-radio-button label="brush">
+                            <v-icon name='pen'></v-icon>
+                        </el-radio-button>
+                        <el-radio-button label="labelRect">
+                            <v-icon name='rect'></v-icon>
+                        </el-radio-button>
+                        <el-radio-button label="labelCircle">
+                            <v-icon name='circle'></v-icon>
+                        </el-radio-button>
+                        <el-radio-button label="labelPolygon">
+                            <v-icon name='polygon'></v-icon>
+                        </el-radio-button>
                     </el-radio-group>
-
+                    <div class="revoke">
+                        <el-button @click='undo' type="text" size="small" title="后退">
+                            <v-icon name='undo'></v-icon>
+                        </el-button>
+                        <el-button @click='redo' type="text" size="small" title="前进">
+                            <v-icon name='redo'></v-icon>
+                        </el-button>
+                    </div>
                     <el-radio-group v-show="editor.type==='brush'" @change="selectChange" v-model="editor.lineMode" size="mini" class="line-group">
                         <el-radio-button v-for="option in editor.lines" :key="option" :label="option">{{option}}</el-radio-button>
                     </el-radio-group>
 
                     <div class="block">
-                        <span>color:</span>
+                        <v-icon name='tiaoseban'></v-icon>
                         <el-color-picker v-model="editor.line.color" @change="drawingLineColor" show-alpha :predefine="editor.predefineColors"></el-color-picker>
                     </div>
                     <div class="block">
-                        <span>width:</span>
+                        <v-icon name='width'></v-icon>
                         <el-slider @change="drawingLineWidth" vertical v-model="editor.line.width" :min="1" :max="150" show-input></el-slider>
                     </div>
                 </div>
@@ -69,6 +94,10 @@
 
         },
         methods: {
+            fixIn() {
+                this.$parent.setZoom(this.canvas);
+                this.canvas.absolutePan({ x: 0, y: 0 });
+            },
             async clearMark(bol = false) {
                 if (this.canvas.getObjects().length <= 1) return;
                 if (!bol) {
@@ -123,14 +152,23 @@
             downloadImg(url) {
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'www';
+                a.download = this.imageName;
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
             },
+            splitFileName(text) {
+                const pattern = /\.{1}[a-z]{1,}$/;
+                if (pattern.exec(text) !== null) {
+                    return (text.slice(0, pattern.exec(text).index));
+                } else {
+                    return text;
+                }
+            },
             beforeAvatarUpload(file) {
                 const url = URL.createObjectURL(file.raw);
-                this.$parent.addImage(url);
+                this.imageName = this.splitFileName(file.name);
+                this.$parent.addImage(url, this.imageName);
             },
             cancelCut() {
                 this.cut.bigSrc = null;
@@ -161,8 +199,8 @@
                 this.canvas.requestRenderAll();
             },
             ifEdit(bol = false) {
-                this.canvas.selectable = bol;
-                this.canvas.selection = bol;
+                // this.canvas.selectable = bol;
+                // this.canvas.selection = bol;
                 this.canvas.skipTargetFind = !bol;
             },
             setCutMode(bol) {
@@ -227,7 +265,7 @@
                         const croppedCanvas = $bigSrc.cropper('getCroppedCanvas');
                         croppedCanvas.toBlob(async blob => {
                             this.cut.resultSrc = URL.createObjectURL(blob);
-                            await this.$parent.addImage(this.cut.resultSrc);
+                            await this.$parent.addImage(this.cut.resultSrc, this.imageName);
                             this.cut.bigSrc = null;
                         })
                     })
@@ -277,6 +315,9 @@
     .tool-bar {
         width: 150px;
         flex-shrink: 0;
+        .v-icon {
+            font-size: 20px;
+        }
         .el-slider.is-vertical.el-slider--with-input {
             height: 150px;
             .el-slider__input {
@@ -312,7 +353,7 @@
             overflow: hidden;
             margin-bottom: 10px;
             .el-radio-button__inner {
-                padding: 15px 10px;
+                padding: 10px 7px;
                 border-radius: 0 !important;
                 width: 55px;
             }
@@ -337,6 +378,10 @@
         .control-wrap {
             display: flex;
             justify-content: space-around;
+            background: rgba($color: #444, $alpha: 0.5);
+            box-shadow: 0 5px 5px 0 rgba($color: #000, $alpha: 0.5);
+            padding: 20px 0 30px;
+            border-radius: 5px;
             > div {
                 width: 50%;
             }
@@ -360,7 +405,7 @@
         }
         .cut-btns {
             position: absolute;
-            right: 0;
+            left: -120px;
             top: 0;
             z-index: 100;
             display: flex;
@@ -369,7 +414,7 @@
             padding: 20px;
             background: rgba($color: #444, $alpha: 0.5);
             box-shadow: 0 5px 5px 0 rgba($color: #000, $alpha: 0.5);
-            border-radius: 0 0 5px 5px;
+            border-radius: 5px;
             > p {
                 margin-top: 50px;
             }

@@ -101,25 +101,19 @@
                 canvas.setActiveObject(sel);
                 canvas.requestRenderAll();
             },
-            async addImage(imageUrl = '/public/mock-img/1.jpg') {
+            async addImage(imageUrl = '/public/mock-img/1.jpg', name = '') {
                 this.canvas.clear();
-                const img = await new Promise((resolve, reject) => {
-                    this.fabric.Image.fromURL(imageUrl, image => {
-                        image.lockUniScaling = true;
-                        // image.hasRotatingPoint = false;
-                        this.canvas.add(image);
-                        this.setZoom(this.canvas, image);
-                        image.set({
-                            angle: 0,
-                            cornerSize: 15,
-                            transparentCorners: false,
-                            cornerStyle: 'circle'
-                        });
-                        image.viewportCenter();
-                        resolve(image);
-                    });
+                await new Promise((resolve, reject) => {
+                    const img = document.createElement('img');
+                    img.onload = () => {
+                        const namedImg = new this.fabric.NamedImage(img, { name });
+                        this.canvas.add(namedImg);
+                        this.setZoom(this.canvas, namedImg);
+                        namedImg.viewportCenter();
+                        resolve(namedImg);
+                    }
+                    img.src = imageUrl;
                 })
-                return img;
             },
             freeDrawingBrush() {
                 const canvas = this.canvas;
@@ -132,7 +126,8 @@
                 const { fabric } = await import('fabric');
 
                 const canvas = new fabric.Canvas(this.$refs.c, {
-                    includeDefaultValues: false
+                    includeDefaultValues: false,
+                    selection: false
                 });
                 this.fabric = fabric;
                 this.canvas = canvas;
@@ -141,8 +136,32 @@
 
                 let Points = [],
                     mouseDownPoint = null,
-                    selection = null,
+                    skipTargetFind = null,
                     shiftKeyDown = false;
+
+                fabric.NamedImage = fabric.util.createClass(fabric.Image, {
+                    type: 'namedImage',
+                    initialize(element, options) {
+                        options || (options = {});
+                        this.callSuper('initialize', element, options);
+                        this.set('name', options.name || '');
+                        this.set('evented', false);
+                        if (!this.cacheProperties.includes('name')) {
+                            this.cacheProperties.push('name')
+                        }
+                    },
+                    toObject() {
+                        return fabric.util.object.extend(this.callSuper('toObject'), {
+                            name: this.get('name')
+                        });
+                    }
+                })
+                fabric.NamedImage.fromObject = function(options, callback) {
+                    fabric.util.loadImage(options.src, function(img) {
+                        callback && callback(new fabric.NamedImage(img, options));
+                    });
+                }
+                fabric.NamedImage.async = true;
 
                 fabric.LabelPolygon = fabric.util.createClass(fabric.Polygon, {
                     type: 'labelPolygon',
@@ -236,8 +255,12 @@
                         canvas.isDrawingMode = false;
                         canvas.defaultCursor = 'move';
                         shiftKeyDown = true;
-                        selection = canvas.selection;
-                        canvas.selection = false;
+                        skipTargetFind = canvas.skipTargetFind;
+                        canvas.skipTargetFind = true;
+                    }
+                    if (key == 18) {
+                        skipTargetFind = canvas.skipTargetFind;
+                        canvas.skipTargetFind = true;
                     }
                 });
 
@@ -249,16 +272,29 @@
                             canvas.isDrawingMode = true;
                         }
                         shiftKeyDown = false;
-                        canvas.selection = selection;
+                        canvas.skipTargetFind = skipTargetFind;
                     }
                     if (key == 13) {
                         if (this.editor.type === 'labelPolygon') {
                             this.drawing(Points);
                             Points = [];
-                            this.editor.drawingObject.evented = true;
-                            this.editor.drawingObject.selectable = true;
+                            canvas.skipTargetFind = false;
                             this.editor.drawingObject = null;
                         }
+                    }
+                    if (key == 27) {
+                        if (this.editor.type === 'labelPolygon') {
+                            if (this.editor.drawingObject) {
+                                canvas.remove(this.editor.drawingObject)
+                                this.editor.drawingObject = null;
+                            }
+                            Points = [];
+                            canvas.skipTargetFind = false;
+                        }
+                    }
+
+                    if (key == 18) {
+                        canvas.skipTargetFind = skipTargetFind;
                     }
                 });
 
@@ -315,8 +351,7 @@
                     if (this.editor.type === 'labelPolygon') {
                         Points.push(this.transformMouse(options, false))
                         this.drawing(Points);
-                        this.editor.drawingObject.evented = false;
-                        this.editor.drawingObject.selected = false;
+                        canvas.skipTargetFind = true;
                     }
                 });
                 canvas.on('mouse:up', options => {
@@ -336,8 +371,7 @@
                             const arr = [...Points]
                             arr.push(this.transformMouse(options, false))
                             this.drawing(arr);
-                            this.editor.drawingObject.evented = false;
-                            this.editor.drawingObject.selected = false;
+                            canvas.skipTargetFind = true;
                         }
                     }
                 });
@@ -471,7 +505,7 @@
 
                 hotkeys('ctrl+a,command+a', (event, handler) => {
                     event.preventDefault()
-                    this.selectAll();
+                    // this.selectAll();
                 });
             },
             setZoom(canvas, SIZE = {
