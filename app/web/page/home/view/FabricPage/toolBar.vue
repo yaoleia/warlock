@@ -289,7 +289,7 @@
                             self.$emit('update:loading', false);
                         }
                     });
-                    $('.fabric-page').one('dblclick', '.cropper-move', async () => {
+                    $('.fabric-page').on('dblclick', '.cropper-move', async () => {
                         if (this.canvas.getObjects().length > 1) {
                             const resp = await this.$confirm('裁剪将清空所有标注，是否继续?', '提示', {
                                 confirmButtonText: '继续',
@@ -297,13 +297,12 @@
                                 type: 'warning'
                             })
                             if (!resp) return;
-                            this.clearMark(true);
                         }
 
                         const croppedCanvas = $bigSrc.cropper('getCroppedCanvas');
                         croppedCanvas.toBlob(async blob => {
                             this.cut.resultSrc = URL.createObjectURL(blob);
-                            this.clear();
+                            this.clear(true);
                             await this.$parent.addImage(this.cut.resultSrc, this.imageName);
                             URL.revokeObjectURL(this.cut.bigSrc);
                             this.cut.bigSrc = null;
