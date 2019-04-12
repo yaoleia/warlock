@@ -34,18 +34,18 @@
                     <el-button @click='toPng' type="text" size="small" v-show='hasImg' title='导出png'>
                         <v-icon name='ds-png'></v-icon>
                     </el-button>
-                    <el-button @click='toPng' type="text" size="small" v-show='hasImg' title='设置'>
+                    <!-- <el-button @click='toPng' type="text" size="small" v-show='hasImg' title='设置'>
                         <v-icon name='config'></v-icon>
-                    </el-button>
+                    </el-button> -->
 
                     <el-popover placement="bottom" title="使用帮助" v-show='hasImg' width="440" trigger="click" popper-class='help-info-popover'>
                         <div class="help-info">
                             <div>⒈ 按住 shift + 鼠标拖动画布 = 平移画布</div>
                             <div>⒉ 按住 alt + 绘制 = 避免绘制时选中图形</div>
                             <div>⒊ 选中图形 + delete = 删除选中的图形</div>
-                            <div>⒋ 绘制多边形 <v-icon name='polygon'></v-icon> ：enter = 确认创建图形；esc = 取消创建图形</div>
+                            <div>⒋ 绘制多边形 <v-icon name='polygon'></v-icon> ：单击 enter = 确认创建图形；单击 esc = 取消创建图形</div>
                             <div>⒌ 打开图片后有需要裁剪，先裁剪，后标注。裁剪前会清除已经标注的信息。</div>
-                            <div>⒍ 进入裁剪时，可进行 平移/缩放/旋转，确认位置后双击画布，进入裁剪状态。</div>
+                            <div>⒍ 进入裁剪时，可进行 平移/缩放/旋转，确认位置后，双击选中区域，完成裁剪。</div>
                         </div>
                         <el-button slot="reference" type="text" size="small" title='使用帮助'>
                             <v-icon name='help'></v-icon>
@@ -158,7 +158,7 @@
                 const item = this.canvas.item(0);
                 this.canvas.absolutePan({ x: item.left, y: item.top });
                 const items = this.canvas.getObjects();
-                items.map(i => {
+                items.forEach(i => {
                     if (i.type !== 'path') {
                         i.visible = false;
                     }
@@ -181,9 +181,20 @@
             },
             toJson() {
                 const json = this.canvas.toDatalessJSON();
+                json.objects.forEach(i => {
+                    if (i.type !== 'path') return;
+                    const points = [];
+                    i.path.forEach(p => {
+                        points.push({ x: p[1], y: p[2] })
+                        if (p[3] && p[4]) {
+                            points.push({ x: p[3], y: p[4] })
+                        }
+                    })
+                    i.points = points;
+                })
                 console.log(json.objects)
-                if (!json.objects.length) return;
-                this.downloadImg(json.objects[0].src);
+                // this.downloadImg(json.objects[0].src);
+                // TODO: upload file
             },
             downloadImg(url) {
                 const a = document.createElement('a');
@@ -283,7 +294,7 @@
                     $bigSrc.cropper({
                         scalable: false,
                         dragMode: 'move',
-                        autoCrop: false,
+                        // autoCrop: false,
                         autoCropArea: 0.5,
                         ready() {
                             self.$emit('update:loading', false);
