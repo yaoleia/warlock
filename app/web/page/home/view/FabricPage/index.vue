@@ -29,9 +29,28 @@
                 },
                 userZoom: 1,
                 editor: {
-                    lines: [
-                        'Pencil', 'Spray', 'Pattern'
-                    ],
+                    attr: {
+                        labelPoint: {
+                            color: '#ff8800',
+                            width: 20
+                        },
+                        brush: {
+                            color: '#ff8800',
+                            width: 5
+                        },
+                        labelRect: {
+                            color: '#ff8800',
+                            width: 1
+                        },
+                        labelCircle: {
+                            color: '#ff8800',
+                            width: 1
+                        },
+                        labelPolygon: {
+                            color: '#ff8800',
+                            width: 1
+                        }
+                    },
                     predefineColors: [
                         '#ff8800',
                         '#ff4500',
@@ -48,13 +67,13 @@
                         'hsla(209, 100%, 56%, 0.73)',
                         '#c7158577'
                     ],
+                    polygonPoints: [],
+                    lines: [
+                        'Pencil', 'Spray', 'Pattern'
+                    ],
                     lineMode: 'Pencil',
-                    line: {
-                        color: '#ff8800',
-                        width: 1,
-                    },
-                    mouseFrom: {},
-                    mouseTo: {},
+                    mouseFrom: null,
+                    mouseTo: null,
                     drawingObject: null,
                     doDrawing: false,
                     type: '',
@@ -102,7 +121,6 @@
                 canvas.requestRenderAll();
             },
             async addImage(imageUrl = '/public/mock-img/1.jpg', name = '') {
-                this.canvas.clear();
                 await new Promise((resolve, reject) => {
                     const img = document.createElement('img');
                     img.onload = () => {
@@ -118,8 +136,8 @@
             freeDrawingBrush() {
                 const canvas = this.canvas;
                 if (canvas.freeDrawingBrush) {
-                    canvas.freeDrawingBrush.color = this.editor.line.color;
-                    canvas.freeDrawingBrush.width = parseInt(this.editor.line.width, 10) || 1;
+                    canvas.freeDrawingBrush.color = this.editor.attr.brush.color;
+                    canvas.freeDrawingBrush.width = parseInt(this.editor.attr.brush.width, 10) || 1;
                 }
             },
             async init() {
@@ -127,15 +145,15 @@
 
                 const canvas = new fabric.Canvas(this.$refs.c, {
                     includeDefaultValues: false,
-                    selection: false
+                    selection: false,
+                    enableRetinaScaling: false
                 });
                 this.fabric = fabric;
                 this.canvas = canvas;
                 window.canvas = canvas;
                 this.freeDrawingBrush();
 
-                let Points = [],
-                    mouseDownPoint = null,
+                let mouseDownPoint = null,
                     skipTargetFind = null,
                     shiftKeyDown = false;
 
@@ -245,6 +263,33 @@
                     callback(new fabric.LabelCircle(options));
                 }
 
+                fabric.LabelPoint = fabric.util.createClass(fabric.Circle, {
+                    type: 'labelPoint',
+                    initialize(options) {
+                        options || (options = {});
+                        this.callSuper('initialize', options);
+                        this.set('label', options.label || '');
+                        this.set('fill', options.fill || 'rgba(255, 255, 255, 0)');
+                        if (!this.cacheProperties.includes('label')) {
+                            this.cacheProperties.push('label')
+                        }
+                    },
+                    toObject() {
+                        return fabric.util.object.extend(this.callSuper('toObject'), {
+                            label: this.get('label')
+                        });
+                    },
+                    _render(ctx) {
+                        this.callSuper('_render', ctx);
+                        ctx.font = `${this.radius / 2}px Helvetica`;
+                        ctx.fillStyle = '#fff';
+                        ctx.fillText(this.label, -this.width / 2 + 5, this.radius / 6);
+                    }
+                })
+                fabric.LabelPoint.fromObject = function(options, callback) {
+                    callback(new fabric.LabelPoint(options));
+                }
+
 
                 fabric.util.addListener(document.body, 'keydown', options => {
                     if (options.repeat) {
@@ -274,25 +319,20 @@
                         shiftKeyDown = false;
                         canvas.skipTargetFind = skipTargetFind;
                     }
+                    // enter
                     if (key == 13) {
                         if (this.editor.type === 'labelPolygon') {
-                            this.drawing(Points);
-                            Points = [];
+                            this.drawing(this.editor.polygonPoints);
+                            this.editor.polygonPoints = [];
                             canvas.skipTargetFind = false;
                             this.editor.drawingObject = null;
                         }
                     }
+                    // esc
                     if (key == 27) {
-                        if (this.editor.type === 'labelPolygon') {
-                            if (this.editor.drawingObject) {
-                                canvas.remove(this.editor.drawingObject)
-                                this.editor.drawingObject = null;
-                            }
-                            Points = [];
-                            canvas.skipTargetFind = false;
-                        }
+                        this.cancelPolygon();
                     }
-
+                    // shift
                     if (key == 18) {
                         canvas.skipTargetFind = skipTargetFind;
                     }
@@ -322,7 +362,7 @@
                         const point = new fabric.Point(pointer.x, pointer.y);
                         if (delta > 0) {
                             zoom += 0.1;
-                            if (zoom > 5) zoom = 5;
+                            if (zoom > 10) zoom = 10;
                             canvas.zoomToPoint(point, zoom);
                         } else if (delta < 0) {
                             zoom -= 0.1;
@@ -347,10 +387,15 @@
                     if (!this.editor.canDrawing) return;
                     this.editor.mouseFrom = this.transformMouse(options, false);
                     this.editor.doDrawing = true;
+                    if (this.editor.type === 'labelPoint') {
+                        this.drawing()
+                        this.editor.doDrawing = false;
+                        this.editor.drawingObject = null;
+                    }
 
                     if (this.editor.type === 'labelPolygon') {
-                        Points.push(this.transformMouse(options, false))
-                        this.drawing(Points);
+                        this.editor.polygonPoints.push(this.transformMouse(options, false))
+                        this.drawing(this.editor.polygonPoints);
                         canvas.skipTargetFind = true;
                     }
                 });
@@ -367,8 +412,8 @@
                 canvas.on('mouse:move', options => {
                     if (shiftKeyDown) return;
                     if (this.editor.type === 'labelPolygon') {
-                        if (this.editor.drawingObject && Points.length > 0) {
-                            const arr = [...Points]
+                        if (this.editor.drawingObject && this.editor.polygonPoints.length > 0) {
+                            const arr = [...this.editor.polygonPoints]
                             arr.push(this.transformMouse(options, false))
                             this.drawing(arr);
                             canvas.skipTargetFind = true;
@@ -399,6 +444,16 @@
                     }
                 })
             },
+            cancelPolygon(type) {
+                if ((type || this.editor.type) === 'labelPolygon') {
+                    if (this.editor.drawingObject) {
+                        this.canvas.remove(this.editor.drawingObject)
+                        this.editor.drawingObject = null;
+                    }
+                    this.editor.polygonPoints = [];
+                    this.canvas.skipTargetFind = false;
+                }
+            },
             ifDraw(options, bol = false) {
                 if (this.cut.cutMode) return;
                 if (options.selected && options.selected[0]) {
@@ -421,8 +476,7 @@
                 if (this.editor.drawingObject) {
                     this.canvas.remove(this.editor.drawingObject);
                 }
-                const type = this.editor.type;
-                const { mouseFrom, mouseTo, line } = this.editor;
+                const { mouseFrom, mouseTo, attr, type } = this.editor;
                 let x,
                     y;
                 if (mouseFrom) {
@@ -434,9 +488,10 @@
                 const fabric = this.fabric;
                 let subtract;
                 const POINTS = {};
-                if (!points) {
+                if (!points && mouseTo) {
                     subtract = this.editor.mouseTo.subtract(this.editor.mouseFrom);
-                } else {
+                }
+                if (points) {
                     POINTS.x = Math.min.apply(null, points.map(p => p.x))
                     POINTS.y = Math.min.apply(null, points.map(p => p.y))
                 }
@@ -448,8 +503,8 @@
                             top: y,
                             width: subtract.x < 0 ? 0 : subtract.x,
                             height: subtract.y < 0 ? 0 : subtract.y,
-                            stroke: line.color,
-                            strokeWidth: line.width,
+                            stroke: attr[type].color,
+                            strokeWidth: attr[type].width,
                             label: ''
                         });
                         break;
@@ -459,16 +514,24 @@
                             radius,
                             left: x - radius,
                             top: y - radius,
-                            stroke: line.color,
-                            strokeWidth: line.width
+                            stroke: attr[type].color,
+                            strokeWidth: attr[type].width
                         });
                         break;
                     case 'labelPolygon':
                         canvasObject = new fabric.LabelPolygon(points, {
                             left: POINTS.x,
                             top: POINTS.y,
-                            stroke: line.color,
-                            strokeWidth: line.width
+                            stroke: attr[type].color,
+                            strokeWidth: attr[type].width
+                        })
+                        break;
+                    case 'labelPoint':
+                        canvasObject = new fabric.LabelPoint({
+                            radius: attr[type].width,
+                            fill: attr[type].color,
+                            left: x - attr[type].width,
+                            top: y - attr[type].width
                         })
                         break;
                     default:
@@ -508,10 +571,7 @@
                     // this.selectAll();
                 });
             },
-            setZoom(canvas, SIZE = {
-                height: 1080, // 默认画板高、宽
-                width: 1748
-            }) {
+            setZoom(canvas, SIZE = { height: 1080, width: 1748 }, fixInbol) {
                 this.getInnerHeight();
                 let zoom = 1;
 
@@ -534,10 +594,15 @@
                 } else {
                     zoom = height / SIZE.height;
                 }
-
-                canvas.setZoom(zoom);
-                canvas.setWidth(width);
-                canvas.setHeight(height);
+                if (fixInbol) {
+                    canvas.setZoom(1);
+                    canvas.setWidth(SIZE.width);
+                    canvas.setHeight(SIZE.height);
+                } else {
+                    canvas.setZoom(zoom);
+                    canvas.setWidth(width);
+                    canvas.setHeight(height);
+                }
                 this.userZoom = zoom;
                 canvas.renderAll();
                 return ratio;

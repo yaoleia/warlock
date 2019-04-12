@@ -34,12 +34,32 @@
                     <el-button @click='toPng' type="text" size="small" v-show='hasImg' title='导出png'>
                         <v-icon name='ds-png'></v-icon>
                     </el-button>
+                    <el-button @click='toPng' type="text" size="small" v-show='hasImg' title='设置'>
+                        <v-icon name='config'></v-icon>
+                    </el-button>
+
+                    <el-popover placement="bottom" title="使用帮助" v-show='hasImg' width="440" trigger="click" popper-class='help-info-popover'>
+                        <div class="help-info">
+                            <div>⒈ 按住 shift + 鼠标拖动画布 = 平移画布</div>
+                            <div>⒉ 按住 alt + 绘制 = 避免绘制时选中图形</div>
+                            <div>⒊ 选中图形 + delete = 删除选中的图形</div>
+                            <div>⒋ 绘制多边形 <v-icon name='polygon'></v-icon> ：enter = 确认创建图形；esc = 取消创建图形</div>
+                            <div>⒌ 打开图片后有需要裁剪，先裁剪，后标注。裁剪前会清除已经标注的信息。</div>
+                            <div>⒍ 进入裁剪时，可进行 平移/缩放/旋转，确认位置后双击画布，进入裁剪状态。</div>
+                        </div>
+                        <el-button slot="reference" type="text" size="small" title='使用帮助'>
+                            <v-icon name='help'></v-icon>
+                        </el-button>
+                    </el-popover>
                 </div>
             </div>
 
             <div class="right-control">
                 <div v-show='hasImg'>
                     <el-radio-group v-model="editor.type" class="main-group" size="small">
+                        <el-radio-button label="labelPoint">
+                            <v-icon name='point'></v-icon>
+                        </el-radio-button>
                         <el-radio-button label="brush">
                             <v-icon name='pen'></v-icon>
                         </el-radio-button>
@@ -65,13 +85,13 @@
                         <el-radio-button v-for="option in editor.lines" :key="option" :label="option">{{option}}</el-radio-button>
                     </el-radio-group>
 
-                    <div class="block">
+                    <div class="block" v-if="editor.type">
                         <v-icon name='tiaoseban'></v-icon>
-                        <el-color-picker v-model="editor.line.color" @change="drawingLineColor" show-alpha :predefine="editor.predefineColors"></el-color-picker>
+                        <el-color-picker @change="drawingLineColor" v-model="currentAttr.color" show-alpha :predefine="editor.predefineColors"></el-color-picker>
                     </div>
-                    <div class="block">
+                    <div class="block" v-if="editor.type">
                         <v-icon name='width'></v-icon>
-                        <el-slider @change="drawingLineWidth" vertical v-model="editor.line.width" :min="1" :max="150" show-input></el-slider>
+                        <el-slider @change="drawingLineWidth" vertical v-model="currentAttr.width" :min="1" :max="150" show-input></el-slider>
                     </div>
                 </div>
             </div>
@@ -91,12 +111,14 @@
         components: {
         },
         computed: {
-
+            currentAttr() {
+                return this.editor.attr[this.editor.type];
+            }
         },
         methods: {
             fixIn() {
-                this.$parent.setZoom(this.canvas);
                 this.canvas.absolutePan({ x: 0, y: 0 });
+                this.$parent.setZoom(this.canvas);
             },
             async clearMark(bol = false) {
                 if (this.canvas.getObjects().length <= 1) return;
@@ -131,16 +153,30 @@
                 this.canvas.add(redoItem);
             },
             toPng() {
-                this.$parent.$refs.c.toBlob(c => {
-                    this.downloadImg(URL.createObjectURL(c));
+                this.cancelSelection();
+                this.$parent.setZoom(this.canvas, null, true);
+                const item = this.canvas.item(0);
+                this.canvas.absolutePan({ x: item.left, y: item.top });
+                const items = this.canvas.getObjects();
+                items.map(i => {
+                    if (i.type !== 'path') {
+                        i.visible = false;
+                    }
                 })
 
-                this.canvas.item(0).visible = false;
                 this.canvas.renderAll();
+                this.downloadImg(item.toObject().src);
                 this.$parent.$refs.c.toBlob(c => {
-                    this.downloadImg(URL.createObjectURL(c));
-                    this.canvas.item(0).visible = true;
+                    const pngSrc = URL.createObjectURL(c);
+                    this.downloadImg(pngSrc);
+                    items.map(i => {
+                        if (i.type !== 'path') {
+                            i.visible = true;
+                        }
+                    })
                     this.canvas.renderAll();
+                    this.fixIn();
+                    URL.revokeObjectURL(pngSrc);
                 })
             },
             toJson() {
@@ -165,10 +201,11 @@
                     return text;
                 }
             },
-            beforeAvatarUpload(file) {
+            async beforeAvatarUpload(file) {
                 const url = URL.createObjectURL(file.raw);
                 this.imageName = this.splitFileName(file.name);
-                this.$parent.addImage(url, this.imageName);
+                this.clear(true);
+                await this.$parent.addImage(url, this.imageName);
             },
             cancelCut() {
                 this.cut.bigSrc = null;
@@ -182,6 +219,11 @@
                     })
                     if (!resp) return;
                 }
+                const objects = this.canvas.getObjects();
+                objects.map(o => {
+                    if (o.type !== 'namedImage') return;
+                    URL.revokeObjectURL(o.toObject().src);
+                })
                 this.canvas.clear();
                 this.$parent.setZoom(this.canvas);
                 this.$emit('update:hasImg', false);
@@ -190,8 +232,8 @@
             freeDrawingBrush() {
                 const canvas = this.canvas;
                 if (canvas.freeDrawingBrush) {
-                    canvas.freeDrawingBrush.color = this.editor.line.color;
-                    canvas.freeDrawingBrush.width = parseInt(this.editor.line.width, 10) || 1;
+                    canvas.freeDrawingBrush.color = this.editor.attr.brush.color;
+                    canvas.freeDrawingBrush.width = parseInt(this.editor.attr.brush.width, 10) || 1;
                 }
             },
             cancelSelection() {
@@ -212,64 +254,62 @@
                 this.cancelSelection();
             },
             drawingLineColor() {
-                this.canvas.freeDrawingBrush.color = this.editor.line.color;
+                if (this.editor.type === 'brush') {
+                    this.canvas.freeDrawingBrush.color = this.editor.attr.brush.color;
+                }
             },
             drawingLineWidth() {
-                this.canvas.freeDrawingBrush.width = parseInt(this.editor.line.width, 10) || 1;
+                if (this.editor.type === 'brush') {
+                    this.canvas.freeDrawingBrush.width = parseInt(this.editor.attr.brush.width, 10) || 1;
+                }
             },
             selectChange() {
                 this.canvas.freeDrawingBrush = new fabric[`${this.editor.lineMode}Brush`](this.canvas);
                 this.freeDrawingBrush();
             },
             async cutImg() {
-                if (this.canvas.getObjects().length > 1) {
-                    const resp = await this.$confirm('裁剪将清空所有标注，是否继续?', '提示', {
-                        confirmButtonText: '继续',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    })
-                    if (!resp) return;
-                    this.clearMark(true);
-                }
                 this.$emit('update:loading', true);
                 const self = this;
                 this.ifEdit();
                 this.cancelSelection();
-                setTimeout(async () => {
-                    this.cut.bigSrc = await new Promise((resolve, reject) => {
-                        self.$parent.$refs.c.toBlob(blob => {
-                            resolve(URL.createObjectURL(blob))
-                        })
-                    })
+                this.cut.bigSrc = this.canvas.item(0).toObject().src;
 
-                    let $bigSrc = null;
-                    this.$nextTick(async () => {
-                        $bigSrc = $(self.$refs.bigSrc);
-                        if (!$bigSrc.cropper) {
-                            await import('cropperjs/dist/cropper.css');
-                            await import('cropper');
+                this.$nextTick(async () => {
+                    const $bigSrc = $(self.$refs.bigSrc);
+                    if (!$bigSrc.cropper) {
+                        await import('cropperjs/dist/cropper.css');
+                        await import('cropper');
+                    }
+                    $bigSrc.cropper({
+                        scalable: false,
+                        dragMode: 'move',
+                        autoCrop: false,
+                        autoCropArea: 0.5,
+                        ready() {
+                            self.$emit('update:loading', false);
                         }
-                        $bigSrc.cropper({
-                            scalable: false,
-                            dragMode: 'move',
-                            autoCrop: false,
-                            autoCropArea: 0.5,
-                            ready() {
-                                self.$emit('update:loading', false);
-                            }
-                        });
-                    })
+                    });
+                    $('.fabric-page').one('dblclick', '.cropper-move', async () => {
+                        if (this.canvas.getObjects().length > 1) {
+                            const resp = await this.$confirm('裁剪将清空所有标注，是否继续?', '提示', {
+                                confirmButtonText: '继续',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            })
+                            if (!resp) return;
+                            this.clearMark(true);
+                        }
 
-                    $('.fabric-page').one('dblclick', '.cropper-move', () => {
-                        this.clear(true);
                         const croppedCanvas = $bigSrc.cropper('getCroppedCanvas');
                         croppedCanvas.toBlob(async blob => {
                             this.cut.resultSrc = URL.createObjectURL(blob);
+                            this.clear();
                             await this.$parent.addImage(this.cut.resultSrc, this.imageName);
+                            URL.revokeObjectURL(this.cut.bigSrc);
                             this.cut.bigSrc = null;
                         })
                     })
-                }, 100);
+                })
             },
             reset() {
                 this.clear();
@@ -279,9 +319,6 @@
         },
         watch: {
             'cut.bigSrc': function(src, oldSrc) {
-                if (oldSrc) {
-                    URL.revokeObjectURL(oldSrc);
-                }
                 if (src) {
                     this.ifEdit();
                     return;
@@ -291,13 +328,15 @@
                 $('.fabric-page').off('dblclick', '.cropper-move');
                 this.cutAngle = 0;
             },
-            'editor.type': function(type) {
+            'editor.type': function(type, oldType) {
                 const canvas = this.canvas;
                 this.cancelCut();
                 this.$parent.activeObj = null;
 
                 const cutType = [];
                 this.setCutMode(cutType.includes(type))
+
+                this.$parent.cancelPolygon(oldType);
 
                 // 自由画笔模式
                 const bol = type === 'brush';
@@ -312,6 +351,21 @@
     }
 </script>
 <style lang="scss">
+    .help-info-popover {
+        background: #444;
+        color: #efefef;
+        border-color: #aaa;
+        box-shadow: 0 5px 5px 0 rgba($color: #000, $alpha: 0.5);
+        .el-popover__title {
+            color: #aaa;
+        }
+        .help-info {
+            line-height: 22px;
+            > div {
+                margin-bottom: 5px;
+            }
+        }
+    }
     .tool-bar {
         width: 150px;
         flex-shrink: 0;
@@ -345,6 +399,17 @@
                 padding: 10px 5px;
                 border-radius: 0 !important;
                 width: 50px;
+            }
+        }
+        .el-radio-button {
+            .el-radio-button__inner {
+                background: #aaa;
+                border: none;
+            }
+            &.is-active {
+                .el-radio-button__inner {
+                    background: #ff8800;
+                }
             }
         }
         .main-group.el-radio-group {
