@@ -264,15 +264,64 @@
                 }
                 this.cancelSelection();
             },
-            drawingLineColor() {
+            drawingLineColor(value) {
                 if (this.editor.type === 'brush') {
                     this.canvas.freeDrawingBrush.color = this.editor.attr.brush.color;
+                    return;
+                }
+                const activeObject = this.canvas.getActiveObject();
+                if (activeObject) {
+                    if (this.editor.type === 'labelPoint') {
+                        activeObject.set('fill', value);
+                    } else {
+                        activeObject.set('stroke', value);
+                    }
+                    this.canvas.renderAll();
                 }
             },
-            drawingLineWidth() {
-                if (this.editor.type === 'brush') {
+            drawingLineWidth(value) {
+                const type = this.editor.type;
+                if (type === 'brush') {
                     this.canvas.freeDrawingBrush.width = parseInt(this.editor.attr.brush.width, 10) || 1;
+                    return;
                 }
+                const activeObject = this.canvas.getActiveObject();
+                if (!activeObject) return;
+
+                switch (type) {
+                    case 'labelRect':
+                        activeObject.set({
+                            left: activeObject.left + activeObject.strokeWidth - value,
+                            top: activeObject.top + activeObject.strokeWidth - value,
+                            width: activeObject.width - activeObject.strokeWidth + value,
+                            height: activeObject.height - activeObject.strokeWidth + value,
+                            strokeWidth: value
+                        })
+                        break;
+                    case 'labelCircle':
+                        activeObject.set({
+                            radius: activeObject.radius - activeObject.strokeWidth / 2 + value / 2,
+                            left: activeObject.left + activeObject.strokeWidth - value,
+                            top: activeObject.top + activeObject.strokeWidth - value,
+                            strokeWidth: value
+                        })
+                        break;
+                    case 'labelPoint':
+                        activeObject.set({
+                            radius: value,
+                            left: activeObject.left + activeObject.radius - value,
+                            top: activeObject.top + activeObject.radius - value
+                        });
+                        break;
+                    case 'labelPolygon':
+                        activeObject.set({
+                            strokeWidth: value
+                        });
+                        break;
+                    default:
+                        break;
+                }
+                this.canvas.renderAll();
             },
             selectChange() {
                 this.canvas.freeDrawingBrush = new fabric[`${this.editor.lineMode}Brush`](this.canvas);

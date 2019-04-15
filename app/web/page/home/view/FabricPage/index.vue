@@ -499,10 +499,10 @@
                 switch (this.editor.type) {
                     case 'labelRect':
                         canvasObject = new fabric.LabelRect({
-                            left: x,
-                            top: y,
-                            width: subtract.x < 0 ? 0 : subtract.x,
-                            height: subtract.y < 0 ? 0 : subtract.y,
+                            left: x - attr[type].width,
+                            top: y - attr[type].width,
+                            width: subtract.x + attr[type].width < 0 ? 0 : subtract.x + attr[type].width,
+                            height: subtract.y + attr[type].width < 0 ? 0 : subtract.y + attr[type].width,
                             stroke: attr[type].color,
                             strokeWidth: attr[type].width,
                             label: ''
@@ -511,9 +511,9 @@
                     case 'labelCircle':
                         radius = Math.sqrt(subtract.x * subtract.x + subtract.y * subtract.y) / 2;
                         canvasObject = new fabric.LabelCircle({
-                            radius,
-                            left: x - radius,
-                            top: y - radius,
+                            radius: radius + attr[type].width / 2,
+                            left: x - radius - attr[type].width,
+                            top: y - radius - attr[type].width,
                             stroke: attr[type].color,
                             strokeWidth: attr[type].width
                         });
